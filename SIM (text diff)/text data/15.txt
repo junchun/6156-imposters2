@@ -1,0 +1,555 @@
+package controllers;
+
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+    
+    app = Javalin.create(config -> {
+      config.addStaticFiles("/public");
+    }).start(PORT_NUMBER);
+
+    // Test Echo Server
+    app.post("/echo", ctx -> {
+      ctx.result(ctx.body());
+    });
+    
+    // Default info
+    app.get("/", ctx -> {
+      ctx.result("Please go to /newgame to start a game.");
+    });
+
+    GameBoard game = new GameBoard();
+    Gson gson = new Gson();
+    
+    // New game
+    app.get("/newgame", ctx -> {
+      ctx.redirect("tictactoe.html");
+      ctx.result("Redirect to tictactoe.html");
+    });
+    
+    // Player 1 to pick a chess piece and start the game
+    app.post("/startgame", ctx -> {
+      // Request body: "type=x"
+      char type = ctx.req.getParameter("type").toCharArray()[0];
+      game.setP1(new Player(type, 1));
+      ctx.json(gson.toJson(game));
+    });
+    
+    // Player 2 to join the game
+    app.get("/joingame", ctx -> {
+      game.setP2();
+      ctx.redirect("/tictactoe.html?p=2");
+      sendGameBoardToAllPlayers(gson.toJson(game));
+    });
+    
+    // Players make a move on the board
+    app.post("/move/:playerId", ctx -> {
+      int id = Integer.parseInt(ctx.pathParam("playerId"));
+      int x = Integer.parseInt(ctx.req.getParameter("x"));
+      int y = Integer.parseInt(ctx.req.getParameter("y"));
+      ctx.json(gson.toJson(game.makeMove(id, x, y)));
+      sendGameBoardToAllPlayers(gson.toJson(game));
+    });
+    
+    
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue<Session> sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+package controllers;
+
+import io.javalin.websocket.WsCloseContext;
+import io.javalin.websocket.WsCloseHandler;
+import io.javalin.websocket.WsConnectContext;
+import io.javalin.websocket.WsConnectHandler;
+import io.javalin.websocket.WsHandler;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import org.eclipse.jetty.websocket.api.Session;
+
+/** Web socket class: DO NOT MODIFY.
+ * @author Shirish Singh
+ *
+ */
+public class UiWebSocket implements Consumer<WsHandler>  {
+
+  // Store sessions to broadcast a message to all users
+  private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+  @Override
+  public void accept(final WsHandler t) {
+
+    // On Connect
+    t.onConnect(new WsConnectHandler() {
+
+      @Override
+      public void handleConnect(final WsConnectContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+        SESSIONS.add(ctx.session);
+      }
+
+    });
+
+    // On Close
+    t.onClose(new WsCloseHandler() {
+
+      @Override
+      public void handleClose(final WsCloseContext ctx) throws Exception {
+        SESSIONS.remove(ctx.session);
+      }
+    });
+  }
+
+  public static Queue<Session> getSessions() {
+    return SESSIONS;
+  }
+
+}
+package models;
+
+public class GameBoard {
+
+  private int row;
+  
+  private int col;
+  
+  private Player p1;
+
+  private Player p2;
+
+  private char[] chessPieces;
+  
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  /** Default constructor that initializes board with empty chars.
+   */
+  public GameBoard() {
+    this.row = 3;
+    this.col = 3;
+    this.chessPieces = new char[] {'X', 'O'};
+    this.boardState = new char [row][col];
+    for (int i = 0; i < this.row; i++) {
+      for (int j = 0; j < this.col; j++) {
+        this.boardState[i][j] = ' ';
+      }
+    }
+    this.gameStarted = false;
+    this.turn = 1;
+    this.winner = 0;
+    this.isDraw = false;
+  }
+  
+  /** Complete constructor covering all data fields.
+   * @param p1 player1
+   * @param p2 player2
+   * @param start is game started or not
+   * @param turn which player's turn (equal to player id)
+   * @param state game board state
+   * @param winner who is the winner
+   * @param isDraw is this game a draw or not
+   */
+  public GameBoard(Player p1, Player p2, boolean start, int turn,
+      char[][] state, int winner, boolean isDraw) {
+    this.p1 = p1;
+    this.p2 = p2;
+    this.gameStarted = start;
+    this.turn = turn;
+    this.boardState = state;
+    this.winner = winner;
+    this.isDraw = isDraw;
+  }
+  
+  /** Method to make a move and return game status.
+   * @param id id of player who makes this move
+   * @param x row location of move
+   * @param y col location of move
+   * @return Message telling whether move is valid or not
+   */
+  public Message makeMove(int id, int x, int y) {
+    Player p;
+    if (id == this.p1.getId()) {
+      p = p1;
+    } else {
+      p = p2;
+    }
+    // Check validity of move
+    Move m = new Move(p, x, y);
+    Message msg = validMove(m);
+    if (msg.isMoveValidity()) {
+      this.boardState[x][y] = m.getPlayer().getType();
+      // Check if any players wins or a draw occurs
+      if (endGame()) {
+        if (isDraw) {
+          msg.setCode(110);
+          msg.setMessage("Dra");
+        } else {
+          msg.setCode(100 + this.winner);
+          msg.setMessage("Win " + Integer.toString(this.winner));
+        }
+      } else {
+        if (turn == 1) {
+          turn = 2;
+        } else {
+          turn = 1;
+        }
+        msg.setCode(100);
+        msg.setMessage("Con");
+      }
+    }
+
+    return msg;
+  }
+
+  /** Method to verify if a move is valid.
+   * (1) game has started
+   * (2) player moving is the turn player
+   * (3) x and y are within range
+   * @param m Move object
+   * @return Message telling whether move is valid
+   */
+  
+  public Message validMove(Move m) {
+    if (!this.gameStarted) {
+      return new Message(false, -1, "Game has not started");
+    }
+    if (m.getPlayer().getId() != turn) {
+      return new Message(false, -1, "Please wait for the turn player.");
+    }
+    int x = m.getMoveX();
+    int y = m.getMoveY();
+    if (y < 0 || y > col || x < 0 || x > row) {
+      return new Message(false, -1, "Move not on board.");
+    } else if (boardState[x][y] != ' ') {
+      return new Message(false, -2, "Cannot take an occupied slot.");
+    }
+    return new Message(true, 100, "Valid move.");
+  }
+  
+  /** Check if the game is end.
+   * (1) A player wins
+   * (2) Draw
+   * @return whether game ends or no
+   */
+  public boolean endGame() {
+    boolean win = false;
+    
+    // Check win conditions involving (0,0)
+    char mark = boardState[0][0];
+    if (mark == ' ') {
+      // no need for further checking since there is no chess
+    } else if (boardState[0][1] == mark && boardState[0][2] == mark) {
+      win = true;
+    } else if (boardState[1][0] == mark && boardState[2][0] == mark) {
+      win = true;
+    } else if (boardState[1][1] == mark && boardState[2][2] == mark) {
+      win = true;
+    }
+    // Check win conditions involving (0,1)
+    mark = boardState[0][1];
+    if (mark == ' ') {
+      // no need for further checking since there is no chess
+    } else if (boardState[1][1] == mark && boardState[2][1] == mark) {
+      win = true;
+    }
+    // Check win conditions involving (0,2)
+    mark = boardState[0][2];
+    if (mark == ' ') {
+      // no need for further checking since there is no chess
+    } else if (boardState[1][2] == mark && boardState[2][2] == mark) {
+      win = true;
+    } else if (boardState[1][1] == mark && boardState[2][0] == mark) {
+      win = true;
+    }
+    // Check win conditions involving (1,0)
+    mark = boardState[1][0];
+    if (mark == ' ') {
+      // no need for further checking since there is no chess
+    } else if (boardState[1][1] == mark && boardState[1][2] == mark) {
+      win = true;
+    }
+    // Check win conditions involving (2,0)
+    mark = boardState[2][0];
+    if (mark == ' ') {
+      // no need for further checking since there is no chess
+    } else if (boardState[2][1] == mark && boardState[2][2] == mark) {
+      win = true;
+    }
+    
+    // Check for draw if no winner
+    if (!win) {
+      isDraw = true;
+      for (int i = 0; i < boardState.length; i++) {
+        for (int j = 0; j < boardState.length; j++) {
+          if (this.boardState[i][j] == ' ') {
+            isDraw = false;
+            break;
+          }
+        }
+      }
+      if (isDraw) {
+        winner = 0;
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+    // Now someone wins, we need to determine the winner
+    winner = turn;
+    
+    return win;
+  }
+  
+  // Getters and Setters
+  public Player getP1() {
+    return p1;
+  }
+
+  public void setP1(Player p1) {
+    this.p1 = p1;
+  }
+
+  public Player getP2() {
+    return p2;
+  }
+
+  /** Sets up player 2, automatically assigns chess piece type, and start the game.
+   */
+  public void setP2() {
+    Player p2 = new Player(' ', 2);
+    // Automatically assign the chess piece
+    if (p1.getType() == this.chessPieces[0]) {
+      p2.setType(this.chessPieces[1]);
+    } else {
+      p2.setType(this.chessPieces[0]);
+    }
+    this.p2 = p2;
+    // Start the game if both players are ready
+    if (this.p1 != null && this.p2 != null) {
+      this.gameStarted = true;
+    }
+  }
+  
+  public void setP2(Player p2) {
+    this.p2 = p2;
+  }
+
+  public boolean isGameStarted() {
+    return gameStarted;
+  }
+
+  public void setGameStarted(boolean gameStarted) {
+    this.gameStarted = gameStarted;
+  }
+
+  public int getTurn() {
+    return turn;
+  }
+
+  public void setTurn(int turn) {
+    this.turn = turn;
+  }
+
+  public char[][] getBoardState() {
+    return boardState;
+  }
+
+  public void setBoardState(char[][] boardState) {
+    this.boardState = boardState;
+  }
+
+  public int getWinner() {
+    return winner;
+  }
+
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
+
+}
+package models;
+
+public class Message {
+
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+  
+  /** Complete constructor.
+   * @param valid whether move is valid or not
+   * @param code return code
+   * @param msg message to show up on the UI
+   */
+  public Message(boolean valid, int code, String msg) {
+    this.moveValidity = valid;
+    this.code = code;
+    this.message = msg;
+  }
+
+  public boolean isMoveValidity() {
+    return moveValidity;
+  }
+
+  public void setMoveValidity(boolean moveValidity) {
+    this.moveValidity = moveValidity;
+  }
+
+  public int getCode() {
+    return code;
+  }
+
+  public void setCode(int code) {
+    this.code = code;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+}
+package models;
+
+public class Move {
+
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+  
+  /** Complete constructor.
+   * @param p player object of the player who moves
+   * @param x row location
+   * @param y col location
+   */
+  public Move(Player p, int x, int y) {
+    this.player = p;
+    this.moveX = x;
+    this.moveY = y;
+  }
+
+  public Player getPlayer() {
+    return player;
+  }
+
+  public void setPlayer(Player player) {
+    this.player = player;
+  }
+
+  public int getMoveX() {
+    return moveX;
+  }
+
+  public void setMoveX(int moveX) {
+    this.moveX = moveX;
+  }
+
+  public int getMoveY() {
+    return moveY;
+  }
+
+  public void setMoveY(int moveY) {
+    this.moveY = moveY;
+  }
+
+}
+package models;
+
+public class Player {
+
+  private char type;
+
+  private int id;
+  
+  /** Default constructor.
+   */
+  public Player() {
+    this.type = ' ';
+    this.id = 0;
+  }
+  
+  /** Complete constructor.
+   * @param type chess piece type
+   * @param id player id
+   */
+  public Player(char type, int id) {
+    this.type = type;
+    this.id = id;
+  }
+
+  public char getType() {
+    return type;
+  }
+
+  public void setType(char type) {
+    this.type = type;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+}

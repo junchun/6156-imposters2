@@ -1,0 +1,626 @@
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import java.util.regex.Pattern;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+  
+  // Probably should create a separate GameBoardManager class but this is good enough for now
+  private static GameBoard[] gameBoardManager = new GameBoard[] { null };
+  
+  private static Gson gson = new Gson();
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+    app = Javalin.create(config -> {
+      config.addStaticFiles("/public");
+    }).start(PORT_NUMBER);
+
+    // Test Echo Server
+    app.post("/echo", ctx -> {
+      ctx.result(ctx.body());
+    });
+
+    // Initialize a new game
+    app.get("/newgame", ctx -> {
+      gameBoardManager[0] = new GameBoard();
+      ctx.redirect("/tictactoe.html");
+    });
+    
+    // Player 1 selects either X or O by passing in body "type=X" or "type=O"
+    app.post("/startgame", ctx -> {
+      validateActiveGameBoard();
+      
+      GameBoard gameBoard = gameBoardManager[0];
+      
+      String request = ctx.body();
+
+      if (!Pattern.matches("type=[XO]", request)) {
+        throw new RuntimeException("Improperly formatted input to startgame endpoint");
+      }
+
+      gameBoard.setP1(new Player(1, request.charAt(5)));
+
+      gameBoardManager[0] = gameBoard;
+      ctx.result(gson.toJson(gameBoard));
+    });
+    
+    app.get("/joingame", ctx -> {
+      validateActiveGameBoard();
+      validateActivePlayer1();
+      
+      GameBoard gameBoard = gameBoardManager[0];
+      
+      char p2Type;
+      
+      if (gameBoard.getP1().getType() == 'X') {
+        p2Type = 'O';
+      } else {
+        p2Type = 'X';
+      }
+      
+      gameBoard.setP2(new Player(2, p2Type));
+      
+      gameBoard.startGame();
+
+      gameBoardManager[0] = gameBoard;
+      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+      ctx.redirect("/tictactoe.html?p=2");
+    });
+
+    app.post("/move/:playerId", ctx -> {
+      validateActiveGameBoard();
+      validateActivePlayer1();
+      validateActivePlayer2();
+      
+      GameBoard gameBoard = gameBoardManager[0];
+      
+      String request = ctx.body();
+      
+      if (!Pattern.matches("x=[012]&y=[012]", request)) {
+        throw new RuntimeException("Improperly formatted input to move endpoint");
+      }
+      
+      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+      
+      Player player = gameBoard.getPlayerById(playerId);
+      int moveX = Character.getNumericValue(request.charAt(2));
+      int moveY = Character.getNumericValue(request.charAt(6));
+      
+      Move move = new Move(player, moveX, moveY);
+      
+      Message message = gameBoard.attemptMove(move);
+      gameBoardManager[0] = gameBoard;
+      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+      ctx.result(gson.toJson(message));
+    });
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+  
+  /**
+   *  Throws an exception if the user hits an endpoint before initializing a game.
+   */
+  private static void validateActiveGameBoard() {
+    if (gameBoardManager[0] == null) {
+      throw new RuntimeException("Trying to use GameBoard before starting game");
+    }
+  }
+  
+  /**
+   *  Throws an exception if the user hits an endpoint before Player1 has been initialized.
+   */
+  private static void validateActivePlayer1() {
+    if (gameBoardManager[0].getP1() == null) {
+      throw new RuntimeException("Trying to use Player1 before Player1 has been initialized");
+    }
+  }
+  
+  /**
+   *  Throws an exception if the user hits an endpoint before Player2 has been initialized.
+   */
+  private static void validateActivePlayer2() {
+    if (gameBoardManager[0].getP2() == null) {
+      throw new RuntimeException("Trying to use Player2 before Player2 has been initialized");
+    }
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue<Session> sessions = UiWebSocket.getSessions();
+    
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+package controllers;
+
+import io.javalin.websocket.WsCloseContext;
+import io.javalin.websocket.WsCloseHandler;
+import io.javalin.websocket.WsConnectContext;
+import io.javalin.websocket.WsConnectHandler;
+import io.javalin.websocket.WsHandler;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import org.eclipse.jetty.websocket.api.Session;
+
+/** Web socket class: DO NOT MODIFY.
+ * @author Shirish Singh
+ *
+ */
+public class UiWebSocket implements Consumer<WsHandler>  {
+
+  // Store sessions to broadcast a message to all users
+  private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+  @Override
+  public void accept(final WsHandler t) {
+
+    // On Connect
+    t.onConnect(new WsConnectHandler() {
+
+      @Override
+      public void handleConnect(final WsConnectContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+        SESSIONS.add(ctx.session);
+      }
+
+    });
+
+    // On Close
+    t.onClose(new WsCloseHandler() {
+
+      @Override
+      public void handleClose(final WsCloseContext ctx) throws Exception {
+        SESSIONS.remove(ctx.session);
+      }
+    });
+  }
+
+  public static Queue<Session> getSessions() {
+    return SESSIONS;
+  }
+
+}
+package models;
+
+public class GameBoard {
+  
+  private static final char[][] EMPTY_BOARD_STATE = new char[][] {
+      new char[] {'\u0000', '\u0000', '\u0000'},
+      new char[] {'\u0000', '\u0000', '\u0000'},
+      new char[] {'\u0000', '\u0000', '\u0000'}
+  };
+
+  private Player p1;
+  private Player p2;
+  private boolean gameStarted;
+  private int turn;
+  private char[][] boardState;
+  private int winner;
+  private boolean isDraw;
+  
+  /**
+   * Default constructor for GameBoard.
+   * Initializes private member variables to starting states.
+   * Start p1 and p2 as null - will be set by callers later.
+   */
+  public GameBoard() {
+    this.p1 = null;
+    this.p2 = null;
+    this.gameStarted = false;
+    this.turn = 1;
+    this.boardState = EMPTY_BOARD_STATE;
+    this.winner = 0;
+    this.isDraw = false;
+  }
+  
+  /**
+   * Get the appropriate player based on id.
+   * Throws if id isn't 1 or 2 since these are the only valid player ids.
+   * 
+   * @param id int 1 or 2 indicating Player1 or Player2
+   * @return Player associated with the passed id
+   */
+  public Player getPlayerById(int id) {
+    switch (id) {
+      case 1:
+        return this.p1;
+      case 2:
+        return this.p2;
+      default:
+        throw new RuntimeException("Trying to get player by invalid id");
+    }
+  }
+  
+  /**
+   * Indicate that the game has started.
+   */
+  public void startGame() {
+    this.gameStarted = true;
+  }
+  
+  /**
+   * Validate the passed move and return with either a VALID message after updating internal state
+   * appropriately or an error message.
+   * @param move Move representing the current action being taken
+   * @return Message with either error information or VALID
+   */
+  public Message attemptMove(Move move) {
+    if (this.gameStarted == false) {
+      return new Message(Message.NOT_BEGUN);
+    } else if (this.winner != 0 || this.isDraw) {
+      return new Message(Message.ALREADY_OVER);
+    } else if (move.getPlayer().getId() != this.turn) {
+      return new Message(Message.NOT_YOUR_TURN);
+    } else if (!(this.boardState[move.getMoveX()][move.getMoveY()] == '\u0000')) {
+      return new Message(Message.ALREADY_OCCUPIED);
+    } else {
+      this.boardState[move.getMoveX()][move.getMoveY()] = move.getPlayer().getType();
+      
+      if (inWinState()) {
+        this.winner = this.turn;
+      } else if (inDrawState()) {
+        this.isDraw = true;
+      } else {
+        this.turn = (this.turn == 1) ? 2 : 1;
+      }
+      
+      return new Message(Message.VALID);
+    }
+  }
+
+  /**
+   * Determine if a player has won.
+   * @return True if the board currently represents a winning condition, false otherwise
+   */
+  private boolean inWinState() {
+    // Check verticals
+    for (int y = 0; y < 3; y++) {
+      if (checkAllSameType(
+          this.boardState[0][y],
+          this.boardState[1][y],
+          this.boardState[2][y]
+      )) {
+        return true;
+      }
+    }
+    // Check horizontals
+    for (int x = 0; x < 3; x++) {
+      if (checkAllSameType(
+          this.boardState[x][0],
+          this.boardState[x][1],
+          this.boardState[x][2]
+      )) {
+        return true;
+      }
+    }
+    // Check diagonals
+    if (checkAllSameType(
+        this.boardState[0][0],
+        this.boardState[1][1],
+        this.boardState[2][2]
+    )) {
+      return true;
+    }
+    if (checkAllSameType(
+        this.boardState[2][0],
+        this.boardState[1][1],
+        this.boardState[0][2]
+    )) {
+      return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * Checks three chars to see if they're all 'X' or all 'O'.
+   * @param firstType char first to compare
+   * @param secondType char second to compare
+   * @param thirdType char thirst to compare
+   * @return boolean True if all three are the same type, false otherwise
+   */
+  private boolean checkAllSameType(char firstType, char secondType, char thirdType) {
+    return firstType == secondType
+        && secondType == thirdType
+        && (firstType == 'X' || firstType == 'O');
+  }
+  
+  /**
+   * Determine if the players have reached a draw.
+   * @return boolean True if the board currently represents a draw condition, false otherwise
+   */
+  private boolean inDrawState() {
+    if (!inWinState()) { // Call inWinState() again to decouple function ordering
+      for (int x = 0; x < 3; x++) {
+        for (int y = 0; y < 3; y++) {
+          if (this.boardState[x][y] == '\u0000') {
+            return false;
+          }
+        }
+      }
+    } else {
+      return false;      
+    }
+    return true;
+  }
+  
+  /**
+   * Get first player.
+   * @return Player First player
+   */
+  public Player getP1() {
+    return this.p1;
+  }
+  
+  /**
+   * Throws if player's id is not 1.
+   * Throws if setting p1 would set it to the same value as p2 if p2 is already set.
+   * @param p1 Player to set as first player
+   */
+  public void setP1(Player p1) {
+    if (p1.getId() != 1) {
+      throw new RuntimeException("Attempting to set somebody who is not player 1 to p1");
+    }
+    
+    if (this.p2 != null && this.p2.getType() == p1.getType()) {
+      throw new RuntimeException("Attempting to set p1 type to the same as p2");
+    }
+    
+    this.p1 = p1;
+  }
+  
+  /**
+   * Get second player.
+   * @return Player Second player
+   */
+  public Player getP2() {
+    return this.p2;
+  }
+  
+  /**
+   * Throws if Player's id is not 2.
+   * Throws if setting p2 would set it to the same value as p1 if p1 is already set.
+   * 
+   * @param p2 Player to set as second player
+   */
+  public void setP2(Player p2) {
+    if (p2.getId() != 2) {
+      throw new RuntimeException("Attempting to set somebody who is not player 2 to p2");
+    }
+    
+    if (this.p1 != null && this.p1.getType() == p2.getType()) {
+      throw new RuntimeException("Attempting to set p2 type to the same as p1");
+    }
+    
+    this.p2 = p2;
+  }
+  
+  /**
+   * Get if the game has started.
+   * @return boolean Whether or not the game has started yet
+   */
+  public boolean getGameStarted() {
+    return this.gameStarted;
+  }
+  
+  /**
+   * Get whose turn it is.
+   * @return int If 1 then it's Player1's turn, if 2 then it's Player2's turn
+   */
+  public int getTurn() {
+    return this.turn;
+  }
+  
+  /**
+   * Get the current board state.
+   * @return char[][] The current board state, full of the appropriate X's and O's
+   */
+  public char[][] getBoardState() {
+    return this.boardState;
+  }
+  
+  /**
+   * Get the winner if somebody has won.
+   * @return int The value of the winner: 0 if nobody has won or the id of the winner (1 or 2)
+   */
+  public int getWinner() {
+    return this.winner;
+  }
+  
+  /**
+   * Get if the game has ended in a draw.
+   * @return boolean If the game has ended in a draw
+   */
+  public boolean getIsDraw() {
+    return this.isDraw;
+  }
+
+}
+package models;
+
+import java.util.AbstractMap;
+import java.util.Map;
+
+public class Message {
+  
+  public static final Integer VALID = 100;
+  public static final Integer NOT_YOUR_TURN = 101;
+  public static final Integer ALREADY_OCCUPIED = 102;
+  public static final Integer NOT_BEGUN = 103;
+  public static final Integer ALREADY_OVER = 104;
+  
+  private static final Map<Integer, String> CODE_TO_MESSAGE_MAP = Map.ofEntries(
+      new AbstractMap.SimpleEntry<Integer, String>(VALID, ""),
+      new AbstractMap.SimpleEntry<Integer, String>(NOT_YOUR_TURN, "It is not your turn"),
+      new AbstractMap.SimpleEntry<Integer, String>(ALREADY_OCCUPIED, "Space is already occupied"),
+      new AbstractMap.SimpleEntry<Integer, String>(NOT_BEGUN, "The game has not begun"),
+      new AbstractMap.SimpleEntry<Integer, String>(ALREADY_OVER, "The game has already finished")
+      );
+
+  private boolean moveValidity;
+  private int code;
+  private String message;
+  
+  /**
+   * Constructor for Message.
+   * Throws if the passed code is invalid.
+   * @param code int Code representing either a valid move or an error message
+   */
+  public Message(int code) {
+    if (!CODE_TO_MESSAGE_MAP.containsKey(code)) {
+      throw new RuntimeException("Invalid code in message");
+    }
+    
+    this.moveValidity = code == 100;
+    this.code = code;
+    this.message = CODE_TO_MESSAGE_MAP.get(code);
+  }
+
+  /**
+   * Get if the move was valid.
+   * @return boolean True if move is valid, false otherwise
+   */
+  public boolean getMoveValidity() {
+    return this.moveValidity;
+  }
+  
+  /**
+   * Get the code for the move.
+   * @return int Code 100 if valid, error representation otherwise
+   */
+  public int getCode() {
+    return this.code;
+  }
+
+  /**
+   * Get the message to display to the user if there was an error.
+   * @return String Empty message if the move was valid, otherwise an error message
+   */
+  public String getMessage() {
+    return this.message;
+  }
+}
+package models;
+
+public class Move {
+
+  private Player player;
+  private int moveX;
+  private int moveY;
+
+  /**
+   * Constructor for Move.
+   * Throws if either moveX or moveY are not 0, 1, or 2.
+   * @param player Player associated with this move
+   * @param moveX int Indicates the 0 to 2 X coordinate of the move
+   * @param moveY int Indicates the 0 to 2 Y coordinate of the move
+   */
+  public Move(Player player, int moveX, int moveY) {
+    if (moveX < 0 || moveX > 2 || moveY < 0 || moveY > 2) {
+      throw new RuntimeException("Attempting to create invalid move");
+    }
+    
+    this.player = player;
+    this.moveX = moveX;
+    this.moveY = moveY;
+  }
+
+  /**
+   * Get the player associated with this move.
+   * @return Player associated with this move
+   */
+  public Player getPlayer() {
+    return this.player;
+  }
+  
+  /**
+   * Get the X-coordinate of the move.
+   * @return int X-coordinate of the move, either 0, 1, or 2
+   */
+  public int getMoveX() {
+    return this.moveX;
+  }
+  
+  /**
+   * Get the Y-coordinate of the move.
+   * @return int Y-coordinate of the move, either 0, 1, or 2
+   */
+  public int getMoveY() {
+    return this.moveY;
+  }
+
+}
+package models;
+
+public class Player {
+
+  private char type;
+  private int id;
+  
+  /**
+   * Constructor for Player with id of either 1 or 2.
+   * Throws if attempting to create a Player numbered something other than 1 or 2.
+   * type is initialized to '\u0000' since this is set later through setType().
+   * @param id int 1 or 2 depending on if it's the first or second player
+   * @param type char 'X' or 'O' depending on what token the player will be using
+   */
+  public Player(int id, char type) {
+    if (id != 1 && id != 2) {
+      throw new RuntimeException("Id for Player can only be set to 1 or 2");
+    }
+    if (type != 'X' && type != 'O') {
+      throw new RuntimeException("Set type must be either 'X' or 'O'");
+    }
+    
+    this.type = type;
+    this.id = id;
+  }
+
+  /**
+   * Get the type of the Player - X or O.
+   * @return char Type representing if this player is using 'X' or 'O'
+   */
+  public char getType() {
+    return this.type;
+  }
+  
+  /**
+   * Get the id of the Player - 1 or 2.
+   * @return int 1 or 2 depending on if this is the first or the second player
+   */
+  public int getId() {
+    return this.id;
+  }
+
+}

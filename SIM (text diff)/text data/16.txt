@@ -1,0 +1,644 @@
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+  
+  private static Gson gson = new Gson(); 
+  
+  private static GameBoard gameBoard; 
+  
+  private static Player player1;
+  
+  private static Player player2; 
+  
+  private static int gameSessionTurn; 
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+    app = Javalin.create(config -> {
+      config.addStaticFiles("/public");
+    }).start(PORT_NUMBER);
+
+    // Test Echo Server
+    app.post("/echo", ctx -> {
+      ctx.result(ctx.body());
+    });
+    
+    // Redirects the user to a new game
+    app.get("/newgame", ctx -> {
+      ctx.redirect("/tictactoe.html");
+    }); 
+    
+    // Adds player 1 to the game and sends a link for player to join
+    app.post("/startgame", ctx -> {
+      char player1Symbol = ctx.body().charAt(ctx.body().length() - 1); 
+      player1 = new Player(player1Symbol, 1); 
+      gameBoard = new GameBoard(); 
+      gameBoard.setP1(player1);
+      ctx.result(gson.toJson(gameBoard)); 
+    });
+    
+    // Adds player 2 to the game and starts the game
+    app.get("/joingame", ctx -> {
+      char player2Symbol = player1.getType() == 'X' ? 'O' : 'X';
+      player2 = new Player(player2Symbol, 2); 
+      gameBoard.setP2(player2);
+      gameBoard.setGameStarted(true); 
+      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+      ctx.redirect("/tictactoe.html?p=2");
+    });
+    
+    //Adds moves to the board and ends the game when necessary
+    app.post("/move/:playerId", ctx -> {
+      int playersTurn = Integer.parseInt(ctx.pathParam("playerId")); 
+      int moveX = Character.getNumericValue(ctx.body().charAt(2)); 
+      int moveY = Character.getNumericValue(ctx.body().charAt(ctx.body().length() - 1));
+      Move currentMove; 
+      if (playersTurn == 1) {
+        currentMove = new Move(gameBoard.getP1(), moveX, moveY);
+      } else {
+        currentMove = new Move(gameBoard.getP2(), moveX, moveY);
+      }
+      Message moveMessage; 
+      if (gameBoard.isValidMove(currentMove)) {
+        gameBoard.addMoveToBoardAndSwitchesTurns(currentMove); 
+        if (gameBoard.playerWonGame(player1)) {
+          gameBoard.endsGameAndSetsWinner(player1);
+        }  
+        if (gameBoard.playerWonGame(player2)) {
+          gameBoard.endsGameAndSetsWinner(player2);
+        }
+        moveMessage = gameBoard.generateValidMoveMessage();
+        sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+        
+      } else if (gameBoard.isGameDraw()) {
+        gameBoard.setGameDraw();
+        moveMessage = gameBoard.generateDrawMessage();
+        
+      } else {
+        moveMessage = gameBoard.generateInvalidMoveMessage();
+      }
+      ctx.result(gson.toJson(moveMessage));
+    }); 
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue<Session> sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+package controllers;
+
+import io.javalin.websocket.WsCloseContext;
+import io.javalin.websocket.WsCloseHandler;
+import io.javalin.websocket.WsConnectContext;
+import io.javalin.websocket.WsConnectHandler;
+import io.javalin.websocket.WsHandler;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import org.eclipse.jetty.websocket.api.Session;
+
+/** Web socket class: DO NOT MODIFY.
+ * @author Shirish Singh
+ *
+ */
+public class UiWebSocket implements Consumer<WsHandler>  {
+
+  // Store sessions to broadcast a message to all users
+  private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+  @Override
+  public void accept(final WsHandler t) {
+
+    // On Connect
+    t.onConnect(new WsConnectHandler() {
+
+      @Override
+      public void handleConnect(final WsConnectContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+        SESSIONS.add(ctx.session);
+      }
+
+    });
+
+    // On Close
+    t.onClose(new WsCloseHandler() {
+
+      @Override
+      public void handleClose(final WsCloseContext ctx) throws Exception {
+        SESSIONS.remove(ctx.session);
+      }
+    });
+  }
+
+  public static Queue<Session> getSessions() {
+    return SESSIONS;
+  }
+
+}
+package models;
+
+/**
+ * GameBoard adds moves to the board and updates game status. 
+ * @author kenyaplenty
+ *
+ */
+
+public class GameBoard {
+
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  /** Creates a new instance of the GameBoard.
+   */
+  public GameBoard() {
+    this.gameStarted = false;
+    this.turn = 1; 
+    this.boardState = new char[3][3];
+    this.winner = 0; 
+    this.isDraw = false; 
+
+  }
+  
+  /** Returns an instance of Player 1.
+   * @return the p1
+   */
+  
+  public Player getP1() {
+    return p1;
+  }
+
+  /** Returns an instance of Player 2. 
+   * @param p1 the p1 to set
+  */
+  public void setP1(Player p1) {
+    this.p1 = p1;
+  }
+
+  /** Returns an instance of Player 2. 
+   * @return the p2
+   */
+  public Player getP2() {
+    return p2;
+  }
+
+  /** Sets p2 to a passed in instance of player.
+  * @param p2 the p2 to set
+  */
+  public void setP2(Player p2) {
+    this.p2 = p2;
+  }
+  
+  /** Sets the value of gameStarted.
+   * @param gameStarted a boolean indicating whether or not the game has started
+   * 
+   */
+  public void setGameStarted(boolean gameStarted) {
+    this.gameStarted = gameStarted; 
+  }
+  
+  /** Returns the current turn.
+   * @return the turn 
+   */
+  public int getTurn() {
+    return this.turn; 
+  }
+  
+  /** 
+   * Sets the turn field to the integer passed in using the turn parameter.
+   * @param turn represents the current player's turn as an integer
+   */
+  public void setTurn(int turn) {
+    this.turn = turn; 
+  }
+  
+  /**
+   *  Checks if a move can be made at this time.
+   * @param move represents a Move instance 
+   */
+  public boolean isValidMove(Move move) {
+    if (this.gameStarted && isSpaceFree(move) && isPlayerTurn(move)) {
+      return true; 
+    }
+    return false; 
+  }
+  
+  /**
+   * Checks to see if it is time for a player to make a turn. 
+   * @return boolean stating whether or not the current player can make a move
+   * 
+   */
+  private boolean isPlayerTurn(Move move) {
+    return this.turn == move.getPlayer().getId();
+  }
+  
+  /** 
+   * Checks if the space described in the move is free.
+   * @param move represents a Move object
+   * @return a boolean representing whether or not the space is free
+   */
+  private boolean isSpaceFree(Move move) {
+    int moveX = move.getMoveX(); 
+    int moveY = move.getMoveY(); 
+    if (boardState[moveX][moveY] == 'X' || boardState[moveX][moveY] == 'O') {
+      return false; 
+    }
+    return true; 
+  }
+  
+  /** 
+   * Adds a new Move to the game board and switches it over to the other player's turn. 
+   * @param move is a move object that represents the move that will be added to the board
+   */
+  public void addMoveToBoardAndSwitchesTurns(Move move) {
+    int moveX = move.getMoveX();
+    int moveY = move.getMoveY(); 
+    char symbol = move.getPlayer().getType();
+    this.boardState[moveX][moveY] = symbol;
+    this.turn = move.getPlayer().getId() == 1 ? 2 : 1; 
+  }
+ 
+  
+  /**
+   * Checks to see if a specific player has won the game.
+   * @param player represents the player whose victory we are assessing
+   * @return
+   */
+  public boolean playerWonGame(Player player) {
+    if (playerWonGameWithDiagonalLine(player) || playerWonGameWithHorizontalLine(player)
+        || playerWonGameWithVerticalLine(player)) {
+      return true; 
+    }
+    return false; 
+    
+  }
+  
+  /**
+   * Checks whether or not the game has ended in a draw. 
+   * @return boolean indicating whether or not the game has been won
+   */
+  public boolean isGameDraw() {
+    if (this.winner == 0 && isBoardFull() && this.gameStarted) {
+      return true; 
+    }
+    return false; 
+  }
+  
+  /**
+   * Changes the necessary parameters so the game can end in a draw.
+   */
+  
+  public void setGameDraw() {
+    this.gameStarted = false; 
+    this.winner = 0; 
+    this.isDraw = true; 
+  }
+  
+  /** 
+   * Checks to see if a player has won with a diagonal line.
+   * @param player represents the player whose victory we are assessing
+   * @return whether a player has won with a diagonal line
+   */
+  private boolean playerWonGameWithDiagonalLine(Player player) {
+    char playerSymbol = player.getType();
+    if (boardState[0][0] == playerSymbol && boardState[1][1] == playerSymbol 
+        && boardState[2][2] == playerSymbol) {
+      return true; 
+    } else if (boardState[0][2] == playerSymbol && boardState[1][1] == playerSymbol 
+        && boardState[2][0] == playerSymbol) {
+      return true; 
+    }
+    return false; 
+  }
+  
+  /**
+   * Checks to see if a player has won with a horizontal line. 
+   * @param player represents the player whose victory we are assessing
+   * @return whether a player has won with a horizontal line
+   */
+  private boolean playerWonGameWithHorizontalLine(Player player) {
+    char playerSymbol = player.getType();
+    for (int i = 0; i < 3; i++) {
+      if (boardState[i][0] == playerSymbol && boardState[i][1] == playerSymbol 
+          && boardState[i][2] == playerSymbol) {
+        return true; 
+      }
+    
+    }
+    return false;  
+  }
+  
+  /**
+   * Checks to see if a player has won with a vertical line.
+   * @param player represents the player whose victory we are assessing
+   * @return whether a player has won with a vertical line
+   * 
+   */
+  private boolean playerWonGameWithVerticalLine(Player player) {
+    char playerSymbol = player.getType(); 
+    for (int i = 0; i < 3; i++) {
+      if  (boardState[0][i] == playerSymbol && boardState[1][i] == playerSymbol 
+          && boardState[2][i] == playerSymbol) {
+        return true; 
+      }
+    
+    }
+    return false; 
+  }
+  
+  /**
+   * Checks to see if all the spaces on the board are full. 
+   * @return a boolean representing whether or not all the spaces on the board are full
+   */
+  private boolean isBoardFull() {
+    for (int i = 0; i < 3; i++) {
+      for  (int j = 0; j < 3; j++) {
+        if (boardState[i][j] != 'X' && boardState[i][j] != 'O') {
+          return false; 
+        }
+      }
+    }
+    return true; 
+  }
+  
+  /**
+   *  Designates the winner of the game and ends the game.
+   *  @param player represents the player that has won the game
+   */
+  
+  public void endsGameAndSetsWinner(Player player) {
+    this.winner = player.getId(); 
+    this.gameStarted = false; 
+  
+  }
+ 
+  
+  /** 
+   * Generates a message telling the user that they successfully made a move.
+   * @return a message indicating a good move
+   */
+  public Message generateValidMoveMessage() {
+    return new Message(true, 100, "");
+  }
+
+  /**
+   * Generates a message telling the users that the game has ended in a draw. 
+   * @return
+   */
+  public Message generateDrawMessage() {
+    return new Message(false, -100, "Game Over. It was a DRAW!"); 
+  }
+  
+  /**
+   * Generates a message telling the user that their move was unsuccessful.
+   * @return a message indicating that a move was bad
+   */
+  
+  public Message generateInvalidMoveMessage() {
+    Message moveMessage = new Message(false, -1,
+        "ERROR: It is not your turn or the space you have chosen is full.");
+    return moveMessage; 
+  }
+  
+  
+}
+package models;
+
+/** 
+ * This class represents messages sent during the game.
+ * @author kenyaplenty
+ *
+ */
+
+public class Message {
+
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+  
+  /** Creates a new instance of the Message class.
+   * @param moveValidity is a boolean representing if the move was valid
+   * @param code is an integer representing the error status associated with the message
+   * @param message is a string representing the contents of the message
+   */
+  public Message(boolean moveValidity, int code, String message) {
+    this.moveValidity = moveValidity; 
+    this.code = code; 
+    this.message = message; 
+  }
+
+  /** 
+   * Returns whether or not the move is valid. 
+   * @return the moveValidity
+   */
+  public boolean isMoveValidity() {
+    return moveValidity;
+  }
+
+  /** 
+   * Sets the value of moveValidity to the parameter moveValidity.
+   * @param moveValidity the moveValidity to set
+   */
+  public void setMoveValidity(boolean moveValidity) {
+    this.moveValidity = moveValidity;
+  }
+
+  /** 
+   * Returns the error status of the message.
+   * @return the code
+   */
+  public int getCode() {
+    return code;
+  }
+
+  /** 
+   * Sets the error status of the message to the parameter code. 
+   * @param code the code to set
+   */
+  public void setCode(int code) {
+    this.code = code;
+  }
+
+  /**
+   * Returns the string or body of the message.
+   * @return the message
+   */
+  public String getMessage() {
+    return message;
+  }
+
+  /** Sets the string or body of the message to the input message.
+   * @param message the message to set
+   */
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+}
+package models;
+
+/**
+ * Represents a move in the game. 
+ * @author kenyaplenty
+ *
+ */
+public class Move {
+
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+  
+  /** Creates a new instance of the Move class. 
+   * @param player represents the player making the move
+   * @param moveX represents the x coordinate of the move
+   * @param moveY represents the y coordinate of the move
+   */
+  
+  public Move(Player player, int moveX, int moveY) {
+    this.player = player; 
+    this.moveX = moveX;
+    this.moveY = moveY; 
+  }
+
+  /** Returns the player making the move. 
+   * @return the player
+   */
+  public Player getPlayer() {
+    return player;
+  }
+  
+  /**
+   * Sets a move's player to the input player.
+   * @param player represents the player making the move
+   */
+  public void setPlayer(Player player) {
+    this.player = player; 
+  }
+ 
+
+  /** Returns the x coordinate of the move.
+   * @return the moveX
+   */
+  public int getMoveX() {
+    return moveX;
+  }
+  
+  /*
+   * Sets the x coordinate of the the move to the input moveX
+   * @param moveX represents the x coordinate of the move
+   */
+  public void setMoveX(int moveX) {
+    this.moveX = moveX; 
+  }
+
+  /** Returns the y coordinate of the move. 
+   * @return the moveY
+   */
+  public int getMoveY() {
+    return moveY;
+  }
+  
+  /*
+  * Sets the y coordinate of the move to the input moveY.
+  * @param moveY represents the y coordinate of the move
+  */
+  public void setMoveY(int moveY) {
+    this.moveY = moveY; 
+  }
+}
+package models;
+
+/**
+ * This class represents a player in the game.
+ * @author kenyaplenty
+ *
+ */
+public class Player {
+
+  private char type;
+
+  private int id;
+  
+  public Player(char playerSymbol, int playerId) {
+    this.type = playerSymbol; 
+    this.id = playerId; 
+  }
+
+  /** Returns a player's symbol in the game.
+   * @return the type
+   */
+  public char getType() {
+    return type;
+  }
+
+  /** Sets a player's symbol for the game.
+   * @param type is a char that represents a player's symbol
+   */
+  public void setType(char type) {
+    this.type = type;
+  }
+
+  /** Returns a player's id. 
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
+  /**Sets a player's id.
+   * @param id an integer representing what the player's id should be
+   */
+  public void setId(int id) {
+    this.id = id;
+  }
+
+}

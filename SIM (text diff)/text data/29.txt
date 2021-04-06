@@ -1,0 +1,433 @@
+package controllers;
+
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+  private static Javalin app;
+  private static GameBoard game;
+  
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+    //Create app
+    app = Javalin.create(config -> {
+      config.addStaticFiles("/public");
+    }).start(PORT_NUMBER);
+
+    // Test Echo Server
+    app.post("/echo", ctx -> {
+      ctx.result(ctx.body());
+    });
+
+    // Redirect to tic tac toe board.
+    app.get("/newgame", ctx -> {
+      ctx.redirect("/tictactoe.html");
+    });
+    
+    // Start game, creating player 1 and game board.
+    app.post("/startgame", ctx -> {
+      char type1 = ctx.req.getParameter("type").charAt(0);
+      Player p1 = new Player(type1, 1);
+      game = new GameBoard(p1);
+      ctx.result(game.getBoard());
+    });
+
+    // Player 2 joins game and game begins.
+    app.get("/joingame", ctx -> {
+      char type2;
+      if (game.getP1Type() == 'X') {
+        type2 = 'O';
+      } else {
+        type2 = 'X';
+      }
+      Player p2 = new Player(type2, 2);
+      game.addP2(p2);
+      ctx.redirect("/tictactoe.html?p=2");
+      game.startGame();
+      sendGameBoardToAllPlayers(game.getBoard());
+    });
+    
+    
+    // Player 1 moves.
+    app.post("/move/1", ctx -> {
+      int x = Integer.parseInt(ctx.req.getParameter("x"));
+      int y = Integer.parseInt(ctx.req.getParameter("y"));
+      Move move = new Move(game.getP1(), x, y);
+      Message message = game.move(move);
+      ctx.result(message.getMessage());
+      sendGameBoardToAllPlayers(game.getBoard());
+      System.out.println("Sent board to all players");
+    });
+    
+    // Player 2 moves.
+    app.post("/move/2", ctx -> {
+      int x = Integer.parseInt(ctx.req.getParameter("x"));
+      int y = Integer.parseInt(ctx.req.getParameter("y"));
+      Move move = new Move(game.getP2(), x, y);
+      Message message = game.move(move);
+      ctx.result(message.getMessage());
+      sendGameBoardToAllPlayers(game.getBoard());
+      System.out.println("Sent board to all players");
+    });
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+  
+  /**
+   * Send message to all players.
+   * 
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue<Session> sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        System.out.println("Failed to send game board to all players.");
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+package controllers;
+
+import io.javalin.websocket.WsCloseContext;
+import io.javalin.websocket.WsCloseHandler;
+import io.javalin.websocket.WsConnectContext;
+import io.javalin.websocket.WsConnectHandler;
+import io.javalin.websocket.WsHandler;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import org.eclipse.jetty.websocket.api.Session;
+
+/** Web socket class: DO NOT MODIFY.
+ * @author Shirish Singh
+ *
+ */
+public class UiWebSocket implements Consumer<WsHandler>  {
+
+  // Store sessions to broadcast a message to all users
+  private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+  @Override
+  public void accept(final WsHandler t) {
+
+    // On Connect
+    t.onConnect(new WsConnectHandler() {
+
+      @Override
+      public void handleConnect(final WsConnectContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+        SESSIONS.add(ctx.session);
+      }
+
+    });
+
+    // On Close
+    t.onClose(new WsCloseHandler() {
+
+      @Override
+      public void handleClose(final WsCloseContext ctx) throws Exception {
+        SESSIONS.remove(ctx.session);
+      }
+    });
+  }
+
+  public static Queue<Session> getSessions() {
+    return SESSIONS;
+  }
+
+}
+package models;
+
+import com.google.gson.Gson;
+
+public class GameBoard {
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+  
+  private char[][] boardState;
+
+  private int winner;
+    
+  private boolean isDraw;
+  
+  /**
+   * Creates an instance of a gameboard
+   * with player 1. Creates an empty board
+   * with no winner or draw yet, and with 
+   * the turn starting with player 1.
+   */
+  public GameBoard(Player p) {
+    p1 = p;
+    gameStarted = false;
+    turn = 1;
+    boardState = new char[3][3];
+    winner = 0;
+    isDraw = false;
+  }
+    
+  public void addP2(Player p) {
+    p2 = p;
+  }
+  
+  public char getP1Type() {
+    return p1.getType();
+  }
+  
+  public Player getP1() {
+    return p1;
+  }
+  
+  public Player getP2() {
+    return p2;
+  }
+  
+  /**
+   * Returns all attributes of GameBoard
+   * as a json string.
+   */
+  public String getBoard() {
+    Gson gson = new Gson();
+    String json = gson.toJson(this);
+    return json;
+  }
+  
+  public void startGame() {
+    gameStarted = true;
+  }
+  
+  /**
+   * Checks for a valid move and returns a message.
+   * If not a valid move, returns a Message with the
+   * corresponding error code and message to display.
+   * If move is valid, returns a Message indicating the
+   * move is valid. Also checks if the player has won the
+   * game or if the game is a draw.
+   */
+  public Message move(Move move) {
+    Message message;
+    Player p = move.getPlayer();
+    int x = move.getMoveX();
+    int y = move.getMoveY();
+    if (boardState[x][y] == 0) {
+      if (p.getId() == turn) {
+        boardState[x][y] = p.getType();
+        if (turn == 1) {
+          turn = 2;
+        } else {
+          turn = 1;
+        }
+        message = new Message(true, 100, "");
+        this.checkWin(p, x, y);
+      } else {
+        message = new Message(false, 400, String.format("It's Player %d's turn!", turn));
+      }
+    } else {
+      message = new Message(false, 400, "Invalid move!");
+    }
+    return message;
+  }
+
+  /**
+   * Checks rows, columns, and diagonals associated
+   * with a certain move to see if a player has won
+   * the game. If there are no wins, it calls another
+   * function to check if there is a draw.
+   */
+  public void checkWin(Player p, int x, int y) {
+    int id = p.getId();
+    char type = p.getType();
+    
+    // check row
+    boolean win = true;
+    for (int i = 0; i < 3; i++) {
+      if (boardState[x][i] != type) {
+        win = false;
+        break;
+      }
+    }
+    if (win) {
+      winner = id;
+      return;
+    }
+    
+    // check column
+    win = true;
+    for (int i = 0; i < 3; i++) {
+      if (boardState[i][y] != type) {
+        win = false;
+        break;
+      }
+    }
+    if (win) {
+      winner = id;
+      return;
+    }
+
+    // check first diagonal (\)
+    win = true;
+    for (int i = 0; i < 3; i++) {
+      if (boardState[i][i] != type) {
+        win = false;
+        break;
+      }
+    }
+    if (win) {
+      winner = id;
+      return;
+    }
+    
+    // check second diagonal (/)
+    win = true;
+    for (int i = 0; i < 3; i++) {
+      if (boardState[i][3 - i - 1] != type) {
+        win = false;
+        break;
+      }
+    }
+    if (win) {
+      winner = id;
+      return;
+    }
+    
+    // If no wins, check for a draw
+    this.checkDraw();
+  }
+
+  /**
+   * Checks if all cells are filled
+   * when no players have won to determine
+   * if the game is a draw.
+   * If there is a draw, it changes the
+   * isDraw variable to true.
+   */
+  public void checkDraw() {
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (boardState[i][j] == 0) {
+          return;
+        }
+      }
+    }
+    isDraw = true;
+  }
+
+}
+package models;
+
+import com.google.gson.Gson;
+
+public class Message {
+
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+  
+  /**
+   * Creates an instance of a message.
+   * @param validity whether the move is valid
+   * @param c the code associated with the move
+   * @param m the message to display with the move
+   */
+  public Message(boolean validity, int c, String m) {
+    moveValidity = validity;
+    code = c;
+    message = m;
+  }
+  
+  /**
+   * Returns moveValidity, code, and message as a 
+   * json formatted String.
+   */
+  public String getMessage() {
+    Gson gson = new Gson();
+    String json = gson.toJson(this);
+    return json;
+  }
+
+}
+package models;
+
+public class Move {
+
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+  
+  /**
+   * Constructs an instance of a "move".
+   * @param p the player who made the move
+   * @param x the x position of the move
+   * @param y the y position of the move
+   */
+  public Move(Player p, int x, int y) {
+    player = p;
+    moveX = x;
+    moveY = y;
+  }
+ 
+  public int getMoveX() {
+    return moveX;
+  }
+  
+  public int getMoveY() {
+    return moveY;
+  }
+  
+  public Player getPlayer() {
+    return player;
+  }
+
+}
+package models;
+
+public class Player {
+
+  private char type;
+  private int id;
+  
+  /**
+   * Creates an instance of a player with
+   * type t and id i.
+   */
+  public Player(char t, int i) {
+    type = t;
+    id = i;
+  }
+  
+  public char getType() {
+    return type;
+  }
+  
+  public int getId() {
+    return id;
+  }
+}

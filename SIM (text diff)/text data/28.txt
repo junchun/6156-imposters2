@@ -1,0 +1,652 @@
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  private static GameBoard gameboard;
+
+  /**
+   * Main method of the application.
+   * 
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+    app = Javalin.create(config -> {
+      config.addStaticFiles("/public");
+    }).start(PORT_NUMBER);
+
+    // Test Echo Server
+    app.post("/echo", ctx -> {
+      ctx.result(ctx.body());
+    });
+
+    // Endpoint that redirects to initial UI, allowing user to start a game.
+    app.get("/newgame", ctx -> {
+      ctx.redirect("/tictactoe.html");
+    });
+
+    // Endpoint to initialize player 1 and gameboard. 
+    app.post("/startgame", ctx -> {
+      String requestBody = ctx.body();
+      char playerType = requestBody.charAt(requestBody.indexOf("=") + 1);
+      gameboard = new GameBoard();
+
+      Player player1 = new Player();
+      player1.setId(1);
+      player1.setType(playerType);
+      
+      gameboard.setP1(player1);
+      ctx.result(getGameboardJson());
+    });
+
+    // Endpoint to initialize player 2, add them to game, and start the game.
+    app.get("/joingame", ctx -> {
+      Player p2 = new Player();
+      p2.setId(2);
+      if (gameboard.getP1().getType() == 'O') {
+        p2.setType('X');
+      } else {
+        p2.setType('O');
+      }
+      
+      gameboard.setP2(p2);
+      gameboard.setGameStarted(true);
+      
+      sendGameBoardToAllPlayers(getGameboardJson());
+      ctx.redirect("/tictactoe.html?p=2");
+    });
+
+    // Endpoint to execute a move if valid and update gameboard state accordingly.
+    app.post("/move/:playerId", ctx -> {
+      String playerId = ctx.pathParam("playerId");
+      Player player;
+      if (playerId.indexOf('1') != -1) {
+        player = gameboard.getP1();
+      } else {
+        player = gameboard.getP2();
+      }
+      
+      String requestBody = ctx.body();
+      int x = Integer.parseInt("" + requestBody.charAt(requestBody.indexOf("=") + 1));
+      int y = Integer.parseInt("" + requestBody.charAt(requestBody.lastIndexOf("=") + 1));
+      Move move = new Move(player, x, y);
+      
+      Message response;
+      if (gameboard.isValidMove(move)) {
+        gameboard.makeMove(move);
+        response = new Message(true, 100, "");
+      } else {
+        response = new Message(false, 400, "This is not a valid move.");
+      }
+      
+      Gson gsonLib = new Gson();
+      ctx.result(gsonLib.toJson(response));
+      sendGameBoardToAllPlayers(getGameboardJson());
+    });
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /**
+   * Send message to all players.
+   * 
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue<Session> sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+        System.out.println("The following error occured: " + e.getMessage());
+      }
+    }
+  }
+
+  /**
+   * Returns JSON string of current gameboard.
+   * 
+   * @return gameboard represented as JSON string.
+   */
+  private static String getGameboardJson() {
+    Gson gsonLib = new Gson();
+    return gsonLib.toJson(gameboard);
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+package controllers;
+
+import io.javalin.websocket.WsCloseContext;
+import io.javalin.websocket.WsCloseHandler;
+import io.javalin.websocket.WsConnectContext;
+import io.javalin.websocket.WsConnectHandler;
+import io.javalin.websocket.WsHandler;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import org.eclipse.jetty.websocket.api.Session;
+
+/** Web socket class: DO NOT MODIFY.
+ * @author Shirish Singh
+ *
+ */
+public class UiWebSocket implements Consumer<WsHandler>  {
+
+  // Store sessions to broadcast a message to all users
+  private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+  @Override
+  public void accept(final WsHandler t) {
+
+    // On Connect
+    t.onConnect(new WsConnectHandler() {
+
+      @Override
+      public void handleConnect(final WsConnectContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+        SESSIONS.add(ctx.session);
+      }
+
+    });
+
+    // On Close
+    t.onClose(new WsCloseHandler() {
+
+      @Override
+      public void handleClose(final WsCloseContext ctx) throws Exception {
+        SESSIONS.remove(ctx.session);
+      }
+    });
+  }
+
+  public static Queue<Session> getSessions() {
+    return SESSIONS;
+  }
+
+}
+package models;
+
+public class GameBoard {
+
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+
+  /**
+   * Sets default values for new GameBoard object.
+   */
+  public GameBoard() {
+    gameStarted = false;
+    turn = 1;
+    boardState = new char[3][3];
+    winner = 0;
+    isDraw = false;
+  }
+
+  /**
+   * Determines if move is valid or not.
+   * 
+   * @param move to check for validity
+   * @return boolean indicating if move is valid or not.
+   */
+  public boolean isValidMove(Move move) {
+    boolean isPlayerTurn = (move.getPlayer() != null) && move.getPlayer().getId() == turn;
+    if (!isPlayerTurn || winner != 0 || gameStarted == false || isDraw == true) {
+      return false;
+    }
+    boolean moveLocationEmpty = boardState[move.getMoveX()][move.getMoveY()] == '\u0000';
+    return moveLocationEmpty;
+  }
+
+  /**
+   * Determines if the game is a draw.
+   * 
+   * @return boolean indicating if game is a draw.
+   */
+  public boolean gameIsDraw() {
+    for (int r = 0; r < boardState.length; r++) {
+      for (int c = 0; c < boardState.length; c++) {
+        // check if any board position is empty
+        if (boardState[r][c] == '\u0000') {
+          return false;
+        }
+      }
+    }
+    return (winner == 0);
+  }
+
+  /**
+   * Determines if a player has won the game and returns their player id. If no player has won,
+   * returns 0.
+   * 
+   * @return id of player who has won
+   */
+  public int getGameWinner() {
+    char winnerType = '\u0000';
+    // check rows
+    for (int r = 0; r < boardState.length; r++) {
+      if (boardState[r][0] != '\u0000' && boardState[r][0] == boardState[r][1]
+          && boardState[r][1] == boardState[r][2]) {
+        winnerType = boardState[r][0];
+        break;
+      }
+    }
+    // check columns
+    for (int c = 0; c < boardState[0].length; c++) {
+      if (boardState[0][c] != '\u0000' && boardState[0][c] == boardState[1][c]
+          && boardState[1][c] == boardState[2][c]) {
+        winnerType = boardState[0][c];
+        break;
+      }
+    }
+    // check diagonals
+    if (boardState[0][0] != '\u0000' && boardState[0][0] == boardState[1][1]
+        && boardState[1][1] == boardState[2][2]) {
+      winnerType = boardState[0][0];
+    }
+    if (boardState[0][2] != '\u0000' && boardState[0][2] == boardState[1][1]
+        && boardState[1][1] == boardState[2][0]) {
+      winnerType = boardState[0][2];
+    }
+    // return id of player associated with winning type.
+    if (winnerType == '\u0000') {
+      return 0;
+    } else if (winnerType == p1.getType()) {
+      return 1; 
+    } else {
+      return 2;
+    }
+  }
+
+  /**
+   * Assuming isValidMove has already been called, makes move and updates game board.
+   * 
+   * <p>Note: Also checks for game winner or game draw after executing move.
+   * 
+   * @param move to be executed
+   */
+  public void makeMove(Move move) {
+    boardState[move.getMoveX()][move.getMoveY()] = move.getPlayer().getType();
+    // switch turn
+    if (turn == 1) {
+      turn = 2;
+    } else {
+      turn = 1;
+    }
+    // check for winner and draw
+    int gameWinner = getGameWinner();
+    if (gameWinner != 0) {
+      winner = gameWinner;
+      gameStarted = false;
+    } else {
+      if (gameIsDraw()) {
+        isDraw = true;
+        gameStarted = false;
+      }
+    }
+  }
+
+  /**
+   * Returns player one.
+   * 
+   * @return the p1
+   */
+  public Player getP1() {
+    return p1;
+  }
+
+  /**
+   * Sets player one.
+   * 
+   * @param p1 the p1 to set
+   */
+  public void setP1(Player p1) {
+    this.p1 = p1;
+  }
+
+  /**
+   * Returns player 2.
+   * 
+   * @return the p2
+   */
+  public Player getP2() {
+    return p2;
+  }
+
+  /**
+   * Sets player 2.
+   * 
+   * @param p2 the p2 to set
+   */
+  public void setP2(Player p2) {
+    this.p2 = p2;
+  }
+
+  /**
+   * Returns boolean indicating whether game has started.
+   * 
+   * @return the gameStarted
+   */
+  public boolean isGameStarted() {
+    return gameStarted;
+  }
+
+  /**
+   * Sets gameStarted variable.
+   * 
+   * @param gameStarted the gameStarted to set
+   */
+  public void setGameStarted(boolean gameStarted) {
+    this.gameStarted = gameStarted;
+  }
+
+  /**
+   * Gets turn indicating which player's turn it is.
+   * 
+   * <p>Note: turn will take on values 1 or 2 corresponding to player 1 and player 2 respectively.
+   * 
+   * @return the turn
+   */
+  public int getTurn() {
+    return turn;
+  }
+
+  /**
+   * Sets turn variable indicating which player's turn it is.
+   * 
+   * @param turn the turn to set
+   */
+  public void setTurn(int turn) {
+    this.turn = turn;
+  }
+
+  /**
+   * Returns boardState.
+   * 
+   * @return the boardState
+   */
+  public char[][] getBoardState() {
+    return boardState;
+  }
+
+  /**
+   * Sets boardState.
+   * 
+   * @param boardState the boardState to set
+   */
+  public void setBoardState(char[][] boardState) {
+    this.boardState = boardState;
+  }
+
+  /**
+   * Returns id of the winner.
+   * 
+   * @return the winner
+   */
+  public int getWinner() {
+    return winner;
+  }
+
+  /**
+   * Sets winner variable with id of player that has won.
+   * 
+   * @param winner the winner to set
+   */
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  /**
+   * Returns boolean indicating whether game has ended in a draw.
+   * 
+   * @return the isDraw
+   */
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  /**
+   * Sets isDraw variable.
+   * 
+   * @param isDraw the isDraw to set
+   */
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
+
+}
+package models;
+
+public class Message {
+
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+
+  /**
+   * Constructor for the Message class.
+   * 
+   * @param moveValidity indicating whether move was valid or not.
+   * @param code to identify types of errors from one another.
+   * @param message describing move
+   */
+  public Message(boolean moveValidity, int code, String message) {
+    this.moveValidity = moveValidity;
+    this.code = code;
+    this.message = message;
+  }
+
+  /**
+   * Returns boolean indicating the moveValidity.
+   * 
+   * @return the moveValidity
+   */
+  public boolean isMoveValidity() {
+    return moveValidity;
+  }
+
+  /**
+   * Sets moveValidity. 
+   * 
+   * @param moveValidity the moveValidity to set
+   */
+  public void setMoveValidity(boolean moveValidity) {
+    this.moveValidity = moveValidity;
+  }
+
+  /**
+   * Returns code of message.
+   * 
+   * @return the code
+   */
+  public int getCode() {
+    return code;
+  }
+
+  /**
+   * Sets code of message. 
+   * 
+   * @param code the code to set
+   */
+  public void setCode(int code) {
+    this.code = code;
+  }
+
+  /**
+   * Gets string message within Message object.
+   * 
+   * @return the message
+   */
+  public String getMessage() {
+    return message;
+  }
+
+  /**
+   * Sets message string.
+   * 
+   * @param message the message to set
+   */
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+}
+package models;
+
+public class Move {
+
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+
+  /**
+   * Constructor for the Move class.
+   * 
+   * @param player executing move
+   * @param moveX represents x coordinate of move
+   * @param moveY represents y coordinate of move
+   */
+  public Move(Player player, int moveX, int moveY) {
+    this.player = player;
+    this.moveX = moveX;
+    this.moveY = moveY;
+  }
+
+  /**
+   * Returns player executing move.
+   * 
+   * @return the player
+   */
+  public Player getPlayer() {
+    return player;
+  }
+
+  /**
+   * Sets player of move.
+   * 
+   * @param player the player to set
+   */
+  public void setPlayer(Player player) {
+    this.player = player;
+  }
+
+  /**
+   * Returns x coordinate of move.
+   * 
+   * @return the moveX
+   */
+  public int getMoveX() {
+    return moveX;
+  }
+
+  /**
+   * Sets x coordinate of move.
+   * 
+   * @param moveX the moveX to set
+   */
+  public void setMoveX(int moveX) {
+    this.moveX = moveX;
+  }
+
+  /**
+   * Returns y coordinate of move.
+   * 
+   * @return the moveY
+   */
+  public int getMoveY() {
+    return moveY;
+  }
+
+  /**
+   * Sets y coordinate of move.
+   * 
+   * @param moveY the moveY to set
+   */
+  public void setMoveY(int moveY) {
+    this.moveY = moveY;
+  }
+
+}
+package models;
+
+public class Player {
+
+  private char type;
+
+  private int id;
+
+  /**
+   * Returns type of player.
+   * 
+   * @return the type
+   */
+  public char getType() {
+    return type;
+  }
+
+  /**
+   * Sets type of player. 
+   * 
+   * <p>Note: For tic-tac-toe, should take value of either 'X' or 'O'.
+   * 
+   * @param type the type to set
+   */
+  public void setType(char type) {
+    this.type = type;
+  }
+
+  /**
+   * Gets id of player. 
+   * 
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * Sets id of player. 
+   * 
+   * <p>For two-player tic-tac-toe, id should be either 1 or 2.
+   * 
+   * @param id the id to set
+   */
+  public void setId(int id) {
+    this.id = id;
+  }
+
+}

@@ -1,0 +1,474 @@
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import org.eclipse.jetty.websocket.api.Session;
+
+public class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  final static GameBoard board = new GameBoard();
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+    app = Javalin.create(config -> {
+      config.addStaticFiles("/public");
+    }).start(PORT_NUMBER);
+
+    // Test Echo Server
+    app.post("/echo", ctx -> {
+      ctx.result(ctx.body());
+    }); 
+    
+    // Create a new end point to conveniently get the game board
+    app.get("/getboard", ctx -> {
+      Gson gson = new Gson();
+      String json = gson.toJson(board); 
+      ctx.result(json);
+    });
+    
+    app.get("/newgame", ctx -> {
+      ctx.redirect("/tictactoe.html");
+    });
+    
+    app.post("/startgame", ctx -> {
+      String body = ctx.body();
+      char type = ' ';
+      for (int i = 0; i < body.length(); i++) {
+        if (body.charAt(i) == 'X') {
+          type = 'X';
+        }
+        if (body.charAt(i) == 'O') {
+          type = 'O';
+        }
+      }
+      board.startgame(type);
+      
+      Gson gson = new Gson();
+      String json = gson.toJson(board); 
+      ctx.result(json);
+    });
+    
+    app.get("/joingame", ctx -> {
+      board.joingame();
+      ctx.redirect("/tictactoe.html?p=2");
+      
+      Gson gson = new Gson();
+      String json = gson.toJson(board); 
+      ctx.result(json);
+      
+      sendGameBoardToAllPlayers(json);
+    });
+    
+    app.post("/move/:playerid", ctx -> {
+      /* extraction of context param/body */
+      String id = ctx.pathParam("playerid");
+      int playerid = Integer.parseInt(id);
+      
+      String body = ctx.body();
+      int row = -1;
+      int col = -1;
+      Boolean x = false;
+      Boolean y = false;
+      for (int i = 0; i < body.length(); i++) {
+        char cur = body.charAt(i);
+        if (cur == 'x') {
+          x = true;
+        }
+        if (cur == 'y') {
+          y = true;
+        }
+        if (Character.isDigit(cur) && x == true && y == false) {
+          row = Character.getNumericValue(cur);
+        }
+        if (Character.isDigit(cur) && x == true && y == true) {
+          col = Character.getNumericValue(cur);
+        }
+      }
+      /* extraction ends here */
+      
+      /* updates the board and create corresponding message objects */
+      Message msg = new Message();
+      if (board.setter(playerid, row, col) == true) {
+        msg.validSetter();
+      } else {
+        msg.invalidSetter();
+      }
+      Gson gsonmsg = new Gson();
+      String strmsg = gsonmsg.toJson(msg); 
+      ctx.result(strmsg);
+      
+      Gson gson = new Gson();
+      String json = gson.toJson(board);
+      sendGameBoardToAllPlayers(json);    
+    });
+    
+    
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue<Session> sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+package controllers;
+
+import io.javalin.websocket.WsCloseContext;
+import io.javalin.websocket.WsCloseHandler;
+import io.javalin.websocket.WsConnectContext;
+import io.javalin.websocket.WsConnectHandler;
+import io.javalin.websocket.WsHandler;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import org.eclipse.jetty.websocket.api.Session;
+
+/** Web socket class: DO NOT MODIFY.
+ * @author Shirish Singh
+ *
+ */
+public class UiWebSocket implements Consumer<WsHandler>  {
+
+  // Store sessions to broadcast a message to all users
+  private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+  @Override
+  public void accept(final WsHandler t) {
+
+    // On Connect
+    t.onConnect(new WsConnectHandler() {
+
+      @Override
+      public void handleConnect(final WsConnectContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+        SESSIONS.add(ctx.session);
+      }
+
+    });
+
+    // On Close
+    t.onClose(new WsCloseHandler() {
+
+      @Override
+      public void handleClose(final WsCloseContext ctx) throws Exception {
+        SESSIONS.remove(ctx.session);
+      }
+    });
+  }
+
+  public static Queue<Session> getSessions() {
+    return SESSIONS;
+  }
+
+}
+package models;
+
+public class GameBoard {
+
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  /** 
+   *  Check if there is a winner, based on the current move. 
+   */
+  public boolean checkWinner(int row, int col) {
+    char type = boardState[row][col];
+    // check if a row is the same character
+    for (int i = 0; i < 3; i++) {
+      if (i == 2 && boardState[row][i] == type) {
+        return true;
+      }
+      if (boardState[row][i] != type) {
+        break;
+      }
+    }
+    
+    // check if a column is the same character
+    for (int i = 0; i < 3; i++) {
+      if (i == 2 && boardState[i][col] == type) {
+        return true;
+      }
+      if (boardState[i][col] != type) {
+        break;
+      }
+    }
+    
+    // check if a diagonal line is the same character when the current move is on the line
+    if ((row == 0 && col == 2) || (row == 2 && col == 0) || (row == 1 && col == 1)) {
+      if ((boardState[0][2] == type) && (boardState[1][1] == type) && (boardState[2][0] == type)) {
+        return true;
+      }
+    }
+  
+    if ((row == 0 && col == 0) || (row == 2 && col == 2) || (row == 1 && col == 1)) {
+      if ((boardState[0][0] == type) && (boardState[1][1] == type) && (boardState[2][2] == type)) {
+        return true;
+      }
+    }
+  
+    return false;
+  }
+  
+  /**
+   *  Check if the board is a draw.
+   */
+  public boolean checkDraw() {
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (boardState[i][j] == '\u0000') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  
+  /**
+   * When the first player picks X or O, startgame function is called to set up the game board.
+   * @param   ch          the character (X or O) the first player picks
+   */
+  public void startgame(char ch) {
+    p1 = new Player();
+    boardState = new char[3][3];
+    
+    p1.startgame(ch);
+    gameStarted = false;
+    turn = 1;
+    winner = 0;
+    isDraw = false;
+  }
+  
+  /**
+   * When the second player join the game, 
+   * joingame function is called to set up the rest of the board,
+   * which is basically p2.
+   */
+  public void joingame() {
+    char type1 = p1.getType();
+    p2 = new Player();
+    
+    char type2 = ' ';
+    if (type1 == 'X') {
+      type2 = 'O';
+    }
+    if (type1 == 'O') {
+      type2 = 'X';
+    }
+    
+    p2.joingame(type2);
+    gameStarted = true;
+  }
+  
+  /**
+   * setter updates the board when a player makes a move.
+   * @param   playerid      the id of the player (1 or 2)
+   * @param   row           the row number of the move
+   * @param   col           the column number of the move
+   * @return                whether the move is valid or not
+   */
+  public boolean setter(int playerid, int row, int col) {
+    if (turn != playerid) {
+      return false;
+    }
+
+    char type = ' ';
+    if (playerid == 1) {
+      type = p1.getType();
+    } else if (playerid == 2) {
+      type = p2.getType();
+    } 
+    
+    if (boardState[row][col] == '\u0000') {
+      boardState[row][col] = type;
+      if (checkWinner(row, col) == true) {
+        winner = playerid;
+      } else if (checkDraw() == true) {
+        isDraw = true;
+      } else {
+        if (playerid == 1) {
+          turn = 2;
+        } else if (playerid == 2) {
+          turn = 1;
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+    
+  }
+  
+  /* below are getters ------------------------------- */
+  
+  public boolean getGameStarted() {
+    return gameStarted;
+  }
+  
+  public int getWinner() {
+    return winner;
+  }
+  
+  public boolean getIsDraw() {
+    return isDraw;
+  }
+  
+  public Player getP1() {
+    return p1;
+  }
+  
+  public Player getP2() {
+    return p2;
+  }
+
+  public int getTurn() {
+    return turn;
+  }
+
+}
+
+package models;
+
+public class Message {
+
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+  
+  /**
+   * Sets the private variables when a move is valid.
+   */
+  public void validSetter() {
+    moveValidity = true;
+    code = 100;
+    message = "";
+  }
+  
+  /**
+   * Sets the private variables when a move is invalid.
+   */
+  public void invalidSetter() {
+    moveValidity = false;
+    code = 300;
+    message = "Invalid move!";
+  }
+  
+  /* below are getters ------------------------------- */
+  
+  public boolean getmoveValidity() {
+    return moveValidity;
+  }
+  
+  public int getcode() {
+    return code;
+  }
+  
+  public String getmessage() {
+    return message;
+  }
+
+}
+package models;
+
+public class Move {
+
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+  
+  /* below are getters and setters -------------------- */
+  
+  public void setplayer() {
+    player = new Player();
+  }
+  
+  public void setmoveX(int row) {
+    moveX = row;
+  }
+  
+  public void setmoveY(int col) {
+    moveY = col;
+  }
+  
+  public Player getplayer() {
+    return player;
+  }
+  
+  public int getmoveX() {
+    return moveX;
+  }
+  
+  public int getmoveY() {
+    return moveY;
+  }
+
+}
+package models;
+
+public class Player {
+
+  private char type;
+
+  private int id;
+  
+  public void startgame(char x) {
+    type = x;
+    id = 1;
+  }
+  
+  public void joingame(char x) {
+    type = x;
+    id = 2;
+  }
+  
+  /* below are getters ------------------------------- */
+  
+  public char getType() {
+    return type;
+  }
+  
+  public int getId() {
+    return id;
+  }
+
+}
