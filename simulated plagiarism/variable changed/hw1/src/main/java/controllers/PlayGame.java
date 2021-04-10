@@ -38,99 +38,80 @@ class PlayGame {
       ctx.result(ctx.body());
     });
 
-    /**
-     * Please add your end points here.
-     * 
-     * 
-     * 
-     * 
-     * Please add your end points here.
-     * 
-     * 
-     * 
-     * 
-     * Please add your end points here.
-     * 
-     * 
-     * 
-     * 
-     * Please add your end points here.
-     * 
-     */
     app.get("/newgame", ctx -> {
         ctx.redirect("/tictactoe.html");
       });
       
       app.post("/startgame", ctx -> {
-        String requestBody = ctx.body();
+        String rq = ctx.body();
               
         e = new GameBoard();
-        char type = requestBody.charAt(requestBody.indexOf("type=") + "type=".length());
+        char tt = rq.charAt(rq.indexOf("type=") + "type=".length());
         p1 = new Player();
         p1.changeTheId(1);
-        p1.changePlayerType(type);
+        p1.changePlayerType(tt);
         
         e.makeIt1st(p1);
         
-        Gson gson = new Gson();
-        ctx.result(gson.toJson(e));
+        Gson bbb = new Gson();
+        ctx.result(bbb.toJson(e));
       });
       
       app.get("/joingame", ctx -> {
         ctx.redirect("/tictactoe.html?p=2");
         
-        char playerType = p1.retrievePlayerType() == 'O' ? 'X' : 'O';
+        char ptt = p1.retrievePlayerType() == 'O' ? 'X' : 'O';
         
         p2 = new Player();
         p2.changeTheId(2);
-        p2.changePlayerType(playerType);
+        p2.changePlayerType(ptt);
         
         e.makeIt2nd(p2);
         e.asdgasg(true);
         
-        Gson gson = new Gson();
-        sendGameBoardToAllPlayers(gson.toJson(e));
+        Gson dd = new Gson();
+        sendGameBoardToAllPlayers(dd.toJson(e));
       });
       
       app.post("/move/:playerId", ctx -> {
-        String requestBody = ctx.body();
+        String rb = ctx.body();
         String playerId = ctx.pathParam("playerId");
         Player player;
-        Move move = new Move();
+        Move m = new Move();
         if (playerId.equals("1")) {
           player = p1;
         } else {
           player = p1;
         }
         int moveX = Character.getNumericValue(
-                requestBody.charAt(requestBody.indexOf("x=") + "x=".length()));
+                rb.charAt(rb.indexOf("x=") + "x=".length()));
         int moveY = Character.getNumericValue(
-                requestBody.charAt(requestBody.indexOf("y=") + "y=".length()));
-        move.whoBePlaying(player);
-        move.whatWasTheMoveX(moveX);
-        move.whatWasTheMoveY(moveY);
+                rb.charAt(rb.indexOf("y=") + "y=".length()));
+        m.whoBePlaying(player);
+        m.whatWasTheMoveX(moveX);
+        m.whatWasTheMoveY(moveY);
         
-        Message message = new Message();
-        message.makeItValid(e.mmvvvv113(move) == 1);
-        message.changeStatus(100);
-        if (e.mmvvvv113(move) == 0) {
-          message.setMessage("Invalid move!");
+        Message kk = new Message();
+        kk.makeItValid(e.mmvvvv113(m) == 1);
+        kk.changeStatus(100);
+        if (e.mmvvvv113(m) == 0) {
+          kk.setMessage("Invalid move!");
         } else {
-          if (e.ssmmmm113(move) == 1) {
+          if (e.ssmmmm113(m) == 1) {
             if (e.didanyonewin() == 1) {
-              message.setMessage("The game is a draw!");
+              kk.setMessage("The game is a draw!");
             } else {
-              int winner = e.gwwwggww();
-              message.setMessage(String.format("Player %d won!", winner));
+              int w = e.gwwwggww();
+              kk.setMessage(String.format("Player %d won!", w));
             }
           } else {
-            message.setMessage("");
+            kk.setMessage("");
           }
         }
         
-        Gson gson = new Gson();
-        ctx.result(gson.toJson(message));
-        sendGameBoardToAllPlayers(gson.toJson(e));
+        Gson dd = new Gson();
+        ctx.result(dd.toJson(kk));
+        sendGameBoardToAllPlayers(dd.toJson(e));
       });
       // TODO complete
 
