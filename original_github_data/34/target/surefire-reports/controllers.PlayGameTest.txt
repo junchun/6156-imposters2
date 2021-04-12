@@ -1,0 +1,24 @@
+-------------------------------------------------------------------------------
+Test set: controllers.PlayGameTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 0.648 sec <<< FAILURE! - in controllers.PlayGameTest
+newGameTest  Time elapsed: 0.349 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <404> but was: <200>
+	at controllers.PlayGameTest.startNewGame(PlayGameTest.java:43)
+
+startGameTest  Time elapsed: 0.003 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <404> but was: <200>
+	at controllers.PlayGameTest.startNewGame(PlayGameTest.java:43)
+
+joinTest  Time elapsed: 0.003 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <404> but was: <200>
+	at controllers.PlayGameTest.startNewGame(PlayGameTest.java:43)
+
+moveTest  Time elapsed: 0.002 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <404> but was: <200>
+	at controllers.PlayGameTest.startNewGame(PlayGameTest.java:43)
+
+otherTest  Time elapsed: 0.002 sec  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <404> but was: <200>
+	at controllers.PlayGameTest.startNewGame(PlayGameTest.java:43)
+

@@ -1,0 +1,5 @@
+unit/PlayerTest.class
+unit/GameBoardTest.class
+unit/MoveTest.class
+unit/MessageTest.class
+integration/PlayGameTest.class
