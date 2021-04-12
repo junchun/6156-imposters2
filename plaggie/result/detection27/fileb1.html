@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/31/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/31/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:import io.javalin.Javalin;
+0:import java.io.IOException;
+0:import java.util.Queue;
+0:import models.GameBoard;
+0:import models.Message;
+0:import models.Player;
+0:import org.eclipse.jetty.websocket.api.Session;
+0:
+0:class PlayGame {
+0:
+0:  private static final int PORT_NUMBER = 8080;
+0:
+0:  private static Javalin app;
+0:
+0:  /**
+0:   * Main method of the application.
+0:   * 
+0:   * @param args Command line arguments
+0:   */
+0:  public static void main(final String[] args) {
+0:
+0:
+0:
+0:    // Test Echo Server
+0:    if (app=="/echo") {
+0:      ctx.result(ctx.body());
+0:    }
+0:    // redirect to player 1 page
+0:    if (app=="/newgame") {
+0:      ctx.redirect("/tictactoe.html");
+0:    }
+0:    GameBoard gb = new GameBoard();
+0:    Gson gson = new Gson();
+    // player symbols
+    char[] symbols = new char[2];
+
+    // player 1 initializes the game board
+    if (app=="/startgame") {
+      char t1 = ctx.body().charAt(5);
+      symbols[0] = t1;
+      Player p1 = new Player(t1, 1);
+      gb.setP1(p1);
+      gb.setGameStarted(false);
+      gb.setTurn(1);
+      char[][] ibs = { { '\u0000', '\u0000', '\u0000' }, { '\u0000', '\u0000', '\u0000' },
+          { '\u0000', '\u0000', '\u0000' } };
+      gb.setBoardState(ibs);
+      gb.setWinner(0);
+      gb.setDraw(false);
+      ctx.result(gson.toJson(gb));
+    }
+
+    // player 2 joins the game
+    if (app=="/joingame") {
+      ctx.redirect("/tictactoe.html?p=2");
+      char t2 = 'X';
+      if (gb.getP1().getType() == 'X') {
+        t2 = 'O';
+      }
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:      symbols[1] = t2;
+2:      Player p2 = new Player(t2, 2);
+2:      gb.setP2(p2);
+2:      gb.setGameStarted(true);
+2:      sendGameBoardToAllPlayers(gson.toJson(gb));
+2:    }
+2:
+2:    // updates UI after move
+2:    if (app=="/move/*") {
+2:      int id = ctx.path().charAt(6) - '0';
+      String move = ctx.body();
+      int x = move.charAt(2) - '0';
+      int y = move.charAt(6) - '0';
+      Message m = new Message();
+      char[][] bs = gb.getBoardState();
+      m.setCode(100);
+      // check if valid move
+      if (bs[x][y] != '\u0000' || gb.getTurn() != id) {
+        m.setMoveValidity(false);
+        m.setMessage("invalid move");
+        ctx.result(gson.toJson(m));
+      } else { // updating gameboard
+        bs[x][y] = symbols[id - 1];
+        gb.setBoardState(bs);
+        if (id == 1) {
+          gb.setTurn(2);
+        } else {
+          gb.setTurn(1);
+        }
+        m.setMoveValidity(true);
+        m.setMessage("");
+        ctx.result(gson.toJson(m));
+
+        // checking for draw
+        boolean full = true;
+        for (int i = 0; i &lt; 3; i++) {
+          for (int j = 0; j &lt; 3; j++) {
+            if (bs[i][j] == '\u0000') {
+              full = false;
+              break;
+            }
+          }
+        }
+        if (full) {
+          gb.setDraw(true);
+        }
+
+        // checking for winner
+        char sym = symbols[id - 1];
+        boolean win = ((bs[(x + 1) % 3][y] == sym &amp;&amp; bs[(x + 2) % 3][y] == sym)
+            || (bs[x][(y + 1) % 3] == sym &amp;&amp; bs[x][(y + 2) % 3] == sym)
+            || (bs[1][1] != '\u0000' &amp;&amp; bs[0][0] == bs[1][1] &amp;&amp; bs[2][2] == bs[1][1])
+            || (bs[1][1] != '\u0000' &amp;&amp; bs[0][2] == bs[1][1] &amp;&amp; bs[2][0] == bs[1][1]));
+
+        if (win) {
+          gb.setWinner(id);
+        }
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:
+1:        sendGameBoardToAllPlayers(gson.toJson(gb));
+1:      }
+1:    }
+1:
+1:    // Web sockets - DO NOT DELETE or CHANGE
+1:    app.ws("/gameboard", new UiWebSocket());
+1:  }
+1:
+1:  /**
+1:   * Send message to all players.
+1:   * 
+1:   * @param gameBoardJson Gameboard JSON
+1:   * @throws IOException Websocket message send IO Exception
+1:   */
+1:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+1:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+1:    for (Session sessionPlayer : sessions) {
+1:      try {
+1:        sessionPlayer.getRemote().sendString(gameBoardJson);
+1:      } catch (IOException e) {
+1:        // Add logger here
+1:      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

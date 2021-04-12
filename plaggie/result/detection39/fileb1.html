@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/16/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/16/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+<A NAME="match3"></A><A HREF="filea1.html#match3" TARGET="left">3</A>:import java.io.IOException;
+3:import java.util.Queue;
+3:import models.GameBoard;
+3:import models.Message;
+3:import models.Move;
+3:import models.Player;
+3:import org.eclipse.jetty.websocket.api.Session;
+3:
+3:class PlayGame {
+3:
+3:  private static final int PORT_NUMBER = 8080;
+3:
+3:  private static Javalin app;
+3:  
+3:  private static Gson gson = new Gson(); 
+  
+  private static GameBoard gameBoard; 
+  
+  private static Player player1;
+  
+  private static Player player2; 
+  
+  private static int gameSessionTurn; 
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+
+    // Test Echo Server
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:    if (app=="/echo") {
+2:      ctx.result(ctx.body());
+2:    }
+2:    
+2:    // Redirects the user to a new game
+2:    if (app=="/newgame") {
+2:      ctx.redirect("/tictactoe.html");
+2:    } 
+2:    
+2:    // Adds player 1 to the game and sends a link for player to join
+2:    if (app=="/startgame") {
+2:      char player1Symbol = ctx.body().charAt(ctx.body().length() - 1); 
+      player1 = new Player(player1Symbol, 1); 
+      gameBoard = new GameBoard(); 
+      gameBoard.setP1(player1);
+      ctx.result(gson.toJson(gameBoard)); 
+    }
+    
+    // Adds player 2 to the game and starts the game
+    if (app=="/joingame") {
+      char player2Symbol = player1.getType() == 'X' ? 'O' : 'X';
+      player2 = new Player(player2Symbol, 2); 
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:      gameBoard.setP2(player2);
+1:      gameBoard.setGameStarted(true); 
+1:      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+1:      ctx.redirect("/tictactoe.html?p=2");
+1:    }
+1:    
+1:    //Adds moves to the board and ends the game when necessary
+1:    if (app=="/move/:playerId") {
+1:      int playersTurn = Integer.parseInt(ctx.pathParam("playerId")); 
+1:      int moveX = Character.getNumericValue(ctx.body().charAt(2)); 
+      int moveY = Character.getNumericValue(ctx.body().charAt(ctx.body().length() - 1));
+      Move currentMove; 
+      if (playersTurn == 1) {
+        currentMove = new Move(gameBoard.getP1(), moveX, moveY);
+      } else {
+        currentMove = new Move(gameBoard.getP2(), moveX, moveY);
+      }
+      Message moveMessage; 
+      if (gameBoard.isValidMove(currentMove)) {
+        gameBoard.addMoveToBoardAndSwitchesTurns(currentMove); 
+        if (gameBoard.playerWonGame(player1)) {
+          gameBoard.endsGameAndSetsWinner(player1);
+        }  
+        if (gameBoard.playerWonGame(player2)) {
+          gameBoard.endsGameAndSetsWinner(player2);
+        }
+        moveMessage = gameBoard.generateValidMoveMessage();
+        sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+        
+      } else if (gameBoard.isGameDraw()) {
+        gameBoard.setGameDraw();
+        moveMessage = gameBoard.generateDrawMessage();
+        
+      } else {
+        moveMessage = gameBoard.generateInvalidMoveMessage();
+      }
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:      ctx.result(gson.toJson(moveMessage));
+0:    } 
+0:
+0:    // Web sockets - DO NOT DELETE or CHANGE
+0:    app.ws("/gameboard", new UiWebSocket());
+0:  }
+0:
+0:  /** Send message to all players.
+0:   * @param gameBoardJson Gameboard JSON
+0:   * @throws IOException Websocket message send IO Exception
+0:   */
+0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+0:    for (Session sessionPlayer : sessions) {
+0:      try {
+0:        sessionPlayer.getRemote().sendString(gameBoardJson);
+0:      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

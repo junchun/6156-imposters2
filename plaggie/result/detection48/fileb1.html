@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/18/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/18/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+<A NAME="match3"></A><A HREF="filea1.html#match3" TARGET="left">3</A>:import io.javalin.Javalin;
+3:import java.io.IOException;
+3:import java.lang.Integer;
+3:import java.util.Queue;
+3:import models.GameBoard;
+3:import models.Message;
+3:import models.Move;
+3:import models.Player;
+3:import org.eclipse.jetty.websocket.api.Session;
+3:
+3:
+3:class PlayGame {
+3:
+3:  private static final int PORT_NUMBER = 8080;
+3:
+3:  private static Javalin app;
+3:  
+3:  private static GameBoard board;
+  
+  private static final Gson gson = new Gson();
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:  public static void main(final String[] args) {
+2:
+2:
+2:
+2:    // Test Echo Server
+2:    if (app=="/echo") {
+2:      ctx.result(ctx.body());
+2:    }
+2:
+2:    //new game end point
+2:    if (app=="/newgame") {
+2:      ctx.redirect("/tictactoe.html");
+2:    }
+2:    
+2:    //start game end point
+2:    if (app=="/startgame") {
+2:      //Create p1 according to user-selected type
+2:      Player p1 = new Player(ctx.formParam("type").charAt(0), 1);
+      ctx.result(startGame(p1));
+    }
+    
+    //join game end point
+    if (app=="/joingame") {
+      joinGame();
+      ctx.redirect("/tictactoe.html?p=2");
+    }
+    
+    //move end point
+    if (app=="/move/:playerId") {
+      //retrieve player id and move coordinates from request
+      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+      int moveX = Integer.parseInt(ctx.formParam("x"));
+      int moveY = Integer.parseInt(ctx.formParam("y"));
+      
+      ctx.result(move(playerId, moveX, moveY));
+    }
+    
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /**
+   * Creates the game board with player 1.
+   * 
+   * @param p1 Player 1
+   * @return board data in Json form
+   */
+  private static String startGame(Player p1) {
+    board = new GameBoard(p1);
+    return gson.toJson(board);
+  }
+  
+  /**
+   * Adds p2 to game and updates UI for both players.
+   */
+  private static void joinGame() {
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:    char p1Type = board.getPlayer(1).getType();
+1:    char p2Type;
+1:    
+1:    //choose opposite type from p1
+1:    if (p1Type == 'X') {
+1:      p2Type = 'O';
+1:    } else {
+1:      p2Type = 'X';
+1:    }
+1:    
+1:    Player p2 = new Player(p2Type, 2);
+1:    board.addPlayer2(p2);
+1:    
+1:    sendGameBoardToAllPlayers(gson.toJson(board));
+  }
+  
+  /**
+   * Attempts to complete specified move and updates UI.
+   * 
+   * @param playerId ID of the player making move
+   * @param moveX X-coordiante of move
+   * @param moveY Y-coordinate of move
+   * @return Message describing move validity in Json format
+   */
+  private static String move(int playerId, int moveX, int moveY) {
+    Player currentPlayer = board.getPlayer(playerId);
+    Move moveAttempt = new Move(currentPlayer, moveX, moveY);
+    Message response = board.playTurn(moveAttempt);
+    
+    sendGameBoardToAllPlayers(gson.toJson(board));
+    return gson.toJson(response); 
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:  }
+0:  
+0:  /** Send message to all players.
+0:   * @param gameBoardJson Gameboard JSON
+0:   * @throws IOException Websocket message send IO Exception
+0:   */
+0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+0:    for (Session sessionPlayer : sessions) {
+0:      try {
+0:        sessionPlayer.getRemote().sendString(gameBoardJson);
+0:      } catch (IOException e) {
+0:        // Add logger here
+0:      }
+0:    }
+0:  }
+0:
+0:  public static void stop() {
+0:    app.stop();
+0:  }
+0:}
+</PRE></CODE>
+</BODY>
+</HTML>

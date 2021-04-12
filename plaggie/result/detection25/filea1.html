@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/15/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/15/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+
+    // Test Echo Server
+<A NAME="match3"></A><A HREF="fileb1.html#match3" TARGET="right">3</A>:    if (app=="/echo") {
+3:      ctx.result(ctx.body());
+3:    }
+3:    
+3:    // Default info
+3:    if (app=="/") {
+3:      ctx.result("Please go to /newgame to start a game.");
+3:    }
+
+    GameBoard game = new GameBoard();
+    Gson gson = new Gson();
+    
+    // New game
+    if (app=="/newgame") {
+<A NAME="match1"></A><A HREF="fileb1.html#match1" TARGET="right">1</A>:      ctx.redirect("tictactoe.html");
+1:      ctx.result("Redirect to tictactoe.html");
+1:    }
+1:    
+1:    // Player 1 to pick a chess piece and start the game
+1:    if (app=="/startgame") {
+1:      // Request body: "type=x"
+1:      char type = ctx.req.getParameter("type").toCharArray()[0];
+1:      game.setP1(new Player(type, 1));
+1:      ctx.json(gson.toJson(game));
+    }
+    
+    // Player 2 to join the game
+    if (app=="/joingame") {
+      game.setP2();
+      ctx.redirect("/tictactoe.html?p=2");
+      sendGameBoardToAllPlayers(gson.toJson(game));
+    }
+    
+    // Players make a move on the board
+    if (app=="/move/:playerId") {
+      int id = Integer.parseInt(ctx.pathParam("playerId"));
+      int x = Integer.parseInt(ctx.req.getParameter("x"));
+<A NAME="match2"></A><A HREF="fileb1.html#match2" TARGET="right">2</A>:      int y = Integer.parseInt(ctx.req.getParameter("y"));
+2:      ctx.json(gson.toJson(game.makeMove(id, x, y)));
+2:      sendGameBoardToAllPlayers(gson.toJson(game));
+2:    }
+2:    
+2:    
+2:
+2:    // Web sockets - DO NOT DELETE or CHANGE
+2:    app.ws("/gameboard", new UiWebSocket());
+<A NAME="match0"></A><A HREF="fileb1.html#match0" TARGET="right">0</A>:  }
+0:
+0:  /** Send message to all players.
+0:   * @param gameBoardJson Gameboard JSON
+0:   * @throws IOException Websocket message send IO Exception
+0:   */
+0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+0:    for (Session sessionPlayer : sessions) {
+0:      try {
+0:        sessionPlayer.getRemote().sendString(gameBoardJson);
+0:      } catch (IOException e) {
+0:        // Add logger here
+0:      }
+0:    }
+0:  }
+0:
+0:  public static void stop() {
+0:    app.stop();
+0:  }
+0:}
+</PRE></CODE>
+</BODY>
+</HTML>

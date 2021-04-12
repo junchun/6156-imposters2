@@ -1,0 +1,942 @@
+<HTML>
+<HEAD>
+<TITLE>Plaggie - Plagiarism Detection Report</TITLE>
+</HEAD>
+<BODY>
+<H1>Plaggie - Plagiarism Detection Report</H1>
+[<A HREF="#configuration">Configuration</A>] [<A HREF="#statistics">Statistics</A>] [<A HREF="#results">Results</A>]
+<A NAME="configuration"><H2>Configuration</H2></A>
+<TABLE BORDER="1">
+<TR><TD>Minimum match length used</TD><TD>11</TD></TR>
+<TR><TD>Recurse subdirectories</TD><TD>true</TD></TR>
+<TR><TD>Html report directory</TD><TD>result</TD></TR>
+<TR><TD>Minimum submission similarity to report</TD><TD>0.5</TD></TR>
+<TR><TD>Maximum number of detection results to report</TD><TD>200</TD></TR>
+<TR><TD>Minimum file similarity to report</TD><TD>0.05</TD></TR>
+<TR><TD>Code tokenizer used</TD><TD>plag.parser.java.JavaTokenizer</TD></TR>
+<TR><TD>Filename filter used</TD><TD>plag.parser.java.JavaFilenameFilter</TD></TR>
+<TR><TD>Checked submissions in subdirectory</TD><TD></TD></TR>
+<TR><TD>Excluded files</TD><TD>UiWebSocket.java</TD></TR>
+<TR><TD>Excluded subdirectories</TD><TD>webstore,webstore/server,webstore/remote,webstore/servlets</TD></TR>
+<TR><TD>Excluded code in template files</TD><TD></TD></TR>
+<TR><TD>Interface code excluded</TD><TD>true</TD></TR>
+</TABLE>
+<A NAME="statistics"><H2>Statistics</H2></A>
+<H3>Distribution of similarities, Average: 6.9%</H3>
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 60%</TD><TD>1</TD><TD>                                                                                </TD></TR>
+<TR><TD> 50%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 40%</TD><TD>1</TD><TD>                                                                                </TD></TR>
+<TR><TD> 30%</TD><TD>3</TD><TD>                                                                                </TD></TR>
+<TR><TD> 20%</TD><TD>26</TD><TD>###                                                                             </TD></TR>
+<TR><TD> 10%</TD><TD>114</TD><TD>################                                                                </TD></TR>
+<TR><TD> 0%</TD><TD>558</TD><TD>################################################################################</TD></TR>
+</TABLE>
+<H3>Distribution of similarities A, Average: 24.6%</H3>
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>4</TD><TD>#                                                                               </TD></TR>
+<TR><TD> 60%</TD><TD>5</TD><TD>#                                                                               </TD></TR>
+<TR><TD> 50%</TD><TD>20</TD><TD>######                                                                          </TD></TR>
+<TR><TD> 40%</TD><TD>44</TD><TD>##############                                                                  </TD></TR>
+<TR><TD> 30%</TD><TD>129</TD><TD>##########################################                                      </TD></TR>
+<TR><TD> 20%</TD><TD>245</TD><TD>################################################################################</TD></TR>
+<TR><TD> 10%</TD><TD>184</TD><TD>############################################################                    </TD></TR>
+<TR><TD> 0%</TD><TD>72</TD><TD>#######################                                                         </TD></TR>
+</TABLE>
+<H3>Distribution of similarities B, Average: 24.6%</H3>
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>1</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 60%</TD><TD>3</TD><TD>#                                                                               </TD></TR>
+<TR><TD> 50%</TD><TD>20</TD><TD>#######                                                                         </TD></TR>
+<TR><TD> 40%</TD><TD>55</TD><TD>####################                                                            </TD></TR>
+<TR><TD> 30%</TD><TD>146</TD><TD>######################################################                          </TD></TR>
+<TR><TD> 20%</TD><TD>215</TD><TD>################################################################################</TD></TR>
+<TR><TD> 10%</TD><TD>186</TD><TD>#####################################################################           </TD></TR>
+<TR><TD> 0%</TD><TD>77</TD><TD>############################                                                    </TD></TR>
+</TABLE>
+<H3>Distribution of maximum file similarities, Average: 6.9%</H3>
+<P>If there are a lot of high similarity values (i.e. > 20%) in this distribution, there is a reason to suspect, that some code provided to the students with the exercise definition or somewhere else is not excluded from the detection. You can use the code exclusion parameters in the configuration file to exclude code from the detection algorithm.
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 60%</TD><TD>1</TD><TD>                                                                                </TD></TR>
+<TR><TD> 50%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 40%</TD><TD>1</TD><TD>                                                                                </TD></TR>
+<TR><TD> 30%</TD><TD>3</TD><TD>                                                                                </TD></TR>
+<TR><TD> 20%</TD><TD>26</TD><TD>###                                                                             </TD></TR>
+<TR><TD> 10%</TD><TD>114</TD><TD>################                                                                </TD></TR>
+<TR><TD> 0%</TD><TD>558</TD><TD>################################################################################</TD></TR>
+</TABLE>
+<H3>Files per submission</H3>
+<TABLE BORDER="1">
+<TR><TD> 1.0</TD><TD>38</TD><TD>################################################################################</TD></TR>
+</TABLE>
+<H3>Counters</H3>
+<TABLE BORDER="1">
+<TR><TD>failed_file_comparisons</TD><TD>37</TD></TR>
+<TR><TD>similarity_over_threshold</TD><TD>49</TD></TR>
+<TR><TD>files_excluded_by_filename_filter</TD><TD>0</TD></TR>
+<TR><TD>parsed_files</TD><TD>37/38</TD></TR>
+<TR><TD>files_excluded_as_non_java_files</TD><TD>0</TD></TR>
+<TR><TD>files_to_parse</TD><TD>38</TD></TR>
+<TR><TD>similarity_comparisons</TD><TD>703/703</TD></TR>
+<TR><TD>tokens_excluded_as_interface_code</TD><TD>0</TD></TR>
+<TR><TD>blacklisted_detection_results</TD><TD>0</TD></TR>
+<TR><TD>files_excluded_by_subdirectory_filter</TD><TD>0</TD></TR>
+<TR><TD>submissions</TD><TD>38/38</TD></TR>
+<TR><TD>file_comparisons</TD><TD>703</TD></TR>
+<TR><TD>parse_failures</TD><TD>1</TD></TR>
+</TABLE>
+<A NAME="results"><H2>Results</H2></A>
+<P>Change sorting by clicking the links on the header row.<BR>
+Blacklisted student id's are highlighted.
+<TABLE BORDER="1">
+<TR><TD>Student A</TD><TD>Student B</TD><TD><A HREF="index.html#results">Similarity</A></TD><TD><A HREF="index_sima.html#results">Similarity A</A></TD><TD><A HREF="index_simb.html#results">Similarity B</A></TD><TD><A HREF="index_maxfile.html#results">Maximum file similarity</A></TD><TD>Student A similarity distribution average</TD><TD>Student B similarity distribution average</TD></TR>
+<TR>
+<TD>
+<A HREF="detection32/index.html">
+2
+</A>
+</TD><TD>
+<A HREF="detection32/index.html">
+19
+</A>
+</TD><TD>
+60.3%</TD><TD>
+75.4%</TD><TD>
+80%</TD><TD>
+60.3%</TD><TD>
+<A HREF="sub33/simdistr.html">15.7%</A></TD><TD>
+<A HREF="sub19/simdistr.html">15.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection38/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection38/index.html">
+29
+</A>
+</TD><TD>
+44.7%</TD><TD>
+75.3%</TD><TD>
+59.3%</TD><TD>
+44.7%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub12/simdistr.html">36.4%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection44/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection44/index.html">
+15
+</A>
+</TD><TD>
+39.4%</TD><TD>
+60.8%</TD><TD>
+64.8%</TD><TD>
+39.4%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection1/index.html">
+7
+</A>
+</TD><TD>
+<A HREF="detection1/index.html">
+33
+</A>
+</TD><TD>
+33.3%</TD><TD>
+68.3%</TD><TD>
+48.7%</TD><TD>
+33.3%</TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD><TD>
+<A HREF="sub4/simdistr.html">29.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection18/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection18/index.html">
+34
+</A>
+</TD><TD>
+31.7%</TD><TD>
+70.3%</TD><TD>
+45.1%</TD><TD>
+31.7%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub3/simdistr.html">27.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection5/index.html">
+29
+</A>
+</TD><TD>
+<A HREF="detection5/index.html">
+18
+</A>
+</TD><TD>
+28.6%</TD><TD>
+52.8%</TD><TD>
+54.2%</TD><TD>
+28.6%</TD><TD>
+<A HREF="sub12/simdistr.html">36.4%</A></TD><TD>
+<A HREF="sub7/simdistr.html">34.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection24/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection24/index.html">
+6
+</A>
+</TD><TD>
+28%</TD><TD>
+71.4%</TD><TD>
+39.2%</TD><TD>
+28%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub14/simdistr.html">23.8%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection10/index.html">
+28
+</A>
+</TD><TD>
+<A HREF="detection10/index.html">
+29
+</A>
+</TD><TD>
+27.3%</TD><TD>
+47.3%</TD><TD>
+57.7%</TD><TD>
+27.3%</TD><TD>
+<A HREF="sub15/simdistr.html">29.8%</A></TD><TD>
+<A HREF="sub12/simdistr.html">36.4%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection34/index.html">
+13
+</A>
+</TD><TD>
+<A HREF="detection34/index.html">
+17
+</A>
+</TD><TD>
+25.8%</TD><TD>
+51.9%</TD><TD>
+49.6%</TD><TD>
+25.8%</TD><TD>
+<A HREF="sub34/simdistr.html">28.3%</A></TD><TD>
+<A HREF="sub16/simdistr.html">31.1%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection37/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection37/index.html">
+18
+</A>
+</TD><TD>
+25.1%</TD><TD>
+55.7%</TD><TD>
+45%</TD><TD>
+25.1%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub7/simdistr.html">34.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection27/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection27/index.html">
+31
+</A>
+</TD><TD>
+25%</TD><TD>
+68.1%</TD><TD>
+36.7%</TD><TD>
+25%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub24/simdistr.html">24.4%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection31/index.html">
+12
+</A>
+</TD><TD>
+<A HREF="detection31/index.html">
+15
+</A>
+</TD><TD>
+24.8%</TD><TD>
+48%</TD><TD>
+51.6%</TD><TD>
+24.8%</TD><TD>
+<A HREF="sub32/simdistr.html">32.6%</A></TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection7/index.html">
+16
+</A>
+</TD><TD>
+<A HREF="detection7/index.html">
+20
+</A>
+</TD><TD>
+24.5%</TD><TD>
+47.7%</TD><TD>
+51.4%</TD><TD>
+24.5%</TD><TD>
+<A HREF="sub13/simdistr.html">29.6%</A></TD><TD>
+<A HREF="sub6/simdistr.html">32.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection40/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection40/index.html">
+28
+</A>
+</TD><TD>
+23.9%</TD><TD>
+60.8%</TD><TD>
+39.3%</TD><TD>
+23.9%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub15/simdistr.html">29.8%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection21/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection21/index.html">
+7
+</A>
+</TD><TD>
+23.6%</TD><TD>
+46.2%</TD><TD>
+51.2%</TD><TD>
+23.6%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection36/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection36/index.html">
+20
+</A>
+</TD><TD>
+23.6%</TD><TD>
+58.8%</TD><TD>
+40.1%</TD><TD>
+23.6%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub6/simdistr.html">32.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection4/index.html">
+29
+</A>
+</TD><TD>
+<A HREF="detection4/index.html">
+20
+</A>
+</TD><TD>
+22.7%</TD><TD>
+51.2%</TD><TD>
+44.4%</TD><TD>
+22.7%</TD><TD>
+<A HREF="sub12/simdistr.html">36.4%</A></TD><TD>
+<A HREF="sub6/simdistr.html">32.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection39/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection39/index.html">
+16
+</A>
+</TD><TD>
+22.7%</TD><TD>
+59.8%</TD><TD>
+37.9%</TD><TD>
+22.7%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub13/simdistr.html">29.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection22/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection22/index.html">
+29
+</A>
+</TD><TD>
+22.3%</TD><TD>
+54.9%</TD><TD>
+40.7%</TD><TD>
+22.3%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub12/simdistr.html">36.4%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection46/index.html">
+14
+</A>
+</TD><TD>
+<A HREF="detection46/index.html">
+29
+</A>
+</TD><TD>
+21.9%</TD><TD>
+39.5%</TD><TD>
+55.3%</TD><TD>
+21.9%</TD><TD>
+<A HREF="sub36/simdistr.html">23.6%</A></TD><TD>
+<A HREF="sub12/simdistr.html">36.4%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection19/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection19/index.html">
+20
+</A>
+</TD><TD>
+21.7%</TD><TD>
+58.2%</TD><TD>
+37.3%</TD><TD>
+21.7%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub6/simdistr.html">32.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection30/index.html">
+12
+</A>
+</TD><TD>
+<A HREF="detection30/index.html">
+20
+</A>
+</TD><TD>
+21.7%</TD><TD>
+56.1%</TD><TD>
+38.7%</TD><TD>
+21.7%</TD><TD>
+<A HREF="sub32/simdistr.html">32.6%</A></TD><TD>
+<A HREF="sub6/simdistr.html">32.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection17/index.html">
+24
+</A>
+</TD><TD>
+<A HREF="detection17/index.html">
+7
+</A>
+</TD><TD>
+21.3%</TD><TD>
+36.4%</TD><TD>
+58.5%</TD><TD>
+21.3%</TD><TD>
+<A HREF="sub27/simdistr.html">27.3%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection29/index.html">
+3
+</A>
+</TD><TD>
+<A HREF="detection29/index.html">
+7
+</A>
+</TD><TD>
+21.2%</TD><TD>
+37.7%</TD><TD>
+56.1%</TD><TD>
+21.2%</TD><TD>
+<A HREF="sub31/simdistr.html">28.7%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection20/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection20/index.html">
+18
+</A>
+</TD><TD>
+21.1%</TD><TD>
+52.7%</TD><TD>
+40%</TD><TD>
+21.1%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub7/simdistr.html">34.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection11/index.html">
+1
+</A>
+</TD><TD>
+<A HREF="detection11/index.html">
+7
+</A>
+</TD><TD>
+20.2%</TD><TD>
+30.7%</TD><TD>
+65.9%</TD><TD>
+20.2%</TD><TD>
+<A HREF="sub17/simdistr.html">16.7%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection23/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection23/index.html">
+16
+</A>
+</TD><TD>
+20.2%</TD><TD>
+58.2%</TD><TD>
+34.6%</TD><TD>
+20.2%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub13/simdistr.html">29.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection16/index.html">
+21
+</A>
+</TD><TD>
+<A HREF="detection16/index.html">
+7
+</A>
+</TD><TD>
+19.9%</TD><TD>
+30.8%</TD><TD>
+64.6%</TD><TD>
+19.9%</TD><TD>
+<A HREF="sub22/simdistr.html">20.9%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection3/index.html">
+7
+</A>
+</TD><TD>
+<A HREF="detection3/index.html">
+18
+</A>
+</TD><TD>
+19.7%</TD><TD>
+53.7%</TD><TD>
+36.7%</TD><TD>
+19.7%</TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD><TD>
+<A HREF="sub7/simdistr.html">34.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection6/index.html">
+29
+</A>
+</TD><TD>
+<A HREF="detection6/index.html">
+7
+</A>
+</TD><TD>
+19.2%</TD><TD>
+35.8%</TD><TD>
+53.7%</TD><TD>
+19.2%</TD><TD>
+<A HREF="sub12/simdistr.html">36.4%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection47/index.html">
+14
+</A>
+</TD><TD>
+<A HREF="detection47/index.html">
+5
+</A>
+</TD><TD>
+18.8%</TD><TD>
+32.6%</TD><TD>
+57.7%</TD><TD>
+18.8%</TD><TD>
+<A HREF="sub36/simdistr.html">23.6%</A></TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection43/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection43/index.html">
+36
+</A>
+</TD><TD>
+18.1%</TD><TD>
+62.9%</TD><TD>
+28.8%</TD><TD>
+18.1%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub23/simdistr.html">20.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection28/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection28/index.html">
+30
+</A>
+</TD><TD>
+17.1%</TD><TD>
+50.5%</TD><TD>
+33.8%</TD><TD>
+17.1%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub25/simdistr.html">23.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection49/index.html">
+22
+</A>
+</TD><TD>
+<A HREF="detection49/index.html">
+28
+</A>
+</TD><TD>
+15.9%</TD><TD>
+31.4%</TD><TD>
+50.7%</TD><TD>
+15.9%</TD><TD>
+<A HREF="sub37/simdistr.html">18.8%</A></TD><TD>
+<A HREF="sub15/simdistr.html">29.8%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection2/index.html">
+7
+</A>
+</TD><TD>
+<A HREF="detection2/index.html">
+20
+</A>
+</TD><TD>
+15.9%</TD><TD>
+52.4%</TD><TD>
+30.3%</TD><TD>
+15.9%</TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD><TD>
+<A HREF="sub6/simdistr.html">32.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection9/index.html">
+28
+</A>
+</TD><TD>
+<A HREF="detection9/index.html">
+7
+</A>
+</TD><TD>
+15%</TD><TD>
+28.7%</TD><TD>
+52.4%</TD><TD>
+15%</TD><TD>
+<A HREF="sub15/simdistr.html">29.8%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection48/index.html">
+22
+</A>
+</TD><TD>
+<A HREF="detection48/index.html">
+18
+</A>
+</TD><TD>
+14.5%</TD><TD>
+26.9%</TD><TD>
+54.2%</TD><TD>
+14.5%</TD><TD>
+<A HREF="sub37/simdistr.html">18.8%</A></TD><TD>
+<A HREF="sub7/simdistr.html">34.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection8/index.html">
+16
+</A>
+</TD><TD>
+<A HREF="detection8/index.html">
+7
+</A>
+</TD><TD>
+14.1%</TD><TD>
+27.5%</TD><TD>
+51.2%</TD><TD>
+14.1%</TD><TD>
+<A HREF="sub13/simdistr.html">29.6%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection25/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection25/index.html">
+10
+</A>
+</TD><TD>
+13%</TD><TD>
+59.3%</TD><TD>
+21.9%</TD><TD>
+13%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub18/simdistr.html">17.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection41/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection41/index.html">
+10
+</A>
+</TD><TD>
+12.6%</TD><TD>
+56.7%</TD><TD>
+22.3%</TD><TD>
+12.6%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub18/simdistr.html">17.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection15/index.html">
+26
+</A>
+</TD><TD>
+<A HREF="detection15/index.html">
+18
+</A>
+</TD><TD>
+12%</TD><TD>
+22.1%</TD><TD>
+54.2%</TD><TD>
+12%</TD><TD>
+<A HREF="sub20/simdistr.html">15.2%</A></TD><TD>
+<A HREF="sub7/simdistr.html">34.6%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection13/index.html">
+19
+</A>
+</TD><TD>
+<A HREF="detection13/index.html">
+33
+</A>
+</TD><TD>
+9.2%</TD><TD>
+17.9%</TD><TD>
+51.3%</TD><TD>
+9.2%</TD><TD>
+<A HREF="sub19/simdistr.html">15.2%</A></TD><TD>
+<A HREF="sub4/simdistr.html">29.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection12/index.html">
+10
+</A>
+</TD><TD>
+<A HREF="detection12/index.html">
+7
+</A>
+</TD><TD>
+9.1%</TD><TD>
+17.4%</TD><TD>
+52.4%</TD><TD>
+9.1%</TD><TD>
+<A HREF="sub18/simdistr.html">17.2%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection42/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection42/index.html">
+26
+</A>
+</TD><TD>
+9.1%</TD><TD>
+52.6%</TD><TD>
+17.3%</TD><TD>
+9.1%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub20/simdistr.html">15.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection14/index.html">
+19
+</A>
+</TD><TD>
+<A HREF="detection14/index.html">
+7
+</A>
+</TD><TD>
+8.9%</TD><TD>
+14.8%</TD><TD>
+59.8%</TD><TD>
+8.9%</TD><TD>
+<A HREF="sub19/simdistr.html">15.2%</A></TD><TD>
+<A HREF="sub11/simdistr.html">42.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection45/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection45/index.html">
+2
+</A>
+</TD><TD>
+8.3%</TD><TD>
+54.6%</TD><TD>
+15.1%</TD><TD>
+8.3%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub33/simdistr.html">15.7%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection35/index.html">
+5
+</A>
+</TD><TD>
+<A HREF="detection35/index.html">
+32
+</A>
+</TD><TD>
+8.2%</TD><TD>
+53.6%</TD><TD>
+15.2%</TD><TD>
+8.2%</TD><TD>
+<A HREF="sub35/simdistr.html">42.2%</A></TD><TD>
+<A HREF="sub1/simdistr.html">11.3%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection26/index.html">
+15
+</A>
+</TD><TD>
+<A HREF="detection26/index.html">
+26
+</A>
+</TD><TD>
+7.9%</TD><TD>
+50.5%</TD><TD>
+15.6%</TD><TD>
+7.9%</TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD><TD>
+<A HREF="sub20/simdistr.html">15.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection33/index.html">
+2
+</A>
+</TD><TD>
+<A HREF="detection33/index.html">
+15
+</A>
+</TD><TD>
+7.5%</TD><TD>
+14%</TD><TD>
+53.8%</TD><TD>
+7.5%</TD><TD>
+<A HREF="sub33/simdistr.html">15.7%</A></TD><TD>
+<A HREF="sub30/simdistr.html">42.9%</A></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>

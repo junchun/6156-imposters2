@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/28/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/28/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+<A NAME="match3"></A><A HREF="filea1.html#match3" TARGET="left">3</A>:import java.io.IOException;
+3:import java.util.Queue;
+3:import models.GameBoard;
+3:import models.Message;
+3:import models.Move;
+3:import models.Player;
+3:import org.eclipse.jetty.websocket.api.Session;
+3:
+3:class PlayGame {
+3:
+3:  private static final int PORT_NUMBER = 8080;
+3:
+3:  private static Javalin app;
+3:
+3:  private static GameBoard gameboard;
+
+  /**
+   * Main method of the application.
+   * 
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+
+
+    // Test Echo Server
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:    if (app=="/echo") {
+1:      ctx.result(ctx.body());
+1:    }
+1:
+1:    // Endpoint that redirects to initial UI, allowing user to start a game.
+1:    if (app=="/newgame") {
+1:      ctx.redirect("/tictactoe.html");
+1:    }
+1:
+1:    // Endpoint to initialize player 1 and gameboard. 
+1:    if (app=="/startgame") {
+1:      String requestBody = ctx.body();
+1:      char playerType = requestBody.charAt(requestBody.indexOf("=") + 1);
+      gameboard = new GameBoard();
+
+      Player player1 = new Player();
+      player1.setId(1);
+      player1.setType(playerType);
+      
+      gameboard.setP1(player1);
+      ctx.result(getGameboardJson());
+    }
+
+    // Endpoint to initialize player 2, add them to game, and start the game.
+    if (app=="/joingame") {
+      Player p2 = new Player();
+      p2.setId(2);
+      if (gameboard.getP1().getType() == 'O') {
+        p2.setType('X');
+      } else {
+        p2.setType('O');
+      }
+      
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:      gameboard.setP2(p2);
+2:      gameboard.setGameStarted(true);
+2:      
+2:      sendGameBoardToAllPlayers(getGameboardJson());
+2:      ctx.redirect("/tictactoe.html?p=2");
+2:    }
+2:
+2:    // Endpoint to execute a move if valid and update gameboard state accordingly.
+2:    if (app=="/move/:playerId") {
+2:      String playerId = ctx.pathParam("playerId");
+      Player player;
+      if (playerId.indexOf('1') != -1) {
+        player = gameboard.getP1();
+      } else {
+        player = gameboard.getP2();
+      }
+      
+      String requestBody = ctx.body();
+      int x = Integer.parseInt("" + requestBody.charAt(requestBody.indexOf("=") + 1));
+      int y = Integer.parseInt("" + requestBody.charAt(requestBody.lastIndexOf("=") + 1));
+      Move move = new Move(player, x, y);
+      
+      Message response;
+      if (gameboard.isValidMove(move)) {
+        gameboard.makeMove(move);
+        response = new Message(true, 100, "");
+      } else {
+        response = new Message(false, 400, "This is not a valid move.");
+      }
+      
+      Gson gsonLib = new Gson();
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:      ctx.result(gsonLib.toJson(response));
+0:      sendGameBoardToAllPlayers(getGameboardJson());
+0:    }
+0:
+0:    // Web sockets - DO NOT DELETE or CHANGE
+0:    app.ws("/gameboard", new UiWebSocket());
+0:  }
+0:
+0:  /**
+0:   * Send message to all players.
+0:   * 
+0:   * @param gameBoardJson Gameboard JSON
+0:   * @throws IOException Websocket message send IO Exception
+0:   */
+0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+0:    for (Session sessionPlayer : sessions) {
+0:      try {
+0:        sessionPlayer.getRemote().sendString(gameBoardJson);
+0:      } catch (IOException e) {
+0:        // Add logger here
+0:        System.out.println("The following error occured: " + e.getMessage());
+      }
+    }
+  }
+
+  /**
+   * Returns JSON string of current gameboard.
+   * 
+   * @return gameboard represented as JSON string.
+   */
+  private static String getGameboardJson() {
+    Gson gsonLib = new Gson();
+    return gsonLib.toJson(gameboard);
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

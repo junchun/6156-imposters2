@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/17/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/17/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:import com.google.gson.GsonBuilder;
+1:import io.javalin.Javalin;
+1:import java.io.IOException;
+1:import java.util.Queue;
+1:import models.GameBoard;
+1:import models.Message;
+1:import models.Move;
+1:import models.Player;
+1:import org.eclipse.jetty.websocket.api.Session;
+1:
+1:
+1:class PlayGame {
+1:
+1:  private static final int PORT_NUMBER = 8080;
+1:
+1:  private static Javalin app;
+1:
+1:  /**
+1:   * Main method of the application.
+1:   * 
+1:   * @param args Command line arguments
+1:   */
+1:  public static void main(final String[] args) {
+1:
+1:
+1:
+1:    // Test Echo Server.
+1:    if (app=="/echo") {
+1:      ctx.result(ctx.body());
+1:    }
+
+    // Get new game and redirect to tictactoe.html
+    if (app=="/") {
+      ctx.redirect("/tictactoe.html");
+    }
+
+    if (app=="/newgame") {
+      ctx.redirect("/tictactoe.html");
+    }
+
+    // Create GameBoard Object and GSON builders.
+    GameBoard gameBoard = new GameBoard();
+    GsonBuilder builder = new GsonBuilder();
+    Gson gson = builder.create();
+
+    // Add player 2 and mark start of game
+    if (app=="/joingame") {
+<A NAME="match3"></A><A HREF="filea1.html#match3" TARGET="left">3</A>:      if (gameBoard.getP1Type() == 'O') {
+3:        gameBoard.initializePlayer2('X');
+3:      } else {
+3:        gameBoard.initializePlayer2('O');
+3:      }
+3:      gameBoard.startGame();
+      String gameBoardJson = gson.toJson(gameBoard);
+      sendGameBoardToAllPlayers(gameBoardJson);
+      ctx.redirect("/tictactoe.html?p=2");
+    }
+
+    // get parameter to initialize gameBoard
+    if (app=="/startgame") {
+      String initialParam = ctx.body();
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:      char p1Type = initialParam.charAt(initialParam.length() - 1);
+2:      gameBoard.initializeGameBoard();
+2:      gameBoard.initializePlayer1(p1Type);
+2:
+2:      // Send out message to share link
+2:      Message msg = new Message(0);
+2:      String msgJson = gson.toJson(msg);
+2:      ctx.result(msgJson);
+2:    }
+2:
+2:    // get parameter to extract move coordinates
+2:    if (app=="/move/:playerId") {
+2:      String playerID = ctx.pathParam("playerId");
+      Player player = gameBoard.getPlayerObject(Integer.parseInt(playerID));
+      // Check move is made by the correct player
+      if (player.getPlayerId() != gameBoard.getCurrentTurn()) {
+        Message msg = new Message(2);
+        String msgJson = gson.toJson(msg);
+        ctx.result(msgJson);
+      } else {
+        String move = ctx.body();
+        try {
+          // Create move object and update gameBoard
+          Move playerMove = new Move(player, move);
+          gameBoard.makeMove(playerMove);
+          String gameBoardJson = gson.toJson(gameBoard);
+          sendGameBoardToAllPlayers(gameBoardJson);
+        } catch (Exception e) {
+          Message msg = new Message(1);
+          String msgJson = gson.toJson(msg);
+          ctx.result(msgJson);
+          // System.out.println("Invalid Move" + e);
+        }
+      }
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:    }
+0:
+0:    // Web sockets - DO NOT DELETE or CHANGE
+0:    app.ws("/gameboard", new UiWebSocket());
+0:  }
+0:
+0:  /**
+0:   * Send message to all players.
+0:   * 
+0:   * @param gameBoardJson Gameboard JSON
+0:   * @throws IOException Websocket message send IO Exception
+0:   */
+0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+0:    for (Session sessionPlayer : sessions) {
+0:      try {
+0:        sessionPlayer.getRemote().sendString(gameBoardJson);
+0:      } catch (IOException e) {
+0:        // Add logger here, this is optional
+0:      }
+0:    }
+0:  }
+0:
+0:  public static void stop() {
+0:    app.stop();
+0:  }
+0:}
+</PRE></CODE>
+</BODY>
+</HTML>

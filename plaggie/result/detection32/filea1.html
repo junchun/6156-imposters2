@@ -1,0 +1,263 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/2/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/2/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+<A NAME="match9"></A><A HREF="fileb1.html#match9" TARGET="right">9</A>:import java.io.IOException;
+9:import java.util.Queue;
+9:import org.eclipse.jetty.websocket.api.Session;
+9:import com.google.gson.Gson;
+9:import io.javalin.Javalin;
+9:import models.GameBoard;
+9:import models.Message;
+9:import models.Player;
+9:
+9:
+9:
+9:class PlayGame {
+9:
+9:  private static final int PORT_NUMBER = 8080;
+9:
+9:  private static Javalin app;
+9:
+9:  private static GameBoard gameboard = new GameBoard();
+
+  // Decide if it is a draw
+<A NAME="match0"></A><A HREF="fileb1.html#match0" TARGET="right">0</A>:  private static boolean isDraw(char[][] boardState) {
+0:    for (int x = 0; x &lt; boardState.length; x++) {
+0:      for (int y = 0; y &lt; boardState[x].length; y++) {
+0:        if (boardState[x][y] == '\u0000') {
+0:          return false;
+0:        }
+0:      }
+0:    }
+0:    return true;
+0:  }
+0:
+0:  // Decide if there is a winner of draw
+0:  private static int getBoardStatus(char[][] boardState, int x, int y) {
+0:    for (int row = 0; row &lt; 3; row++) {
+0:      if (boardState[row][0] == boardState[row][1] &amp;&amp; boardState[row][1] == boardState[row][2]) {
+0:        if (boardState[row][0] == 'X') {
+0:          return x;
+0:        } else if (boardState[row][0] == 'O') {
+0:          return y;
+0:        }
+0:      }
+0:    }
+0:    for (int col = 0; col &lt; 3; col++) {
+0:      if (boardState[0][col] == boardState[1][col] &amp;&amp; boardState[1][col] == boardState[2][col]) {
+0:        if (boardState[0][col] == 'X') {
+0:          return x;
+0:        } else if (boardState[0][col] == 'O') {
+0:          return y;
+0:        }
+0:      }
+0:    }
+0:    if (boardState[0][0] == boardState[1][1] &amp;&amp; boardState[1][1] == boardState[2][2]) {
+0:      if (boardState[0][0] == 'X') {
+0:        return x;
+0:      } else if (boardState[0][0] == 'O') {
+0:        return y;
+0:      }
+0:    } else if (boardState[0][2] == boardState[1][1] &amp;&amp; boardState[1][1] == boardState[2][0]) {
+0:      if (boardState[0][2] == 'X') {
+0:        return x;
+0:      } else if (boardState[0][2] == 'O') {
+0:        return y;
+0:      }
+0:    } else if (isDraw(boardState)) {
+0:      return -1;
+0:    }
+0:    return 0;
+0:  }
+0:
+0:  /**
+0:   * Main method of the application.
+0:   * 
+0:   * @param args Command line arguments
+0:   */
+0:
+0:  public static void main(final String[] args) {
+
+    
+
+    // Test Echo Server
+    if (app=="/echo") {
+      ctx.result(ctx.body());
+    }
+
+    if (app=="/hello") {
+<A NAME="match6"></A><A HREF="fileb1.html#match6" TARGET="right">6</A>:      ctx.result("Hello, world!");
+6:    }
+6:
+6:    // Redirect to new game page
+6:    if (app=="/newgame") {
+6:      ctx.redirect("/tictactoe.html");
+6:    }
+6:
+6:    // Start a new game and initialize the gameBoard
+6:    if (app=="/startgame") {
+6:      String requestBody = ctx.body();
+6:      System.out.print(requestBody);
+6:      String[] tokens = requestBody.split("=");
+      System.out.println(tokens);
+
+
+
+      Player player1 = new Player();
+      player1.setId(1);
+      player1.setType(tokens[1].charAt(0));
+
+      gameboard.setP1(player1);
+
+      gameboard.setBoardState(new char[3][3]);
+      gameboard.setWinner(0);
+      gameboard.setDraw(false);
+      gameboard.setTurn(1);
+
+      Gson gsonLib = new Gson();
+      String jsonGameboard = gsonLib.toJson(gameboard);
+
+      System.out.println(jsonGameboard);
+
+      ctx.result(jsonGameboard);
+
+      // sendGameBoardToAllPlayers()
+    }
+
+    // Player2 join the game and update gameBoard
+    if (app=="/joingame") {
+
+      Player player2 = new Player();
+      player2.setId(2);
+      char p1Type = gameboard.getP1().getType();
+
+      if (p1Type == 'X') {
+        player2.setType('O');
+      } else {
+        player2.setType('X');
+      }
+
+      gameboard.setP2(player2);
+      gameboard.setGameStarted(true);
+      ctx.redirect("/tictactoe.html?p=2");
+      Gson gsonLib = new Gson();
+<A NAME="match8"></A><A HREF="fileb1.html#match8" TARGET="right">8</A>:      sendGameBoardToAllPlayers(gsonLib.toJson(gameboard));
+8:    }
+8:
+8:    // Respond to movements. Update gameBoard. Throw exceptions when there is a not valid movement.
+8:    if (app=="/move/:playerId") {
+8:      String playerId = ctx.pathParam("playerId");
+8:      int x = Integer.parseInt(ctx.formParam("x"));
+8:      int y = Integer.parseInt(ctx.formParam("y"));
+      int xp;
+      int yp;
+
+      boolean moveValidity;
+<A NAME="match4"></A><A HREF="fileb1.html#match4" TARGET="right">4</A>:      String message;
+4:      int code;
+4:
+4:      if (gameboard.getP1().getType() == 'X') {
+4:        xp = 1;
+4:        yp = 2;
+4:      } else {
+4:        xp = 2;
+4:        yp = 1;
+4:      }
+
+<A NAME="match7"></A><A HREF="fileb1.html#match7" TARGET="right">7</A>:      try {
+7:        if (!gameboard.isGameStarted()) {
+7:          throw new IOException("Both players must have joined");
+7:        } else if (gameboard.isDraw() || gameboard.getWinner() &gt; 0) {
+          gameboard.setGameStarted(false);
+          throw new IOException("Game is already over");
+        }
+
+        char[][] boardstate = gameboard.getBoardState();
+        char type;
+
+<A NAME="match1"></A><A HREF="fileb1.html#match1" TARGET="right">1</A>:        if (gameboard.getTurn() == 1 &amp;&amp; playerId.equals("2")) {
+1:          throw new IOException("Player 1 did not move first");
+1:        } else if ((gameboard.getTurn() % 2 == 0 &amp;&amp; playerId.equals("1"))
+1:            || (gameboard.getTurn() % 2 == 1 &amp;&amp; playerId.equals("2"))) {
+1:          throw new IOException("Player cannot make two moves in their turn");
+1:        } else if (boardstate[x][y] != '\u0000') {
+1:          throw new IOException("Please make a legal move");
+<A NAME="match5"></A><A HREF="fileb1.html#match5" TARGET="right">5</A>:        }
+5:
+5:        if (playerId.equals("1")) {
+5:          type = gameboard.getP1().getType();
+5:        } else {
+5:          type = gameboard.getP2().getType();
+<A NAME="match3"></A><A HREF="fileb1.html#match3" TARGET="right">3</A>:        }
+3:
+3:        boardstate[x][y] = type;
+3:        gameboard.setBoardState(boardstate);
+3:
+3:        int status = getBoardStatus(boardstate, xp, yp);
+3:
+3:        if (status == -1) {
+3:          gameboard.setDraw(true);
+3:        } else if (status &gt; 0) {
+3:          gameboard.setWinner(status);
+3:        }
+3:        moveValidity = true;
+3:        code = 100;
+3:        message = "";
+3:        gameboard.setTurn(gameboard.getTurn() == 1 ? 2 : 1);
+        Gson gsonLib = new Gson();
+        ctx.result(gsonLib.toJson(new Message(moveValidity, code, message)));
+      } catch (IOException e) {
+        moveValidity = false;
+        code = 200;
+        message = e.getMessage();
+        Gson gsonLib = new Gson();
+        ctx.result(gsonLib.toJson(new Message(moveValidity, code, message)));
+      }
+<A NAME="match2"></A><A HREF="fileb1.html#match2" TARGET="right">2</A>:      Gson gsonLib = new Gson();
+2:      sendGameBoardToAllPlayers(gsonLib.toJson(gameboard));
+2:
+2:
+2:
+2:    }
+2:
+2:    // Move Endpoint
+2:    // 1- player
+2:    // 2- Move is valid
+2:    // 3- Game winner
+2:    // 4- Game draw
+2:
+2:
+2:    // Web sockets - DO NOT DELETE or CHANGE
+2:    app.ws("/gameboard", new UiWebSocket());
+2:  }
+2:
+2:  /**
+2:   * Send message to all players.
+2:   * 
+2:   * @param gameBoardJson Gameboard JSON
+2:   * @throws IOException Websocket message send IO Exception
+2:   */
+2:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+2:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+2:    for (Session sessionPlayer : sessions) {
+2:      try {
+2:        sessionPlayer.getRemote().sendString(gameBoardJson);
+2:      } catch (IOException e) {
+2:        // Add logger here
+2:      }
+2:    }
+2:  }
+2:
+2:  public static void stop() {
+2:    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

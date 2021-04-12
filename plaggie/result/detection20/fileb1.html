@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/18/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/18/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.lang.Integer;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+  
+  private static GameBoard board;
+  
+  private static final Gson gson = new Gson();
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:  public static void main(final String[] args) {
+2:
+2:
+2:
+2:    // Test Echo Server
+2:    if (app=="/echo") {
+2:      ctx.result(ctx.body());
+2:    }
+2:
+2:    //new game end point
+2:    if (app=="/newgame") {
+2:      ctx.redirect("/tictactoe.html");
+2:    }
+    
+    //start game end point
+    if (app=="/startgame") {
+      //Create p1 according to user-selected type
+      Player p1 = new Player(ctx.formParam("type").charAt(0), 1);
+      ctx.result(startGame(p1));
+    }
+    
+    //join game end point
+    if (app=="/joingame") {
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:      joinGame();
+1:      ctx.redirect("/tictactoe.html?p=2");
+1:    }
+1:    
+1:    //move end point
+1:    if (app=="/move/:playerId") {
+1:      //retrieve player id and move coordinates from request
+1:      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+1:      int moveX = Integer.parseInt(ctx.formParam("x"));
+1:      int moveY = Integer.parseInt(ctx.formParam("y"));
+1:      
+1:      ctx.result(move(playerId, moveX, moveY));
+    }
+    
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /**
+   * Creates the game board with player 1.
+   * 
+   * @param p1 Player 1
+   * @return board data in Json form
+   */
+  private static String startGame(Player p1) {
+    board = new GameBoard(p1);
+    return gson.toJson(board);
+  }
+  
+  /**
+   * Adds p2 to game and updates UI for both players.
+   */
+  private static void joinGame() {
+    char p1Type = board.getPlayer(1).getType();
+    char p2Type;
+    
+    //choose opposite type from p1
+    if (p1Type == 'X') {
+      p2Type = 'O';
+    } else {
+      p2Type = 'X';
+    }
+    
+    Player p2 = new Player(p2Type, 2);
+    board.addPlayer2(p2);
+    
+    sendGameBoardToAllPlayers(gson.toJson(board));
+  }
+  
+  /**
+   * Attempts to complete specified move and updates UI.
+   * 
+   * @param playerId ID of the player making move
+   * @param moveX X-coordiante of move
+   * @param moveY Y-coordinate of move
+   * @return Message describing move validity in Json format
+   */
+  private static String move(int playerId, int moveX, int moveY) {
+    Player currentPlayer = board.getPlayer(playerId);
+    Move moveAttempt = new Move(currentPlayer, moveX, moveY);
+    Message response = board.playTurn(moveAttempt);
+    
+    sendGameBoardToAllPlayers(gson.toJson(board));
+    return gson.toJson(response); 
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:  }
+0:  
+0:  /** Send message to all players.
+0:   * @param gameBoardJson Gameboard JSON
+0:   * @throws IOException Websocket message send IO Exception
+0:   */
+0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+0:    for (Session sessionPlayer : sessions) {
+0:      try {
+0:        sessionPlayer.getRemote().sendString(gameBoardJson);
+0:      } catch (IOException e) {
+0:        // Add logger here
+0:      }
+0:    }
+0:  }
+0:
+0:  public static void stop() {
+0:    app.stop();
+0:  }
+0:}
+</PRE></CODE>
+</BODY>
+</HTML>

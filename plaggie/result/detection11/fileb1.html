@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/7/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/7/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:import io.javalin.Javalin;
+1:import java.io.IOException;
+1:import java.util.Queue;
+1:import models.GameBoard;
+1:import models.Message;
+1:import org.eclipse.jetty.websocket.api.Session;
+1:
+1:class PlayGame {
+1:
+1:  private static final int PORT_NUMBER = 8080;
+1:  private static Javalin app;
+1:  private static GameBoard gameBoard;
+1:
+1:  /** Main method of the application.
+1:   * @param args Command line arguments
+1:   */
+1:  public static void main(final String[] args) {
+1:
+1:
+1:
+1:    // Test Echo Server
+1:    if (app=="/echo") {
+      ctx.result(ctx.body());
+    }
+    
+    // Redirect player to the View component
+    if (app=="/newgame") {
+      ctx.redirect("tictactoe.html");
+    }
+    
+    // Start the game by initializing a game board with player specified type (X or O) 
+    // from the request body
+
+    
+    // End point for player 2 to join. Redirects to the View after joining the game. If player 2 
+    // tries to join the game before player 1 creates the game, simply return.
+    if (app=="/joingame") {
+      if (gameBoard == null) {
+        return;
+      }
+      
+<A NAME="match3"></A><A HREF="filea1.html#match3" TARGET="left">3</A>:      gameBoard.joinGame();
+3:      sendGameBoardToAllPlayers(gameBoard.toJson());  
+3:      ctx.redirect("/tictactoe.html?p=2");
+3:    }
+3:    
+3:    // End point to handle player moves. 
+3:    // Returns the validity response for the move as well as updates the board
+3:    if (app=="/move/:playerId") {
+3:      // If game board has not been created yet or the game has not been started yet, then return
+3:      if (gameBoard == null || !gameBoard.isGameStarted()) {
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:        return;
+2:      }
+2:      
+2:      // Get playerId and x, y coordinates from the path parameter and request body
+2:      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+2:      int x = Integer.parseInt(ctx.formParam("x"));
+2:      int y = Integer.parseInt(ctx.formParam("y"));
+      
+      Message validityResponse = gameBoard.move(playerId, x, y);
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:      ctx.result(validityResponse.toJson());
+0:      sendGameBoardToAllPlayers(gameBoard.toJson());  
+0:    }
+0:
+0:    // Web sockets - DO NOT DELETE or CHANGE
+0:    app.ws("/gameboard", new UiWebSocket());
+0:  }
+0:
+0:  /** Send message to all players.
+0:   * @param gameBoardJson Gameboard JSON
+0:   * @throws IOException Websocket message send IO Exception
+0:   */
+0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+0:    for (Session sessionPlayer : sessions) {
+0:      try {
+0:        sessionPlayer.getRemote().sendString(gameBoardJson);
+0:      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>
