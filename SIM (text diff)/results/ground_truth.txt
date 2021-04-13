@@ -1,5 +1,1 @@
-File /Users/Jun/Desktop/text/36_yumeng_luo.txt: 1865 tokens, 422 lines
-File /Users/Jun/Desktop/text/14_junchun.txt: 2057 tokens, 602 lines
-Total input: 2 files (2 new, 0 old), 3922 tokens
-
-/Users/Jun/Desktop/text/36_yumeng_luo.txt consists for 63 % of /Users/Jun/Desktop/text/14_junchun.txt material
+/Users/Jun/Desktop/text/14_junchun.txt consists for 47 % of /Users/Jun/Desktop/text/36_yumeng_luo.txt material
