@@ -13,22 +13,25 @@ if len(sys.argv) < 2:
 
 filename = sys.argv[1]
 plagiarism_pairs = []
-known_cheat_pairs = [(2,4), (5,19), (5,15), (15,31), (7,21), (19,33), (19,29), (6,15), (5,16)]
-count = 0
-total_weight = 0
+# known_cheat_pairs = [(2,4), (5,19), (5,15), (15,31), (7,21), (19,33), (19,29), (6,15), (5,16)]
+
+# simulated plagiarism text SIM results
+cheat_results = [92, 79, 85, 46, 41, 41, 76, 49, 45, 44]
+count = len(cheat_results)
+total_weight = sum(cheat_results)
 
 f = open(filename, "r")
 
 # Find the averaged similarity % among plagiarized submissions
-for line in f.readlines():
-    subparts = line.split()
-    primary = subparts[0].split('.')[0]
-    secondary = subparts[2].split('.')[0]
-    percentage = int(subparts[1].split('%')[0])
-    if filter_tuple(known_cheat_pairs, int(primary), int(secondary)):
-        print("Found a cheating pair: " + primary + ", " + secondary)
-        total_weight += percentage
-        count += 1
+# for line in f.readlines():
+#     subparts = line.split()
+#     primary = subparts[0].split('.')[0]
+#     secondary = subparts[2].split('.')[0]
+#     percentage = int(subparts[1].split('%')[0])
+#     if filter_tuple(known_cheat_pairs, int(primary), int(secondary)):
+#         print("Found a cheating pair: " + primary + ", " + secondary)
+#         total_weight += percentage
+#         count += 1
 
 average = total_weight/float(count)
 print("Total weight:", total_weight)
