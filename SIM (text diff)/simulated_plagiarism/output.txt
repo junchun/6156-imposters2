@@ -1,0 +1,17 @@
+File /Users/Jun/Desktop/text/all_changed.txt: 3061 tokens, 629 lines
+File /Users/Jun/Desktop/text/lines_removed.txt: 2949 tokens, 583 lines
+File /Users/Jun/Desktop/text/original_junchun.txt: 2057 tokens, 602 lines
+File /Users/Jun/Desktop/text/structure_changed.txt: 2057 tokens, 621 lines
+File /Users/Jun/Desktop/text/variables_changed.txt: 2131 tokens, 620 lines
+Total input: 5 files (5 new, 0 old), 12255 tokens
+
+/Users/Jun/Desktop/text/original_junchun.txt consists for 92 % of /Users/Jun/Desktop/text/structure_changed.txt material
+/Users/Jun/Desktop/text/original_junchun.txt consists for 79 % of /Users/Jun/Desktop/text/variables_changed.txt material
+/Users/Jun/Desktop/text/all_changed.txt consists for 85 % of /Users/Jun/Desktop/text/lines_removed.txt material
+/Users/Jun/Desktop/text/all_changed.txt consists for 46 % of /Users/Jun/Desktop/text/variables_changed.txt material
+/Users/Jun/Desktop/text/all_changed.txt consists for 41 % of /Users/Jun/Desktop/text/original_junchun.txt material
+/Users/Jun/Desktop/text/all_changed.txt consists for 41 % of /Users/Jun/Desktop/text/structure_changed.txt material
+/Users/Jun/Desktop/text/structure_changed.txt consists for 76 % of /Users/Jun/Desktop/text/variables_changed.txt material
+/Users/Jun/Desktop/text/lines_removed.txt consists for 49 % of /Users/Jun/Desktop/text/original_junchun.txt material
+/Users/Jun/Desktop/text/lines_removed.txt consists for 45 % of /Users/Jun/Desktop/text/structure_changed.txt material
+/Users/Jun/Desktop/text/lines_removed.txt consists for 44 % of /Users/Jun/Desktop/text/variables_changed.txt material
