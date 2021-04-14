@@ -1,61 +1,183 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/5/Message.java</TITLE>
+<TITLE>plaggie_data/11/PlayGame.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/5/Message.java</H1>
+<H1>plaggie_data/11/PlayGame.java</H1>
 <CODE><PRE>
-package models;
+package controllers;
 
-public class Message {
+import io.javalin.Javalin;
+import io.javalin.http.BadRequestResponse;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  private static GameBoard gameBoard;
+
 
   /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+   * Main method of the application.
+   *
+   * @param args Command line arguments
    */
+  public static void main(final String[] args) {
 
 
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
+
+
+    // Hello Server
+    if (app=="/hello") {
+      ctx.result("Hello World!");
+    }
+
+    // Test Echo Server
+    if (app=="/echo") {
+      ctx.result(ctx.body());
+    }
+
+    // tic-tac-toe html
+    if (app=="tictacto.html") {
+      ctx.render("/public/tictactoe.html");
+    }
+
+    // New Game
+    if (app=="/newgame") {
+      gameBoard = new models.GameBoard();
+      ctx.redirect("/tictactoe.html");
+    }
+
+    // Start Game
+    if (app=="/startgame") {
+      try {
+
+        char type = Objects.requireNonNull(ctx.formParam("type")).charAt(0);
+
+        if (type != 'X' &amp;&amp; type != 'O') {
+          throw new BadRequestResponse(String.format("type '%c' is not supported", type));
+        }
+
+        Objects.requireNonNull(gameBoard);
+        gameBoard.startGame(type);
+        sendGameBoardToAllPlayers(gameBoard.toJson());
+        ctx.result(gameBoard.toJson());
+      } catch (NullPointerException e) {
+        throw new BadRequestResponse("Game is not initialized!");
+      }
+    }
+
+    // Join Game
+    if (app=="/joingame") {
+      try {
+        Objects.requireNonNull(gameBoard);
+        gameBoard.joinGame();
+        sendGameBoardToAllPlayers(gameBoard.toJson());
+        ctx.redirect("tictactoe.html?p=2");
+      } catch (NullPointerException e) {
+        throw new BadRequestResponse("Game is not initialized!");
+      }
+
+    }
+
+    // Takes a Move
+    if (app=="/move/:playId") {
+      try {
+        Objects.requireNonNull(gameBoard);
+        int playId = ctx.pathParam("playId", int.class).get();
+        int moveX = ctx.formParam("x", int.class).get();
+        int moveY = ctx.formParam("y", int.class).get();
+        Move move = new Move(gameBoard.getPlayer(playId), moveX, moveY);
+        Message message = gameBoard.move(move);
+        ctx.result(message.toJson());
+        sendGameBoardToAllPlayers(gameBoard.toJson());
+      } catch (NullPointerException e) {
+        throw new BadRequestResponse("Game is not initialized!");
+      }
+    }
+
+
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+
   }
 
-<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  public boolean isMoveValidity() {
-0:    return moveValidity;
+  /**
+   * Send message to all players.
+   *
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+
+  /**
+   * Get port number.
+   *
+   * @return port number.
+   */
+<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  public static int getPortNumber() {
+0:    return PORT_NUMBER;
 0:  }
 0:
-0:  public void setMoveValidity(boolean moveValidity) {
-0:    this.moveValidity = moveValidity;
+0:  /**
+0:   * Set app.
+0:   *
+0:   * @param app Javalin app.
+0:   */
+0:  public static void setApp(Javalin app) {
+0:    PlayGame.app = app;
 0:  }
 0:
-0:  public int getCode() {
-0:    return code;
+0:  /**
+0:   * Get app.
+0:   *
+0:   * @return Javalin app.
+0:   */
+0:  public static Javalin getApp() {
+0:    return app;
 0:  }
 0:
-0:  public void setCode(int code) {
-0:    this.code = code;
+0:  /**
+0:   * Set gameboard.
+0:   *
+0:   * @param gameBoard game board class.
+0:   */
+0:  public static void setGameBoard(GameBoard gameBoard) {
+0:    PlayGame.gameBoard = gameBoard;
 0:  }
 0:
-0:  public String getMessage() {
-0:    return message;
+0:  /**
+0:   * Get gameboard.
+0:   *
+0:   * @return game board.
+0:   */
+0:  public static GameBoard getGameBoard() {
+0:    return gameBoard;
 0:  }
-0:
-0:  public void setMessage(String message) {
-0:    this.message = message;
-0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
-0:
-0:  private String message;
-0:
-0:}
+}
 </PRE></CODE>
 </BODY>
 </HTML>

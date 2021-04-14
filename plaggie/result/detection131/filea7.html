@@ -1,34 +1,262 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/19/Player.java</TITLE>
+<TITLE>plaggie_data/14/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/19/Player.java</H1>
+<H1>plaggie_data/14/GameBoard.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
+package models;
+
+public class GameBoard {
+
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+  
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+
+  /**
+   * Constructor for GameBoard.
+   */
+  public GameBoard() {
+    p1 = null;
+    p2 = null;
+    gameStarted = false;
+    turn = 1;
+    
+    // fill the 3 by 3 board with the default value
+    boardState = new char[3][3];
+    for (char[] array : boardState) {
+      for (int i = 0; i &lt; array.length; i++) {
+        array[i] = '0';
+      }
+    }
+    winner = 0;
+    isDraw = false;
+  }
+  
+  /**
+   * Get player 1.
+   * @return player 1
+   */
+<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:  public Player getP1() {
+0:    return p1;
 0:  }
 0:
-0:  public void setType(char type) {
-0:    this.type = type;
+0:  /**
+0:   * Set player 1.
+0:   * @param p1 player 1
+0:   */
+0:  public void setP1(Player p1) {
+0:    this.p1 = p1;
 0:  }
 0:
-0:  public int getId() {
-0:    return id;
+0:  /**
+0:   * Get player 2.
+0:   * @return player 2
+0:   */
+0:  public Player getP2() {
+0:    return p2;
 0:  }
 0:
-0:  public void setId(int id) {
-0:    this.id = id;
+0:  /**
+0:   * Set player 2.
+0:   * @param p2 player 2
+0:   */
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
+0:  }
+0:
+0:  /**
+0:   * Check if the game has started.
+0:   * @return true if game has started
+0:   */
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
+0:  }
+0:
+0:  /**
+0:   * Set game status to started.
+0:   * @param gameStarted game status
+0:   */
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
+0:  }
+0:
+0:  /**
+0:   * Get play turn.
+0:   * @return play turn
+0:   */
+0:  public int getTurn() {
+0:    return turn;
+0:  }
+0:
+0:  /**
+0:   * Set play turn.
+0:   * @param turn play turn to set
+0:   */
+0:  public void setTurn(int turn) {
+0:    this.turn = turn;
+0:  }
+0:
+0:  /**
+0:   * Get board status.
+0:   * @return the board state
+0:   */
+0:  public char[][] getBoardState() {
+0:    return boardState;
+0:  }
+0:
+0:  /**
+0:   * Set board status.
+0:   * @param boardState the board state to set
+0:   */
+0:  public void setBoardState(char[][] boardState) {
+0:    this.boardState = boardState;
+0:  }
+0:
+0:  /**
+0:   * Get game winner.
+0:   * @return winning player
+0:   */
+0:  public int getWinner() {
+0:    return winner;
+0:  }
+0:
+0:  /**
+0:   * Set game winner.
+0:   * @param winner winning player
+0:   */
+0:  public void setWinner(int winner) {
+0:    this.winner = winner;
+0:  }
+0:
+0:  /**
+0:   * Get game drawn status.
+0:   * @return true if the game is tied
+0:   */
+0:  public boolean isDraw() {
+0:    return isDraw;
+0:  }
+0:
+0:  /**
+0:   * Set game draw status.
+0:   * @param isDraw game draw status 
+0:   */
+0:  public void setDraw(boolean isDraw) {
+0:    this.isDraw = isDraw;
 0:  }
 
-  private char type;
-
-  private int id;
-
+  /**
+   * Check if the move is valid or not.
+   * If invalid, a message appears to the players.
+   * @param move player move
+   * @return false if the move is invalid
+   */
+  public boolean isMoveValid(Move move) {
+    char[][] board = getBoardState();
+    if (getTurn() != move.getPlayer().getId() 
+        || board[move.getMoveX()][move.getMoveY()] != '0') {
+      return false;
+    }
+    return true;
+  }
+  
+  /**
+   * Set a valid move and update overall game status.
+   * Should be used after isMoveValid() method to check if the move is valid.
+   * @param move move
+   * @return true if the game is over
+   */
+  public boolean setMove(Move move) {
+    char[][] board = getBoardState();
+    board[move.getMoveX()][move.getMoveY()] = move.getPlayer().getType();
+    if (getTurn() == 1) {
+      setTurn(2);
+    } else {
+      setTurn(1);
+    }
+    return checkOverallStatus(board, move);
+  }
+  
+  /**
+   * Check if the game has concluded.
+   * Update winner and isDraw if the game is over.
+   * @param gameBoard game board
+   * @param move player move
+   * @return true if the game is over
+   */
+  private boolean checkOverallStatus(char[][] gameBoard, Move move) {
+    char type = move.getPlayer().getType();
+    if (type == gameBoard[move.getMoveX()][0]
+        &amp;&amp; gameBoard[move.getMoveX()][0] == gameBoard[move.getMoveX()][1]
+        &amp;&amp; gameBoard[move.getMoveX()][1] == gameBoard[move.getMoveX()][2]) {
+      winner = move.getPlayer().getId();
+    } else if (type == gameBoard[0][move.getMoveY()]
+          &amp;&amp; gameBoard[0][move.getMoveY()] == gameBoard[1][move.getMoveY()]
+          &amp;&amp; gameBoard[1][move.getMoveY()] == gameBoard[2][move.getMoveY()]) {
+      winner = move.getPlayer().getId();
+    } else if (isDiagonalMove(move)) {
+      if (move.getPlayer().getType() == gameBoard[0][0]
+          &amp;&amp; gameBoard[0][0] == gameBoard[1][1]
+          &amp;&amp; gameBoard[1][1] == gameBoard[2][2]) {
+        winner = move.getPlayer().getId();
+      } else if (move.getPlayer().getType() == gameBoard[0][2]
+          &amp;&amp; gameBoard[0][2] == gameBoard[1][1]
+          &amp;&amp; gameBoard[1][1] == gameBoard[2][0]) {
+        winner = move.getPlayer().getId();
+      }
+    }
+    
+    isDraw = checkForDraw(gameBoard);
+    if (getWinner() != 0 || isDraw) {
+      return true;
+    }
+    
+    return false;
+  }
+  
+  /**
+   * Check if the move is made to a diagonal line cell.
+   * @param move player move
+   * @return true if the move is on a diagonal line
+   */
+  private boolean isDiagonalMove(Move move) {
+    if ((move.getMoveX() == 0 &amp;&amp; move.getMoveY() == 0)
+        || (move.getMoveX() == 1 &amp;&amp; move.getMoveY() == 1)
+        || (move.getMoveX() == 2 &amp;&amp; move.getMoveY() == 2)
+        || (move.getMoveX() == 2 &amp;&amp; move.getMoveY() == 0)
+        || (move.getMoveX() == 0 &amp;&amp; move.getMoveY() == 2)) {
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * Check if there is any default value left on the board.
+   * If there is no default value, then the game is over and it's a draw.
+   * @param gameBoard game board
+   * @return true if the game is a draw
+   */
+  private boolean checkForDraw(char[][] gameBoard) {
+    for (int i = 0; i &lt; gameBoard.length; i++) {
+      for (int j = 0; j &lt; gameBoard[0].length; j++) {
+        if (gameBoard[i][j] == '0') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  
 }
 </PRE></CODE>
 </BODY>

@@ -1,43 +1,58 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/14/Move.java</TITLE>
+<TITLE>plaggie_data/22/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/14/Move.java</H1>
+<H1>plaggie_data/22/Message.java</H1>
 <CODE><PRE>
 package models;
 
-public class Move {
+public class Message {
 
-<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  public Player getPlayer() {
-0:    return player;
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+  
+  /**
+   * constructor for a message.
+   * @param v the validity of move
+   * @param c the code for the move
+   * @param m the message attached to the move
+   */
+  public Message(boolean v, int c, String m) {
+    this.moveValidity = v;
+    this.code = c;
+    this.message = m;
+  }
+  
+  // set and get move validity 
+<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  public boolean getMoveValidity() {
+0:    return this.moveValidity;
 0:  }
-0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  
+0:  public void setMoveValidity(boolean tf) {
+0:    this.moveValidity = tf;
 0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  
+0:  //set and get message code 
+0:  public int getCode() {
+0:    return this.code;
 0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  
+0:  public void setCode(int c) {
+0:    this.code = c;
 0:  }
-0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  
+0:  //set and get message 
+0:  public String getMessage() {
+0:    return this.message;
 0:  }
-0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
+0:  
+0:  public void setMessage(String m) {
+0:    this.message = m;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
 0:
 0:}
 </PRE></CODE>

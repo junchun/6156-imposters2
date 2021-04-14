@@ -1,13 +1,30 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/37/Move.java</TITLE>
+<TITLE>plaggie_data/15/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/37/Move.java</H1>
+<H1>plaggie_data/15/Move.java</H1>
 <CODE><PRE>
 <A NAME="match0"></A><A HREF="fileb2.html#match0" TARGET="right">0</A>:package models;
 0:
 0:public class Move {
+0:
+0:  private Player player;
+0:
+0:  private int moveX;
+0:
+0:  private int moveY;
+0:  
+0:  /** Complete constructor.
+0:   * @param p player object of the player who moves
+0:   * @param x row location
+0:   * @param y col location
+0:   */
+0:  public Move(Player p, int x, int y) {
+0:    this.player = p;
+0:    this.moveX = x;
+0:    this.moveY = y;
+0:  }
 0:
 0:  public Player getPlayer() {
 0:    return player;
@@ -32,12 +49,6 @@
 0:  public void setMoveY(int moveY) {
 0:    this.moveY = moveY;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
 0:
 0:}
 </PRE></CODE>

@@ -1,47 +1,38 @@
 package models;
 
 public class Message {
-
+  
+  static final String ERR_200_MSG = "It's not your turn!";
+  static final String ERR_300_MSG = "Missing two players";
+  static final String ERR_400_MSG = "Game is over";
+  static final String ERR_500_MSG = "That space is taken";
+  
   /**
-   * A Message is sent as feedback for every movement.
+   * Associates code with corresponding error description and validity.
    * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+   * @param code message identifier
    */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
+  public Message(int code) {
     this.code = code;
-    this.message = message;
-  }
-
-  public boolean isMoveValidity() {
-    return moveValidity;
-  }
-
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public void setCode(int code) {
-    this.code = code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
+    
+    if (code == 100) {
+      moveValidity = true;
+      message = "";
+    } else {
+      moveValidity = false;
+      
+      if (code == 200) {
+        message = ERR_200_MSG;
+      } else if (code == 300) {
+        message = ERR_300_MSG;
+      } else if (code == 400) {
+        message = ERR_400_MSG;
+      } else if (code == 500) {
+        message = ERR_500_MSG;
+      }
+    }
+  } 
+  
   private boolean moveValidity;
 
   private int code;

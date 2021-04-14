@@ -1,33 +1,251 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/36/Player.java</TITLE>
+<TITLE>plaggie_data/25/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/36/Player.java</H1>
+<H1>plaggie_data/25/GameBoard.java</H1>
 <CODE><PRE>
 package models;
 
-public class Player {
+public class GameBoard {
 
-<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  public char getType() {
-0:    return type;
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+
+  /**
+   * Constructor for GameBoard.
+   */
+  public GameBoard() {
+    gameStarted = false;
+    turn = 1;
+    boardState = new char[3][3];
+    winner = 0;
+    isDraw = false;
+  }
+
+  /**
+   * Getter for p1.
+   * @return the p1
+   */
+  public Player getP1() {
+    return p1;
+  }
+
+  /**
+   * Setter for p1.
+   * @param p1 the p1 to set
+   */
+  public void setP1(Player p1) {
+    this.p1 = p1;
+<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  }
+0:
+0:  /**
+0:   * Getter for p2.
+0:   * @return the p2
+0:   */
+0:  public Player getP2() {
+0:    return p2;
 0:  }
 0:
-0:  public void setType(char type) {
-0:    this.type = type;
+0:  /**
+0:   * Setter for p2.
+0:   * @param p2 the p2 to set
+0:   */
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
 0:  }
 0:
-0:  public int getId() {
-0:    return id;
+0:  /**
+0:   * Getter for gameStarted.
+0:   * @return the gameStarted
+0:   */
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
 0:  }
 0:
-0:  public void setId(int id) {
-0:    this.id = id;
+0:  /**
+0:   * Setter for gameStarted.
+0:   * @param gameStarted the gameStarted to set
+0:   */
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
 0:  }
 0:
-0:  private char type;
+0:  /**
+0:   * Getter for turn.
+0:   * @return the turn
+0:   */
+0:  public int getTurn() {
+0:    return turn;
+0:  }
 0:
-0:  private int id;
+0:  /**
+0:   * Setter for turn.
+0:   * @param turn the turn to set
+0:   */
+0:  public void setTurn(int turn) {
+0:    this.turn = turn;
+0:  }
+0:
+0:  /**
+0:   * Getter for boardState.
+0:   * @return the boardState
+0:   */
+0:  public char[][] getBoardState() {
+0:    return boardState;
+0:  }
+0:
+0:  /**
+0:   * Setter for boardState.
+0:   * @param boardState the boardState to set
+0:   */
+0:  public void setBoardState(char[][] boardState) {
+0:    this.boardState = boardState;
+0:  }
+0:
+0:  /**
+0:   * Getter for winner.
+0:   * @return the winner
+0:   */
+0:  public int getWinner() {
+0:    return winner;
+0:  }
+0:
+0:  /**
+0:   * Setter for winner.
+0:   * @param winner the winner to set
+0:   */
+0:  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  /**
+   * Getter for isDraw.
+   * @return the isDraw
+   */
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  /**
+   * Setter for isDraw.
+   * @param isDraw the isDraw to set
+   */
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
+
+  
+  /**
+   * Decide whether a move is valid in current state.
+   * @param x coordinate and y coordinate of a player's move and the player's Id.
+   * @return boolean whether the move is valid or not.
+   * @apiNote check move validity.
+   */
+  public boolean isValid(int x, int y, int playerId) {
+    
+    if (this.boardState[x][y] == '\u0000' &amp;&amp; playerId == this.turn) {
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * Return a message for invalid move.
+   * @param x coordinate and y coordinate of a player's move and the player's Id.
+   * @return String message.
+   * @apiNote 
+   */
+  public String messageInvalid(int x, int y, int playerId) {
+    String log = "";
+    if (this.boardState[x][y] != '\u0000') {
+      log = "Please select a valid entry!";
+    }
+    if (playerId != this.turn) {
+      log = "Please wait for your turn!";
+    }
+    return log;
+  }
+  
+  /**
+   * Check for winner for each valid move.
+   * @param x coordinate and y coordinate of a player's move and the player's Id.
+   */
+  public void checkWin(int x, int y, int playerId) {
+    // check column
+    for (int i = 0; i &lt; 3; i++) {
+      if (this.boardState[x][i] != this.boardState[x][y]) {
+        break;
+      }
+      if (i == 2) {
+        this.winner = playerId;
+      }
+    }
+    
+    //check row
+    for (int i = 0; i &lt; 3; i++) {
+      if (this.boardState[i][y] != this.boardState[x][y]) {
+        break;
+      }
+      if (i == 2) {
+        this.winner = playerId;
+      }
+    }
+    
+    // check 2 diagonals
+    if (x == y) {
+      for (int i = 0; i &lt; 3; i++) {
+        if (this.boardState[i][i] != this.boardState[x][y]) {
+          break;
+        }
+        if (i == 2) {
+          this.winner = playerId;
+        }
+      }
+    }
+    
+    if (x + y == 2) {
+      for (int i = 0; i &lt; 3; i++) {
+        if (this.boardState[i][2 - i] != this.boardState[x][y]) {
+          break;
+        }
+        if (i == 2) {
+          this.winner = playerId;
+        }
+      }
+    }
+  }
+  
+  /** Check for draw at every move.
+   * @return boolean whether the game is a draw.
+   */
+  public boolean checkDraw() {
+    //return false if the game has a winner
+    if (this.winner != 0) {
+      return false;
+    }
+<A NAME="match1"></A><A HREF="fileb9.html#match1" TARGET="right">1</A>:    //return false if there's an unused entry
+1:    for (int i = 0; i &lt; 3; i++) {
+1:      for (int j = 0; j &lt; 3; j++) {
+1:        if (this.boardState[i][j] == '\u0000') {
+1:          return false;
+1:        }
+1:      }
+1:    }
+1:    //otherwise return true
+1:    return true;
+  }
 
 }
 </PRE></CODE>

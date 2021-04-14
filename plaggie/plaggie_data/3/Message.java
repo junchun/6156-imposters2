@@ -1,51 +1,69 @@
 package models;
 
+import com.google.gson.Gson;
+
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
+  private boolean moveValidity;
+  private int code;
+  private String message;
+
+  /** Constructor - sets code to 100 by default.
    * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
    */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
+  public Message() {
+    code = 100;
   }
 
-  public boolean isMoveValidity() {
+  /** Get move validity.
+   * @return
+   */
+  public boolean getMoveValidity() {
     return moveValidity;
   }
 
+  /** Set move validity.
+   * @param moveValidity move validity
+   */
   public void setMoveValidity(boolean moveValidity) {
     this.moveValidity = moveValidity;
   }
 
+  /** Get code.
+   * @return
+   */
   public int getCode() {
     return code;
   }
 
+  /** Set code.
+   * @param code the message code
+   */
   public void setCode(int code) {
     this.code = code;
   }
 
+  /** Get message.
+   * @return
+   */
   public String getMessage() {
     return message;
   }
 
+  /** Set message.
+   * @param message the text message
+   */
   public void setMessage(String message) {
     this.message = message;
   }
 
-  private boolean moveValidity;
+  /** Converts object to JSON.
+   * @return
+   */
+  public String toJson() { //https://stackoverflow.com/questions/18106778/convert-java-object-to-json-and-vice-versa
 
-  private int code;
-
-  private String message;
+    Gson gson = new Gson(); 
+    return gson.toJson(this);
+  }
 
 }

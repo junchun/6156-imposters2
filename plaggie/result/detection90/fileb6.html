@@ -1,45 +1,61 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/34/Move.java</TITLE>
+<TITLE>plaggie_data/7/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/34/Move.java</H1>
+<H1>plaggie_data/7/Move.java</H1>
 <CODE><PRE>
 package models;
 
 public class Move {
 
+  private Player player;
+  private int moveX;
+  private int moveY;
+  
+  /**
+   * Describe the move taken by a certain Player.
+   * @param player 1 or 2
+   * @param moveX x coordinate of the move
+   * @param moveY y coordinate of the move
+   */
+  public Move(Player player, int moveX, int moveY) {
+    this.setPlayer(player);
+    this.setMoveX(moveX);
+    this.setMoveY(moveY);
+  }
+
+  //  Returns the player that is associated with the move
 <A NAME="match0"></A><A HREF="filea6.html#match0" TARGET="left">0</A>:  public Player getPlayer() {
 0:    return player;
 0:  }
-0:
+0:  
+0:  //  Sets the player associated to the move
 0:  public void setPlayer(Player player) {
 0:    this.player = player;
 0:  }
 0:
+0:  //  Returns the x coordinate
 0:  public int getMoveX() {
 0:    return moveX;
 0:  }
 0:
+0:  //  Sets the x coordinate
 0:  public void setMoveX(int moveX) {
 0:    this.moveX = moveX;
 0:  }
 0:
+0:  //  Returns the y coordinate
 0:  public int getMoveY() {
 0:    return moveY;
 0:  }
 0:
+0:  //  Sets the y coordinate
 0:  public void setMoveY(int moveY) {
 0:    this.moveY = moveY;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

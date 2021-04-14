@@ -1,9 +1,9 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/10/Message.java</TITLE>
+<TITLE>plaggie_data/2/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/10/Message.java</H1>
+<H1>plaggie_data/2/Message.java</H1>
 <CODE><PRE>
 package models;
 
@@ -25,15 +25,15 @@ public class Message {
     this.message = message;
   }
 
-  public boolean isMoveValidity() {
-    return moveValidity;
-  }
-
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
-  }
-
-<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  public int getCode() {
+<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  public boolean isMoveValidity() {
+0:    return moveValidity;
+0:  }
+0:
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
+0:  }
+0:
+0:  public int getCode() {
 0:    return code;
 0:  }
 0:
@@ -48,10 +48,10 @@ public class Message {
 0:  public void setMessage(String message) {
 0:    this.message = message;
 0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
+
+  private boolean moveValidity;
+
+  private int code;
 
   private String message;
 

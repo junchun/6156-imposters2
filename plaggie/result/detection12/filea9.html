@@ -1,33 +1,269 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/11/Player.java</TITLE>
+<TITLE>plaggie_data/28/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/11/Player.java</H1>
+<H1>plaggie_data/28/GameBoard.java</H1>
 <CODE><PRE>
-package models;
+<A NAME="match1"></A><A HREF="fileb9.html#match1" TARGET="right">1</A>:package models;
+1:
+1:public class GameBoard {
+1:
+1:  private Player p1;
+1:
+1:  private Player p2;
+1:
+1:  private boolean gameStarted;
+1:
+1:  private int turn;
+1:
+1:  private char[][] boardState;
+1:
+1:  private int winner;
+1:
+1:  private boolean isDraw;
+1:
+1:  /**
+1:   * Sets default values for new GameBoard object.
+1:   */
+1:  public GameBoard() {
+1:    gameStarted = false;
+1:    turn = 1;
+1:    boardState = new char[3][3];
+1:    winner = 0;
+1:    isDraw = false;
+1:  }
+1:
+1:  /**
+1:   * Determines if move is valid or not.
+1:   * 
+1:   * @param move to check for validity
+1:   * @return boolean indicating if move is valid or not.
+1:   */
+1:  public boolean isValidMove(Move move) {
+    boolean isPlayerTurn = (move.getPlayer() != null) &amp;&amp; move.getPlayer().getId() == turn;
+    if (!isPlayerTurn || winner != 0 || gameStarted == false || isDraw == true) {
+      return false;
+    }
+<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:    boolean moveLocationEmpty = boardState[move.getMoveX()][move.getMoveY()] == '\u0000';
+0:    return moveLocationEmpty;
+0:  }
+0:
+0:  /**
+0:   * Determines if the game is a draw.
+0:   * 
+0:   * @return boolean indicating if game is a draw.
+0:   */
+0:  public boolean gameIsDraw() {
+0:    for (int r = 0; r &lt; boardState.length; r++) {
+0:      for (int c = 0; c &lt; boardState.length; c++) {
+0:        // check if any board position is empty
+0:        if (boardState[r][c] == '\u0000') {
+0:          return false;
+0:        }
+0:      }
+0:    }
+0:    return (winner == 0);
+0:  }
+0:
+0:  /**
+0:   * Determines if a player has won the game and returns their player id. If no player has won,
+0:   * returns 0.
+0:   * 
+0:   * @return id of player who has won
+0:   */
+0:  public int getGameWinner() {
+    char winnerType = '\u0000';
+    // check rows
+    for (int r = 0; r &lt; boardState.length; r++) {
+      if (boardState[r][0] != '\u0000' &amp;&amp; boardState[r][0] == boardState[r][1]
+          &amp;&amp; boardState[r][1] == boardState[r][2]) {
+        winnerType = boardState[r][0];
+        break;
+      }
+    }
+    // check columns
+    for (int c = 0; c &lt; boardState[0].length; c++) {
+      if (boardState[0][c] != '\u0000' &amp;&amp; boardState[0][c] == boardState[1][c]
+          &amp;&amp; boardState[1][c] == boardState[2][c]) {
+        winnerType = boardState[0][c];
+        break;
+      }
+    }
+    // check diagonals
+    if (boardState[0][0] != '\u0000' &amp;&amp; boardState[0][0] == boardState[1][1]
+        &amp;&amp; boardState[1][1] == boardState[2][2]) {
+      winnerType = boardState[0][0];
+    }
+    if (boardState[0][2] != '\u0000' &amp;&amp; boardState[0][2] == boardState[1][1]
+        &amp;&amp; boardState[1][1] == boardState[2][0]) {
+      winnerType = boardState[0][2];
+    }
+    // return id of player associated with winning type.
+    if (winnerType == '\u0000') {
+      return 0;
+    } else if (winnerType == p1.getType()) {
+      return 1; 
+    } else {
+      return 2;
+    }
+  }
 
-public class Player {
+  /**
+   * Assuming isValidMove has already been called, makes move and updates game board.
+   * 
+   * &lt;p&gt;Note: Also checks for game winner or game draw after executing move.
+   * 
+   * @param move to be executed
+   */
+  public void makeMove(Move move) {
+    boardState[move.getMoveX()][move.getMoveY()] = move.getPlayer().getType();
+    // switch turn
+    if (turn == 1) {
+      turn = 2;
+    } else {
+      turn = 1;
+    }
+    // check for winner and draw
+    int gameWinner = getGameWinner();
+    if (gameWinner != 0) {
+      winner = gameWinner;
+      gameStarted = false;
+    } else {
+      if (gameIsDraw()) {
+        isDraw = true;
+        gameStarted = false;
+      }
+    }
+  }
 
-<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  public char getType() {
-0:    return type;
-0:  }
-0:
-0:  public void setType(char type) {
-0:    this.type = type;
-0:  }
-0:
-0:  public int getId() {
-0:    return id;
-0:  }
-0:
-0:  public void setId(int id) {
-0:    this.id = id;
-0:  }
-0:
-0:  private char type;
-0:
-0:  private int id;
+  /**
+   * Returns player one.
+   * 
+   * @return the p1
+   */
+  public Player getP1() {
+    return p1;
+  }
+
+  /**
+   * Sets player one.
+   * 
+   * @param p1 the p1 to set
+   */
+  public void setP1(Player p1) {
+    this.p1 = p1;
+  }
+
+  /**
+   * Returns player 2.
+   * 
+   * @return the p2
+   */
+  public Player getP2() {
+    return p2;
+  }
+
+  /**
+   * Sets player 2.
+   * 
+   * @param p2 the p2 to set
+   */
+  public void setP2(Player p2) {
+    this.p2 = p2;
+  }
+
+  /**
+   * Returns boolean indicating whether game has started.
+   * 
+   * @return the gameStarted
+   */
+  public boolean isGameStarted() {
+    return gameStarted;
+  }
+
+  /**
+   * Sets gameStarted variable.
+   * 
+   * @param gameStarted the gameStarted to set
+   */
+  public void setGameStarted(boolean gameStarted) {
+    this.gameStarted = gameStarted;
+  }
+
+  /**
+   * Gets turn indicating which player's turn it is.
+   * 
+   * &lt;p&gt;Note: turn will take on values 1 or 2 corresponding to player 1 and player 2 respectively.
+   * 
+   * @return the turn
+   */
+  public int getTurn() {
+    return turn;
+  }
+
+  /**
+   * Sets turn variable indicating which player's turn it is.
+   * 
+   * @param turn the turn to set
+   */
+  public void setTurn(int turn) {
+    this.turn = turn;
+  }
+
+  /**
+   * Returns boardState.
+   * 
+   * @return the boardState
+   */
+  public char[][] getBoardState() {
+    return boardState;
+  }
+
+  /**
+   * Sets boardState.
+   * 
+   * @param boardState the boardState to set
+   */
+  public void setBoardState(char[][] boardState) {
+    this.boardState = boardState;
+  }
+
+  /**
+   * Returns id of the winner.
+   * 
+   * @return the winner
+   */
+  public int getWinner() {
+    return winner;
+  }
+
+  /**
+   * Sets winner variable with id of player that has won.
+   * 
+   * @param winner the winner to set
+   */
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  /**
+   * Returns boolean indicating whether game has ended in a draw.
+   * 
+   * @return the isDraw
+   */
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  /**
+   * Sets isDraw variable.
+   * 
+   * @param isDraw the isDraw to set
+   */
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
 
 }
 </PRE></CODE>

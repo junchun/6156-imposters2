@@ -1,43 +1,113 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/34/Move.java</TITLE>
+<TITLE>plaggie_data/19/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/34/Move.java</H1>
+<H1>plaggie_data/19/GameBoard.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="filea7.html#match0" TARGET="left">0</A>:package models;
-0:
-0:public class Move {
-0:
-0:  public Player getPlayer() {
-0:    return player;
-0:  }
-0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
-0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
-0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
-0:  }
+package models;
 
-  public int getMoveY() {
-    return moveY;
+public class GameBoard {
+
+  /**
+   * The object representation of the game state.
+   *
+   * @param p1 The first player
+   * @param p2 The second player
+   * @param gameStarted Whether both players have joined
+   * @param turn Which player's turn it is
+   * @param boardState The board representation
+   * @param winner Whether there is a winner
+   * @param isDraw Whether there is a draw
+   */
+
+  public GameBoard(
+      Player p1,
+      Player p2,
+      boolean gameStarted,
+      int turn,
+      char[][] boardState,
+      int winner,
+      boolean isDraw) {
+    super();
+    this.p1 = p1;
+    this.p2 = p2;
+    this.gameStarted = gameStarted;
+    this.turn = turn;
+    this.boardState = boardState;
+    this.winner = winner;
+    this.isDraw = isDraw;
   }
 
-  public void setMoveY(int moveY) {
-    this.moveY = moveY;
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+<A NAME="match0"></A><A HREF="filea7.html#match0" TARGET="left">0</A>:  private char[][] boardState;
+0:
+0:  private int winner;
+0:
+0:  private boolean isDraw;
+0:  
+0:  public Player getP1() {
+0:    return p1;
+0:  }
+0:  
+0:  public void setP1(Player p1) {
+0:    this.p1 = p1;
+0:  }
+0:  
+0:  public Player getP2() {
+0:    return p2;
+0:  }
+0:  
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
+0:  }
+0:
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
+0:  }
+0:
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
+0:  }
+  
+  public int getTurn() {
+    return turn;
+  }
+  
+  public void setTurn(int turn) {
+    this.turn = turn;
   }
 
-  private Player player;
+  public char[][] getBoardState() {
+    return boardState;
+  }
 
-  private int moveX;
+  public void setBoardState(char[][] boardState) {
+    this.boardState = boardState;
+  }
 
-  private int moveY;
+  public int getWinner() {
+    return winner;
+  }
+
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
 
 }
 </PRE></CODE>

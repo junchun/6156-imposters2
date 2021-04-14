@@ -1,45 +1,72 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/2/Move.java</TITLE>
+<TITLE>plaggie_data/3/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/2/Move.java</H1>
+<H1>plaggie_data/3/Move.java</H1>
 <CODE><PRE>
 package models;
 
 public class Move {
 
-<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  public Player getPlayer() {
+  private Player player;
+  private int moveX;
+  private int moveY;
+
+  /** Constructor.
+   * @param player player making move
+   * @param x x coordinate
+   * @param y y coordinate
+   */
+  public Move(Player player, int x, int y) {
+
+<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:    this.player = player;   
+0:    moveX = x;
+0:    moveY = y;
+0:  }
+0:
+0:  /** Get player.
+0:   * @return
+0:   */
+0:  public Player getPlayer() {
 0:    return player;
 0:  }
 0:
+0:  /** Set player.
+0:   * @param player the player
+0:   */
 0:  public void setPlayer(Player player) {
 0:    this.player = player;
 0:  }
 0:
+0:  /** Get move in x coordinate.
+0:   * @return
+0:   */
 0:  public int getMoveX() {
 0:    return moveX;
 0:  }
 0:
+0:  /** Set move in x coordinate.
+0:   * @param moveX x coordinate
+0:   */
 0:  public void setMoveX(int moveX) {
 0:    this.moveX = moveX;
 0:  }
 0:
+0:  /** Get move in y coordinate.
+0:   * @return
+0:   */
 0:  public int getMoveY() {
 0:    return moveY;
 0:  }
 0:
+0:  /** Set move in y coordinate.
+0:   * @param moveY y coordinate
+0:   */
 0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
-0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+    this.moveY = moveY;
+  }
+}
 </PRE></CODE>
 </BODY>
 </HTML>

@@ -2,21 +2,11 @@ package models;
 
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
-   */
+  private boolean moveValidity;
 
+  private int code;
 
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
-  }
+  private String message;
 
   public boolean isMoveValidity() {
     return moveValidity;
@@ -41,11 +31,5 @@ public class Message {
   public void setMessage(String message) {
     this.message = message;
   }
-
-  private boolean moveValidity;
-
-  private int code;
-
-  private String message;
 
 }

@@ -2,6 +2,26 @@ package models;
 
 public class Player {
 
+  private char type;
+
+  private int id;
+  
+  /** Default constructor.
+   */
+  public Player() {
+    this.type = ' ';
+    this.id = 0;
+  }
+  
+  /** Complete constructor.
+   * @param type chess piece type
+   * @param id player id
+   */
+  public Player(char type, int id) {
+    this.type = type;
+    this.id = id;
+  }
+
   public char getType() {
     return type;
   }
@@ -17,9 +37,5 @@ public class Player {
   public void setId(int id) {
     this.id = id;
   }
-
-  private char type;
-
-  private int id;
 
 }

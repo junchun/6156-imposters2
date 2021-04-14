@@ -2,34 +2,31 @@ package models;
 
 public class Move {
 
-  public Player getPlayer() {
+  private final Player player;
+
+  private final int moveX;
+
+  private final int moveY;
+
+  public final Player getPlayer() {
     return player;
   }
 
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
-
-  public int getMoveX() {
+  public int getX() {
     return moveX;
   }
 
-  public void setMoveX(int moveX) {
-    this.moveX = moveX;
-  }
-
-  public int getMoveY() {
+  public int getY() {
     return moveY;
   }
 
-  public void setMoveY(int moveY) {
+  /** 
+   * Create a new Move object using the specified parameters.
+   */
+  public Move(Player player, int moveX, int moveY) {
+    this.player = player;
+    this.moveX = moveX;
     this.moveY = moveY;
   }
-
-  private Player player;
-
-  private int moveX;
-
-  private int moveY;
 
 }

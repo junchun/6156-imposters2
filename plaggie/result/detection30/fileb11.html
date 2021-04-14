@@ -1,112 +1,143 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/37/GameBoard.java</TITLE>
+<TITLE>plaggie_data/28/PlayGame.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/37/GameBoard.java</H1>
+<H1>plaggie_data/28/PlayGame.java</H1>
 <CODE><PRE>
-package models;
+package controllers;
 
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
 
-public class GameBoard {
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  private static GameBoard gameboard;
+
   /**
-   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
-   * have joined turn Which player's turn it is boardState The board representation winner Whether
-   * there is a winner isDraw Whether there is a draw
+   * Main method of the application.
+   * 
+   * @param args Command line arguments
    */
-  public GameBoard() {
-    super();
-    this.gameStarted = false;
-    this.turn = 1;
-    this.boardState = new char[3][3];
-    this.winner = 0;
-    this.isDraw = false;
-  }
-
-  // public GameBoard() {
-  // gameStarted = false;
-  // turn = 1;
-  // boardState = new char[3][3];
-  // winner = 0;
-  // isDraw = false;
-  // }
-
-
-  private Player p1;
+  public static void main(final String[] args) {
 
 
 
-  private Player p2;
-
-  private boolean gameStarted;
-
-  private int turn;
-
-  private char[][] boardState;
-
-  private int winner;
-
-  private boolean isDraw;
-
-
-
-<A NAME="match0"></A><A HREF="filea11.html#match0" TARGET="left">0</A>:  public Player getP1() {
-0:    return p1;
-0:  }
+    // Test Echo Server
+<A NAME="match0"></A><A HREF="filea11.html#match0" TARGET="left">0</A>:    if (app=="/echo") {
+0:      ctx.result(ctx.body());
+0:    }
 0:
-0:  public void setP1(Player p1) {
-0:    this.p1 = p1;
-0:  }
+0:    // Endpoint that redirects to initial UI, allowing user to start a game.
+0:    if (app=="/newgame") {
+0:      ctx.redirect("/tictactoe.html");
+0:    }
 0:
-0:  public Player getP2() {
-0:    return p2;
-0:  }
-0:
-0:  public void setP2(Player p2) {
-0:    this.p2 = p2;
-0:  }
-0:
-0:  public boolean isGameStarted() {
-0:    return gameStarted;
-0:  }
-0:
-0:  public void setGameStarted(boolean gameStarted) {
-0:    this.gameStarted = gameStarted;
-0:  }
+0:    // Endpoint to initialize player 1 and gameboard. 
+0:    if (app=="/startgame") {
+0:      String requestBody = ctx.body();
+      char playerType = requestBody.charAt(requestBody.indexOf("=") + 1);
+      gameboard = new GameBoard();
 
-  public int getTurn() {
-    return turn;
+      Player player1 = new Player();
+      player1.setId(1);
+      player1.setType(playerType);
+      
+      gameboard.setP1(player1);
+      ctx.result(getGameboardJson());
+    }
+
+    // Endpoint to initialize player 2, add them to game, and start the game.
+    if (app=="/joingame") {
+      Player p2 = new Player();
+      p2.setId(2);
+      if (gameboard.getP1().getType() == 'O') {
+        p2.setType('X');
+      } else {
+        p2.setType('O');
+      }
+      
+      gameboard.setP2(p2);
+      gameboard.setGameStarted(true);
+      
+      sendGameBoardToAllPlayers(getGameboardJson());
+      ctx.redirect("/tictactoe.html?p=2");
+    }
+
+    // Endpoint to execute a move if valid and update gameboard state accordingly.
+    if (app=="/move/:playerId") {
+      String playerId = ctx.pathParam("playerId");
+      Player player;
+      if (playerId.indexOf('1') != -1) {
+        player = gameboard.getP1();
+      } else {
+        player = gameboard.getP2();
+      }
+      
+      String requestBody = ctx.body();
+      int x = Integer.parseInt("" + requestBody.charAt(requestBody.indexOf("=") + 1));
+      int y = Integer.parseInt("" + requestBody.charAt(requestBody.lastIndexOf("=") + 1));
+      Move move = new Move(player, x, y);
+      
+      Message response;
+      if (gameboard.isValidMove(move)) {
+        gameboard.makeMove(move);
+        response = new Message(true, 100, "");
+      } else {
+        response = new Message(false, 400, "This is not a valid move.");
+      }
+      
+      Gson gsonLib = new Gson();
+      ctx.result(gsonLib.toJson(response));
+      sendGameBoardToAllPlayers(getGameboardJson());
+    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
   }
 
-  public void setTurn(int turn) {
-    this.turn = turn;
+  /**
+   * Send message to all players.
+   * 
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+        System.out.println("The following error occured: " + e.getMessage());
+      }
+    }
   }
 
-  public char[][] getBoardState() {
-    return boardState;
+  /**
+   * Returns JSON string of current gameboard.
+   * 
+   * @return gameboard represented as JSON string.
+   */
+  private static String getGameboardJson() {
+    Gson gsonLib = new Gson();
+    return gsonLib.toJson(gameboard);
   }
 
-  public void setBoardState(char[][] boardState) {
-    this.boardState = boardState;
+  public static void stop() {
+    app.stop();
   }
-
-  public int getWinner() {
-    return winner;
-  }
-
-  public void setWinner(int winner) {
-    this.winner = winner;
-  }
-
-  public boolean isDraw() {
-    return isDraw;
-  }
-
-  public void setDraw(boolean isDraw) {
-    this.isDraw = isDraw;
-  }
-
-
 }
 </PRE></CODE>
 </BODY>

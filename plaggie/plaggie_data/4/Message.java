@@ -3,49 +3,66 @@ package models;
 public class Message {
 
   /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+   * Indicate if move is valid.
    */
+  private boolean moveValidity;
 
+  /**
+   * 3-digit code that record the move.
+   */
+  private int code;
 
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
+  /**
+   * Message return to player after move (if any).
+   */
+  private String message;
+
+  /**
+   * Set moveValidity.
+   * @param validity
+   */
+  public void setMoveValidity(final boolean validity) {
+    this.moveValidity = validity;
   }
 
-  public boolean isMoveValidity() {
+  /**
+   * Get moveValidity variable.
+   * @return moveValidity boolean
+   */
+  public boolean getMoveValidity() {
     return moveValidity;
   }
 
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
+  /**
+   * Set Code for a move.
+   * @param c
+   */
+  public void setCode(final int c) {
+    this.code = c;
   }
 
+  /**
+   * Get code of a move.
+   * @return code integer
+   */
   public int getCode() {
     return code;
   }
 
-  public void setCode(int code) {
-    this.code = code;
+  /**
+   * Set message.
+   * @param msg
+   */
+  public void setMessage(final String msg) {
+    this.message = msg;
   }
 
+  /**
+   * Get message.
+   * @return message string
+   */
   public String getMessage() {
     return message;
   }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-  private boolean moveValidity;
-
-  private int code;
-
-  private String message;
 
 }

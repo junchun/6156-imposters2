@@ -1,45 +1,111 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/36/Move.java</TITLE>
+<TITLE>plaggie_data/22/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/36/Move.java</H1>
+<H1>plaggie_data/22/GameBoard.java</H1>
 <CODE><PRE>
 package models;
 
-public class Move {
+public class GameBoard {
 
-<A NAME="match0"></A><A HREF="fileb6.html#match0" TARGET="right">0</A>:  public Player getPlayer() {
-0:    return player;
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  /**
+   * creates GameBoard; assumes first player starts game and is initiated with game.
+   */
+  public GameBoard() {
+    this.gameStarted = false;
+    this.turn = 1; 
+    this.boardState = new char[3][3];
+    this.winner = 0;
+    this.isDraw = false;
+    
+  }
+  
+  // Set and Get Player variables
+<A NAME="match0"></A><A HREF="fileb6.html#match0" TARGET="right">0</A>:  public Player getP1() {
+0:    return this.p1;
 0:  }
-0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  
+0:  public void setP1(Player p) {
+0:    this.p1 = p;
 0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  
+0:  public Player getP2() {
+0:    return this.p2;
 0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  
+0:  public void setP2(Player p) {
+0:    this.p2 = p;
 0:  }
-0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  
+0:  // set &amp; get gameStart state 
+0:  public boolean getGameStarted() {
+0:    return this.gameStarted;
 0:  }
-0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
+0:  
+0:  public void setGameStarted(boolean state) {
+0:    this.gameStarted = state;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+  
+  // set and get turn 
+  public int getTurn() {
+    return this.turn;
+  }
+  
+  public void setTurn(int i) {
+    this.turn = i;
+  }
+  
+  //set and get board state
+  public char [][] getBoardState() {
+    return this.boardState;
+  }
+  
+  /**
+   * this sets the board state taking in a move.
+   * @param m move variable has all the info to change board state 
+   */
+  public void setBoardState(Move m) {
+    int x = m.getMoveX();
+    int y = m.getMoveY();
+    char t = m.getPlayer().getType();
+    this.boardState[x][y] = t;
+  }
+  
+  public int getWinner() {
+    return this.winner;
+  }
+  
+  public void setWinner(int p) {
+    this.winner = p;
+  }
+  
+  public boolean getIsDraw() {
+    return this.isDraw;
+  }
+  
+  public void setIsDraw(boolean tf) {
+    this.isDraw = tf;
+  }
+  
+  
+  
+  
+  
+}
 </PRE></CODE>
 </BODY>
 </HTML>

@@ -1,43 +1,76 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/11/Move.java</TITLE>
+<TITLE>plaggie_data/33/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/11/Move.java</H1>
+<H1>plaggie_data/33/Message.java</H1>
 <CODE><PRE>
 package models;
 
-public class Move {
+public class Message {
 
-<A NAME="match0"></A><A HREF="filea5.html#match0" TARGET="left">0</A>:  public Player getPlayer() {
-0:    return player;
+  /** Indicate if the current move is valid. */
+  private boolean moveValidity;
+
+  /** The status code of the current move. */
+  private int code;
+
+  /** The message to show of this move. */
+  private String message;
+
+  /** Constructor for Message.
+   * @param ifValid if the move is validated
+   * @param statusCode the status code
+   * @param messageToShow the error notification to show
+   */
+  public Message(final boolean ifValid, final int statusCode,
+      final String messageToShow) {
+    this.moveValidity = ifValid;
+    this.code = statusCode;
+    this.message = messageToShow;
+  }
+
+  /** Make sure the variable can be serialized.
+   *  @return moveValidity
+   */
+<A NAME="match0"></A><A HREF="filea5.html#match0" TARGET="left">0</A>:  public boolean isMoveValidity() {
+0:    return moveValidity;
 0:  }
 0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  /** Make sure the variable can be serialized.
+0:   *  @param ifValid moveValidity
+0:   */
+0:  public void setMoveValidity(final boolean ifValid) {
+0:    this.moveValidity = ifValid;
 0:  }
 0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  /** Make sure the variable can be serialized.
+0:   *  @return code
+0:   */
+0:  public int getCode() {
+0:    return code;
 0:  }
 0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  /** Make sure the variable can be serialized.
+0:   *  @param statusCode code
+0:   */
+0:  public void setCode(final int statusCode) {
+0:    this.code = statusCode;
 0:  }
 0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  /** Make sure the variable can be serialized.
+0:   *  @return message
+0:   */
+0:  public String getMessage() {
+0:    return message;
 0:  }
 0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
+0:  /** Make sure the variable can be serialized.
+0:   *  @param messageToShow message
+0:   */
+0:  public void setMessage(final String messageToShow) {
+0:    this.message = messageToShow;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
 0:
 0:}
 </PRE></CODE>

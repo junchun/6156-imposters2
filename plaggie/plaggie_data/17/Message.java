@@ -2,50 +2,21 @@ package models;
 
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
-   */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
-  }
-
-  public boolean isMoveValidity() {
-    return moveValidity;
-  }
-
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public void setCode(int code) {
-    this.code = code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
   private boolean moveValidity;
 
   private int code;
 
   private String message;
 
+  /** An array to store the player messages. */
+  private final String[] messages = new String[] {
+      "Please share the link for second player to join: http://localhost:8080/joingame",
+      "Invalid Move", "Please wait until the other player finish the move"};
+
+  /** Constructor for a new Message object. */
+  public Message(int code) {
+    this.moveValidity = false;
+    this.code = code;
+    this.message = messages[code];
+  }
 }

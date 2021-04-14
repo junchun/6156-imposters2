@@ -2,24 +2,31 @@ package models;
 
 public class Player {
 
+  private char type;
+  private int id;
+  
+  //constructor: takes in player number p = ( 1 || 2) and type t = (X||O)
+  public Player(int p, char t) {
+    this.type = t;
+    this.id = p; 
+  }
+  
+  // get/set type 
   public char getType() {
-    return type;
+    return this.type;
   }
-
-  public void setType(char type) {
-    this.type = type;
+  
+  public void setType(char t) {
+    this.type = t;
   }
-
+  
+  // get/set id 
   public int getId() {
-    return id;
+    return this.id;
   }
-
+  
   public void setId(int id) {
     this.id = id;
   }
-
-  private char type;
-
-  private int id;
 
 }

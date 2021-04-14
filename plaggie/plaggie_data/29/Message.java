@@ -1,51 +1,35 @@
 package models;
 
+import com.google.gson.Gson;
+
 public class Message {
-
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
-   */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
-  }
-
-  public boolean isMoveValidity() {
-    return moveValidity;
-  }
-
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public void setCode(int code) {
-    this.code = code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
 
   private boolean moveValidity;
 
   private int code;
 
   private String message;
+  
+  /**
+   * Creates an instance of a message.
+   * @param validity whether the move is valid
+   * @param c the code associated with the move
+   * @param m the message to display with the move
+   */
+  public Message(boolean validity, int c, String m) {
+    moveValidity = validity;
+    code = c;
+    message = m;
+  }
+  
+  /**
+   * Returns moveValidity, code, and message as a 
+   * json formatted String.
+   */
+  public String getMessage() {
+    Gson gson = new Gson();
+    String json = gson.toJson(this);
+    return json;
+  }
 
 }

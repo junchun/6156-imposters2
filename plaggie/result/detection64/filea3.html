@@ -1,61 +1,105 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/36/Message.java</TITLE>
+<TITLE>plaggie_data/23/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/36/Message.java</H1>
+<H1>plaggie_data/23/Message.java</H1>
 <CODE><PRE>
 <A NAME="match0"></A><A HREF="fileb3.html#match0" TARGET="right">0</A>:package models;
 0:
 0:public class Message {
 0:
 0:  /**
-0:   * A Message is sent as feedback for every movement.
-0:   * 
-0:   * @param moveValidity To validate move
-0:   * @param code Type of message
-0:   * @param message Text to display as feedback
+0:   * the validity of the move.
 0:   */
-0:
-0:
-0:  public Message(boolean moveValidity, int code, String message) {
-0:    super();
-0:    this.moveValidity = moveValidity;
-0:    this.code = code;
-0:    this.message = message;
-0:  }
-0:
-0:  public boolean isMoveValidity() {
-0:    return moveValidity;
-0:  }
-0:
-0:  public void setMoveValidity(boolean moveValidity) {
-0:    this.moveValidity = moveValidity;
-0:  }
-0:
-0:  public int getCode() {
-0:    return code;
-0:  }
-0:
-0:  public void setCode(int code) {
-0:    this.code = code;
-0:  }
-0:
-0:  public String getMessage() {
-0:    return message;
-0:  }
-0:
-0:  public void setMessage(String message) {
-0:    this.message = message;
-0:  }
-0:
 0:  private boolean moveValidity;
 0:
+0:  /**
+0:   * the code of this message.
+0:   */
 0:  private int code;
 0:
+0:  /**
+0:   * the message content.
+0:   */
 0:  private String message;
 0:
-0:}
+0:  /**
+0:   * construct a new message. 
+0:   * @param m the validity of some move
+0:   * @param newCode the message code 
+0:   * @param msg the content of the message
+0:   */
+0:  public Message(final boolean m, final int newCode, final String msg) {
+0:	  this.moveValidity = m;
+0:	  this.code = newCode;
+0:	  this.message = msg;
+0:  }
+0:  
+0:  
+0:  // a set of getters
+0:  
+0:  /**
+0:   * 
+0:   * @return if the associated move with this message
+0:   *  		  is valid or not
+0:   */
+0:  public boolean getMoveValidity() {
+0:	  return this.moveValidity;
+0:  }
+0:  
+0:  /**
+0:   * 
+0:   * @return the message code
+0:   */
+0:  public int getCode() {
+0:	  return this.code;
+0:  }
+0:  
+0:  /**
+0:   * 
+0:   * @return the content of the message
+0:   */
+0:  public String getMessage() {
+0:	  return this.message;
+0:  }
+  
+  // a set of setters
+  
+  /**
+   * reset the validity of some move with the given boolean.
+   * @param m the new validity
+   */
+  public void setMoveValidity(final boolean m) {
+	  this.moveValidity = m;
+  }
+  
+  /**
+   * reset the message code.
+   * @param c the new message code
+   */
+  public void setCode(final int c) {
+	  this.code = c;
+  }
+  
+  /**
+   * reset the new message.
+   * @param msg the new message content
+   */
+  public void setMessage(final String msg) {
+	  this.message = msg;
+  }
+  
+  /**
+   * 
+   * @return the json msg of this message
+   */
+  public String getJson() {
+	  return "{\"moveValidity\": " + this.moveValidity + ", \"code\": " 
+			  + this.code + ", \"message\": \""
+			  + this.message + "\"}";
+  }
+}
 </PRE></CODE>
 </BODY>
 </HTML>

@@ -1,38 +1,12 @@
 package models;
 
-
 public class GameBoard {
-  /**
-   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
-   * have joined turn Which player's turn it is boardState The board representation winner Whether
-   * there is a winner isDraw Whether there is a draw
-   */
-  public GameBoard() {
-    super();
-    this.gameStarted = false;
-    this.turn = 1;
-    this.boardState = new char[3][3];
-    this.winner = 0;
-    this.isDraw = false;
-  }
-
-  // public GameBoard() {
-  // gameStarted = false;
-  // turn = 1;
-  // boardState = new char[3][3];
-  // winner = 0;
-  // isDraw = false;
-  // }
-
 
   private Player p1;
-
-
 
   private Player p2;
 
   private boolean gameStarted;
-
   private int turn;
 
   private char[][] boardState;
@@ -40,64 +14,88 @@ public class GameBoard {
   private int winner;
 
   private boolean isDraw;
-
-
-
+  
+  /**
+   * creates GameBoard; assumes first player starts game and is initiated with game.
+   */
+  public GameBoard() {
+    this.gameStarted = false;
+    this.turn = 1; 
+    this.boardState = new char[3][3];
+    this.winner = 0;
+    this.isDraw = false;
+    
+  }
+  
+  // Set and Get Player variables
   public Player getP1() {
-    return p1;
+    return this.p1;
   }
-
-  public void setP1(Player p1) {
-    this.p1 = p1;
+  
+  public void setP1(Player p) {
+    this.p1 = p;
   }
-
+  
   public Player getP2() {
-    return p2;
+    return this.p2;
   }
-
-  public void setP2(Player p2) {
-    this.p2 = p2;
+  
+  public void setP2(Player p) {
+    this.p2 = p;
   }
-
-  public boolean isGameStarted() {
-    return gameStarted;
+  
+  // set & get gameStart state 
+  public boolean getGameStarted() {
+    return this.gameStarted;
   }
-
-  public void setGameStarted(boolean gameStarted) {
-    this.gameStarted = gameStarted;
+  
+  public void setGameStarted(boolean state) {
+    this.gameStarted = state;
   }
-
+  
+  // set and get turn 
   public int getTurn() {
-    return turn;
+    return this.turn;
   }
-
-  public void setTurn(int turn) {
-    this.turn = turn;
+  
+  public void setTurn(int i) {
+    this.turn = i;
   }
-
-  public char[][] getBoardState() {
-    return boardState;
+  
+  //set and get board state
+  public char [][] getBoardState() {
+    return this.boardState;
   }
-
-  public void setBoardState(char[][] boardState) {
-    this.boardState = boardState;
+  
+  /**
+   * this sets the board state taking in a move.
+   * @param m move variable has all the info to change board state 
+   */
+  public void setBoardState(Move m) {
+    int x = m.getMoveX();
+    int y = m.getMoveY();
+    char t = m.getPlayer().getType();
+    this.boardState[x][y] = t;
   }
-
+  
   public int getWinner() {
-    return winner;
+    return this.winner;
   }
-
-  public void setWinner(int winner) {
-    this.winner = winner;
+  
+  public void setWinner(int p) {
+    this.winner = p;
   }
-
-  public boolean isDraw() {
-    return isDraw;
+  
+  public boolean getIsDraw() {
+    return this.isDraw;
   }
-
-  public void setDraw(boolean isDraw) {
-    this.isDraw = isDraw;
+  
+  public void setIsDraw(boolean tf) {
+    this.isDraw = tf;
   }
-
-
+  
+  
+  
+  
+  
 }

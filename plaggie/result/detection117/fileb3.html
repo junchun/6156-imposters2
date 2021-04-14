@@ -1,35 +1,56 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/16/Player.java</TITLE>
+<TITLE>plaggie_data/15/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/16/Player.java</H1>
+<H1>plaggie_data/15/Message.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="filea3.html#match0" TARGET="left">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
+package models;
+
+public class Message {
+
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+  
+  /** Complete constructor.
+   * @param valid whether move is valid or not
+   * @param code return code
+   * @param msg message to show up on the UI
+   */
+  public Message(boolean valid, int code, String msg) {
+    this.moveValidity = valid;
+    this.code = code;
+    this.message = msg;
+  }
+
+<A NAME="match0"></A><A HREF="filea3.html#match0" TARGET="left">0</A>:  public boolean isMoveValidity() {
+0:    return moveValidity;
 0:  }
 0:
-0:  public void setType(char type) {
-0:    this.type = type;
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
 0:  }
 0:
-0:  public int getId() {
-0:    return id;
+0:  public int getCode() {
+0:    return code;
 0:  }
 0:
-0:  public void setId(int id) {
-0:    this.id = id;
+0:  public void setCode(int code) {
+0:    this.code = code;
 0:  }
 0:
-0:  private char type;
+0:  public String getMessage() {
+0:    return message;
+0:  }
 0:
-0:  private int id;
-0:
-0:}
+0:  public void setMessage(String message) {
+0:    this.message = message;
+0:  }
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

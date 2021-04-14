@@ -1,60 +1,125 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/15/Message.java</TITLE>
+<TITLE>plaggie_data/4/PlayGame.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/15/Message.java</H1>
+<H1>plaggie_data/4/PlayGame.java</H1>
 <CODE><PRE>
-package models;
+package controllers;
 
-public class Message {
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import org.eclipse.jetty.websocket.api.Session;
+import models.Player;
+import models.GameBoard;
+import models.Move;
+import models.Message;
+import com.google.gson.Gson;
+
+final class PlayGame {
 
   /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+   * Private constructor that prevent utility class instantiation.
    */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
+  private PlayGame() {
+    // Throw an exception if this ever *is* called
+    throw new AssertionError("Instantiating utility class.");
   }
 
-  public boolean isMoveValidity() {
-    return moveValidity;
+  /**
+   *  Set listening port.
+   */
+<A NAME="match0"></A><A HREF="fileb10.html#match0" TARGET="right">0</A>:  private static final int PORT_NUMBER = 8080;
+0:
+0:  /**
+0:   * Create Javalin instance.
+0:   */
+0:  private static Javalin app;
+0:
+0:  /** Main method of the application.
+0:   * @param args Command line arguments
+0:   */
+0:  public static void main(final String[] args) {
+0:    GameBoard board = new GameBoard();
+0:
+0:
+0:    // Test Echo Server
+0:    if(app=="/echo"){
+0:      ctx.result(ctx.body());
+0:    }
+0:
+0:    if(app=="/newgame"){
+0:      ctx.redirect("/tictactoe.html");
+0:    }
+0:
+0:    if(app=="/startgame"){
+      board.setBoardState();
+      board.setTurn(1);
+      Player p1 = new Player();
+      board.setP1(p1);
+      p1.setType(ctx.formParam("type").charAt(0));
+      p1.setId(1);
+      ctx.result(new Gson().toJson(board));
+    }
+
+    if(app=="/joingame"){
+      Player p2 = new Player();
+      board.setP2(p2);
+      if (board.getP1().getType() == 'X') {
+        p2.setType('O');
+      } else {
+        p2.setType('X');
+      }
+      p2.setId(2);
+      ctx.redirect("/tictactoe.html?p=2");
+      board.setGameStarted(true);
+      sendGameBoardToAllPlayers(new Gson().toJson(board));
+    }
+
+    if(app=="/move/:playerId"){
+      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+      Move move = new Move();
+      Message message = new Message();
+      move.setPlayer(board.getPlayerFromId(playerId));
+      move.setMoveX(Integer.parseInt(ctx.formParam("x")));
+      move.setMoveY(Integer.parseInt(ctx.formParam("y")));
+      if (board.isValid(move, message)) {
+        board.makeMove(move);
+        if (!board.isOver(move)) {
+          board.switchTurn();
+        }
+      }
+      ctx.result(new Gson().toJson(message));
+      sendGameBoardToAllPlayers(new Gson().toJson(board));
+    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
   }
 
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+        e.printStackTrace();
+      }
+    }
   }
 
-<A NAME="match0"></A><A HREF="fileb10.html#match0" TARGET="right">0</A>:  public int getCode() {
-0:    return code;
-0:  }
-0:
-0:  public void setCode(int code) {
-0:    this.code = code;
-0:  }
-0:
-0:  public String getMessage() {
-0:    return message;
-0:  }
-0:
-0:  public void setMessage(String message) {
-0:    this.message = message;
-0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
-
-  private String message;
-
+  /**
+   * Stop the application.
+   */
+  public static void stop() {
+    app.stop();
+  }
 }
 </PRE></CODE>
 </BODY>

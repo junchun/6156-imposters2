@@ -1,39 +1,41 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/10/Message.java</TITLE>
+<TITLE>plaggie_data/26/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/10/Message.java</H1>
+<H1>plaggie_data/26/Message.java</H1>
 <CODE><PRE>
 package models;
 
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+
+  /** Set the message's all fileds including move's validity, code, and message.
+   *
+   * @param moveValidity Boolean: Move's validity
+   * @param code Integer: Response code: 200 OK, 400 Bad Request
+   * @param message String: Response message
    */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
+  public void setFullMessage(boolean moveValidity, int code, String message) {
     this.moveValidity = moveValidity;
     this.code = code;
-    this.message = message;
-  }
-
-  public boolean isMoveValidity() {
-    return moveValidity;
-  }
-
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
-  }
-
-<A NAME="match0"></A><A HREF="filea9.html#match0" TARGET="left">0</A>:  public int getCode() {
+<A NAME="match0"></A><A HREF="filea9.html#match0" TARGET="left">0</A>:    this.message = message;
+0:  }
+0:
+0:  public boolean getMoveValidity() {
+0:    return moveValidity;
+0:  }
+0:
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
+0:  }
+0:
+0:  public int getCode() {
 0:    return code;
 0:  }
 0:
@@ -48,13 +50,6 @@ public class Message {
 0:  public void setMessage(String message) {
 0:    this.message = message;
 0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
-
-  private String message;
-
 }
 </PRE></CODE>
 </BODY>

@@ -2,6 +2,24 @@ package models;
 
 public class Move {
 
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+
+  /** Constructor for Move with all parameters.
+   *
+   * @param player Player: The player who made this move
+   * @param x int: Row position
+   * @param y int: Column position
+   */
+  public Move(Player player, int x, int y) {
+    this.player = player;
+    this.moveX = x;
+    this.moveY = y;
+  }
+
   public Player getPlayer() {
     return player;
   }
@@ -25,11 +43,4 @@ public class Move {
   public void setMoveY(int moveY) {
     this.moveY = moveY;
   }
-
-  private Player player;
-
-  private int moveX;
-
-  private int moveY;
-
 }

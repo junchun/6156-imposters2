@@ -1,45 +1,101 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/16/Move.java</TITLE>
+<TITLE>plaggie_data/37/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/16/Move.java</H1>
+<H1>plaggie_data/37/GameBoard.java</H1>
 <CODE><PRE>
 package models;
 
-public class Move {
+public class GameBoard {
 
-<A NAME="match0"></A><A HREF="filea6.html#match0" TARGET="left">0</A>:  public Player getPlayer() {
-0:    return player;
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  
+  
+  // getters
+  
+  /**
+   * Get player participating in the game by id.
+   * @param playerID the ID of the player, not null
+   * @return Player
+   */
+  public Player getPlayer(int playerID) {
+    if (playerID == 1) {
+      return this.p1;
+    }
+    return this.p2;
+  }
+  
+  public int getCurPlayer() {
+    return this.turn;
+  }
+  
+  public char[][] getBoardState() {
+    return this.boardState;
+  }
+  
+  public char getBoardStateAt(int x, int y) {
+    return this.boardState[x][y];
+  }
+  
+<A NAME="match0"></A><A HREF="filea6.html#match0" TARGET="left">0</A>:  public boolean getGameStarted() {
+0:    return this.gameStarted;
+0:  }
+0:  
+0:  public boolean getDraw() {
+0:    return this.isDraw;
+0:  }
+0:  
+0:  public int getWinner() {
+0:    return this.winner;
 0:  }
 0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  public void setP1(Player player1) {
+0:    this.p1 = player1;
 0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  
+0:  public void setP2(Player player2) {
+0:    this.p2 = player2;
 0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  
+0:  public void setTurn(int playerID) {
+0:    this.turn = playerID;
 0:  }
-0:
-0:  public int getMoveY() {
-0:    return moveY;
-0:  }
-0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
-0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+0:  
+0:  public void setDraw(boolean draw) {
+    this.isDraw = draw;
+  }
+  
+  public void setWinner(int playerID) {
+    this.winner = playerID;
+  }
+  
+  public void setGameStarted(boolean started) {
+    this.gameStarted = started;
+  }
+  
+  public void setBoardState(char[][] newBoard) {
+    this.boardState = newBoard;
+  }
+  
+  public void setBoardStateAt(int x, int y, char type) {
+    this.boardState[x][y] = type;
+  }
+  
+}
 </PRE></CODE>
 </BODY>
 </HTML>

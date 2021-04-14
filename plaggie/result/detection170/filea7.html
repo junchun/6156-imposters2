@@ -1,35 +1,78 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/29/Player.java</TITLE>
+<TITLE>plaggie_data/25/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/29/Player.java</H1>
+<H1>plaggie_data/25/Message.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
-0:  }
-0:
-0:  public void setType(char type) {
-0:    this.type = type;
-0:  }
-0:
-0:  public int getId() {
-0:    return id;
-0:  }
-0:
-0:  public void setId(int id) {
-0:    this.id = id;
-0:  }
+package models;
 
-  private char type;
+public class Message {
 
-  private int id;
+  private boolean moveValidity;
 
-}
+  private int code;
+
+  private String message;
+  
+  /**
+   * Constructor for Message.
+   */
+  public Message() {
+    moveValidity = true;
+    code = 100;
+    message = "";
+  }
+
+  /**
+   * Getter for moveValidity.
+   * @return the moveValidity
+   */
+<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:  public boolean isMoveValidity() {
+0:    return moveValidity;
+0:  }
+0:
+0:  /**
+0:   * Setter for moveValidity.
+0:   * @param moveValidity the moveValidity to set
+0:   */
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
+0:  }
+0:
+0:  /**
+0:   * Getter for code.
+0:   * @return the code
+0:   */
+0:  public int getCode() {
+0:    return code;
+0:  }
+0:
+0:  /**
+0:   * Setter for code.
+0:   * @param code the code to set
+0:   */
+0:  public void setCode(int code) {
+0:    this.code = code;
+0:  }
+0:
+0:  /**
+0:   * Getter for message.
+0:   * @return the message
+0:   */
+0:  public String getMessage() {
+0:    return message;
+0:  }
+0:
+0:  /**
+0:   * Setter for message.
+0:   * @param message the message to set
+0:   */
+0:  public void setMessage(String message) {
+0:    this.message = message;
+0:  }
+0:
+0:}
 </PRE></CODE>
 </BODY>
 </HTML>

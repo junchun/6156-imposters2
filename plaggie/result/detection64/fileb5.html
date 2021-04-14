@@ -1,45 +1,241 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/10/Move.java</TITLE>
+<TITLE>plaggie_data/34/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/10/Move.java</H1>
+<H1>plaggie_data/34/GameBoard.java</H1>
 <CODE><PRE>
 package models;
 
-public class Move {
+public class GameBoard {
 
-<A NAME="match0"></A><A HREF="filea5.html#match0" TARGET="left">0</A>:  public Player getPlayer() {
-0:    return player;
+<A NAME="match1"></A><A HREF="filea5.html#match1" TARGET="left">1</A>:  private Player p1;
+1:
+1:  private Player p2;
+1:
+1:  private boolean gameStarted;
+1:
+1:  private int turn;
+1:
+1:  private char[][] boardState;
+1:
+1:  private int winner;
+1:
+1:  private boolean isDraw;
+1:  
+1:  /**
+1:   * Constructor.
+1:   */
+1:  public GameBoard() {
+1:    this.p1 = null;
+1:    this.p2 = null;
+1:    this.gameStarted = false;
+1:    this.turn = 0;
+1:    this.boardState = new char[3][3];
+1:    this.winner = 0;
+1:    this.isDraw = false;
+  }
+  
+  /**
+   * To start a new game.
+   */
+  public void startOver() {
+    this.p1 = null;
+    this.p2 = null;
+    this.gameStarted = false;
+    this.turn = 0;
+    this.boardState = new char[3][3];
+    this.winner = 0;
+    this.isDraw = false;
+  }
+  
+  /**
+   * Check if game is started.
+   * @return if game is started.
+   */
+  public boolean isGameStarted() {
+    return this.gameStarted; 
+  }
+  
+  /**
+   * Start initial game.
+   */
+  public void startGame() {
+    this.gameStarted = true;
+    this.turn = 1;
+  }
+ 
+  /**
+   * Set player.
+   * @param type player1 info.
+   */
+  public void setPlayer1(char type) {
+    this.p1 = new Player(type, 1);
+  }
+  
+  /**
+   * Set player.
+   * @param type player2 info.
+   */
+  public void setPlayer2(char type) {
+    this.p2 = new Player(type, 2);
+    this.gameStarted = true;
+<A NAME="match0"></A><A HREF="filea5.html#match0" TARGET="left">0</A>:  }
+0:  
+0:  /**
+0:   * Get player1.
+0:   * @return player1 in the game.
+0:   */
+0:  public Player getPlayer1() {
+0:    return this.p1;
 0:  }
-0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  
+0:  /** Get player2.
+0:   * @return player2 in this game.
+0:   */
+0:  public Player getPlayer2() {
+0:    return this.p2;
 0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  
+0:  /**
+0:   * get the winner of the game.
+0:   * @return winner 
+0:   */
+0:  public int getWinner() {
+0:    return this.winner;
 0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  
+0:  /**
+0:   * get turn.
+0:   * @return turn
+0:   */
+0:  public int getTurn() {
+0:    return this.turn;
 0:  }
-0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  
+0:  /**
+0:   * get if the game is draw.
+0:   * @return if is draw
+0:   */
+0:  public boolean getIsDraw() {
+0:    return this.isDraw;
 0:  }
-0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
-0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+0:  
+0:  /**
+0:   * Check which player it is according to the type char.
+0:   * @param type The char type we want to check.
+0:   * @return the id of the player.
+0:   */
+0:  public int checkTypePlayer(char type) {
+    if (type == this.p1.getType()) {
+      return 1;
+    }
+    return 2;
+  }
+  
+  /**
+   * Check if a player win based on the current board state.
+   * 
+   * @return whether one of the player win the game.
+   */
+  public boolean checkWin() {
+    // check if have 3 consecutive in a column
+    for (int i = 0; i &lt; this.boardState.length; i++) { 
+      char a = this.boardState[i][0];
+      for (int j = 1; j &lt; this.boardState[0].length; j++) {
+        if (this.boardState[i][j] != a) {
+          break;
+        }
+        if (j == boardState[0].length - 1 &amp;&amp; a != 0) {
+          this.winner = this.checkTypePlayer(a);
+          return true;
+        }
+      }
+    }
+    
+    // check if have 3 consecutive in a row
+    for (int i = 0; i &lt; this.boardState[0].length; i++) { 
+      char a = this.boardState[0][i];
+      for (int j = 1; j &lt; this.boardState.length; j++) {
+        if (this.boardState[j][i] != a) {
+          break;
+        }
+        if (j == boardState[0].length - 1 &amp;&amp; a != 0) {
+          this.winner = this.checkTypePlayer(a);
+          return true;
+        }
+      }
+    }
+    
+    // check diagonal
+    char b = this.boardState[0][0];
+    for (int i = 1; i &lt; this.boardState.length; i++) {
+      if (b != this.boardState[i][i] || b == 0) {
+        break;
+      }
+      if (i == boardState.length - 1) {
+        this.winner = this.checkTypePlayer(b);
+        return true;
+      }
+    }
+      
+    // check diagonal
+    char c = this.boardState[0][this.boardState.length - 1];
+    for (int i = 1; i &lt; this.boardState.length; i++) {
+      if (c != this.boardState[i][this.boardState.length - 1 - i] || c == 0) {
+        break;
+      }
+      if (i == boardState.length - 1) {
+        this.winner = this.checkTypePlayer(c);
+        return true;
+      }
+    }
+    
+    // check if draw
+    for (int i = 0; i &lt; this.boardState.length; i++) { 
+      for (int j = 1; j &lt; this.boardState[0].length; j++) {
+        if (this.boardState[i][j] == 0) {
+          return false;
+        }
+      }
+    }
+    
+    this.isDraw = true;
+    
+    return false;
+  }
+  
+  /** Try if the move is valid, if so move.
+   * @param move The move we want to try.
+   * @return Whether the move is valid.
+   */
+  public boolean tryMove(Move move) {
+    if (this.winner != 0 || this.isDraw == true) {
+      return false;
+    }
+    int x = move.getX();
+    int y = move.getY();
+    Player player = move.getPlayer();
+    
+    if (this.turn != player.getId()) {
+      return false;
+    }
+    
+    if (this.boardState[x][y] == 0) {
+      boardState[x][y] = player.getType();
+    } else {
+      return false;
+    }  
+    this.checkWin();
+    
+    if (this.turn == 1) {
+      this.turn = 2;
+    } else {
+      this.turn = 1;
+    }
+    return true;
+  }
+}
 </PRE></CODE>
 </BODY>
 </HTML>

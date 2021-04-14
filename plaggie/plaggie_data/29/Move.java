@@ -2,34 +2,34 @@ package models;
 
 public class Move {
 
-  public Player getPlayer() {
-    return player;
-  }
-
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
-
-  public int getMoveX() {
-    return moveX;
-  }
-
-  public void setMoveX(int moveX) {
-    this.moveX = moveX;
-  }
-
-  public int getMoveY() {
-    return moveY;
-  }
-
-  public void setMoveY(int moveY) {
-    this.moveY = moveY;
-  }
-
   private Player player;
 
   private int moveX;
 
   private int moveY;
+  
+  /**
+   * Constructs an instance of a "move".
+   * @param p the player who made the move
+   * @param x the x position of the move
+   * @param y the y position of the move
+   */
+  public Move(Player p, int x, int y) {
+    player = p;
+    moveX = x;
+    moveY = y;
+  }
+ 
+  public int getMoveX() {
+    return moveX;
+  }
+  
+  public int getMoveY() {
+    return moveY;
+  }
+  
+  public Player getPlayer() {
+    return player;
+  }
 
 }

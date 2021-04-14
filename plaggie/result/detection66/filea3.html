@@ -1,35 +1,78 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/29/Player.java</TITLE>
+<TITLE>plaggie_data/4/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/29/Player.java</H1>
+<H1>plaggie_data/4/Move.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb3.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
+package models;
+
+public class Move {
+
+  /**
+   * Player who makes the move.
+   */
+  private Player player;
+
+  /**
+   * Index of row of the move.
+   */
+  private int moveX;
+
+  /**
+   * Index of column of the move.
+   */
+  private int moveY;
+
+  /**
+   * Set player of the move.
+   * @param p Player object
+   */
+<A NAME="match0"></A><A HREF="fileb3.html#match0" TARGET="right">0</A>:  public void setPlayer(final Player p) {
+0:    this.player = p;
 0:  }
 0:
-0:  public void setType(char type) {
-0:    this.type = type;
+0:  /**
+0:   * Get player of the move.
+0:   * @return Player object
+0:   */
+0:  public Player getPlayer() {
+0:    return player;
 0:  }
 0:
-0:  public int getId() {
-0:    return id;
+0:  /**
+0:   * Set row index.
+0:   * @param x
+0:   */
+0:  public void setMoveX(final int x) {
+0:    this.moveX = x;
 0:  }
 0:
-0:  public void setId(int id) {
-0:    this.id = id;
+0:  /**
+0:   * Get row index.
+0:   * @return row index integer
+0:   */
+0:  public int getMoveX() {
+0:    return moveX;
 0:  }
 0:
-0:  private char type;
-0:
-0:  private int id;
-0:
-0:}
+0:  /**
+0:   * Set column index.
+0:   * @param y
+0:   */
+0:  public void setMoveY(final int y) {
+0:    this.moveY = y;
+0:  }
+
+  /**
+   * Get column index.
+   * @return column index integer
+   */
+  public int getMoveY() {
+    return moveY;
+  }
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

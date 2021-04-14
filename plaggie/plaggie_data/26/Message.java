@@ -2,23 +2,25 @@ package models;
 
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+
+  /** Set the message's all fileds including move's validity, code, and message.
+   *
+   * @param moveValidity Boolean: Move's validity
+   * @param code Integer: Response code: 200 OK, 400 Bad Request
+   * @param message String: Response message
    */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
+  public void setFullMessage(boolean moveValidity, int code, String message) {
     this.moveValidity = moveValidity;
     this.code = code;
     this.message = message;
   }
 
-  public boolean isMoveValidity() {
+  public boolean getMoveValidity() {
     return moveValidity;
   }
 
@@ -41,11 +43,4 @@ public class Message {
   public void setMessage(String message) {
     this.message = message;
   }
-
-  private boolean moveValidity;
-
-  private int code;
-
-  private String message;
-
 }

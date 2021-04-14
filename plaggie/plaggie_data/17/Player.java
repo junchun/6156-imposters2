@@ -2,24 +2,24 @@ package models;
 
 public class Player {
 
-  public char getType() {
-    return type;
+  private char type; // "X" or "O"
+
+  private int id; // 1 or 2
+
+  Player(char inputType, int inputId) {
+    type = inputType;
+    id = inputId;
   }
 
-  public void setType(char type) {
-    this.type = type;
+  public void changePlayerType(char inputType) {
+    this.type = inputType;
   }
 
-  public int getId() {
-    return id;
+  public char getPlayerType() {
+    return this.type;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public int getPlayerId() {
+    return this.id;
   }
-
-  private char type;
-
-  private int id;
-
 }

@@ -1,33 +1,86 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/11/Player.java</TITLE>
+<TITLE>plaggie_data/28/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/11/Player.java</H1>
+<H1>plaggie_data/28/Message.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
-0:  }
-0:
-0:  public void setType(char type) {
-0:    this.type = type;
-0:  }
-0:
-0:  public int getId() {
-0:    return id;
-0:  }
-0:
-0:  public void setId(int id) {
-0:    this.id = id;
-0:  }
+package models;
 
-  private char type;
+public class Message {
 
-  private int id;
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+
+  /**
+   * Constructor for the Message class.
+   * 
+   * @param moveValidity indicating whether move was valid or not.
+   * @param code to identify types of errors from one another.
+   * @param message describing move
+   */
+  public Message(boolean moveValidity, int code, String message) {
+<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:    this.moveValidity = moveValidity;
+0:    this.code = code;
+0:    this.message = message;
+0:  }
+0:
+0:  /**
+0:   * Returns boolean indicating the moveValidity.
+0:   * 
+0:   * @return the moveValidity
+0:   */
+0:  public boolean isMoveValidity() {
+0:    return moveValidity;
+0:  }
+0:
+0:  /**
+0:   * Sets moveValidity. 
+0:   * 
+0:   * @param moveValidity the moveValidity to set
+0:   */
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
+0:  }
+0:
+0:  /**
+0:   * Returns code of message.
+0:   * 
+0:   * @return the code
+0:   */
+0:  public int getCode() {
+0:    return code;
+0:  }
+0:
+0:  /**
+0:   * Sets code of message. 
+0:   * 
+0:   * @param code the code to set
+0:   */
+0:  public void setCode(int code) {
+0:    this.code = code;
+0:  }
+0:
+0:  /**
+0:   * Gets string message within Message object.
+0:   * 
+0:   * @return the message
+0:   */
+0:  public String getMessage() {
+    return message;
+  }
+
+  /**
+   * Sets message string.
+   * 
+   * @param message the message to set
+   */
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
 }
 </PRE></CODE>

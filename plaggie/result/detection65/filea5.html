@@ -1,45 +1,95 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/15/Move.java</TITLE>
+<TITLE>plaggie_data/23/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/15/Move.java</H1>
+<H1>plaggie_data/23/Move.java</H1>
 <CODE><PRE>
 package models;
 
 public class Move {
 
+  /**
+   * the player who makes this move.
+   */
+  private Player player;
+
+  /**
+   * the x coordinate of this move.
+   */
+  private int moveX;
+
+  /**
+   * the y coordinate of this move.
+   */
+  private int moveY;
+
+  /**
+   * Construct a Move of player p with given x and y coordinate 
+   * in the gameboard.
+   * @param p the player who plays the move 
+   * @param mx the x coordinate of this move on gameboard
+   * @param my the y coordinate of this move on gameboard
+   */
+  public Move(final Player p, final int mx, final int my) {
+	  this.player = p;
+	  this.moveX = mx;
+	  this.moveY = my;
+  }
+  
+  // a set of getters 
+  
+  /**
+   * @return the player who made this moves
+   */
 <A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  public Player getPlayer() {
-0:    return player;
+0:	  return this.player;
 0:  }
-0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  
+0:  /**
+0:   * 
+0:   * @return the x coordinate on gameboard of this move
+0:   */
+0:  public int getMX() {
+0:	  return this.moveX;
 0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  
+0:  /**
+0:   * 
+0:   * @return the y coordinate on gameboard of this move
+0:   */
+0:  public int getMY() {
+0:	  return this.moveY;
 0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  
+0:  // a set of setters
+0:  
+0:  /**
+0:   * Reset this move's player with the given player.
+0:   * @param p the player who needs to be assigned to this move
+0:   */
+0:  public void setPlayer(final Player p) {
+0:	  this.player = p;
 0:  }
-0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  
+0:  /**
+0:   * reset the x coordinate of this move with the given mx.
+0:   * @param mx the new x coordinate of this move
+0:   */
+0:  public void setMX(final int mx) {
+0:	  this.moveX = mx;
 0:  }
-0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
+0:  
+0:  /**
+0:   * reset the y coordinate of this move with the given my.
+0:   * @param my the new y coordinate of this move
+0:   */
+0:  public void setMY(final int my) {
+0:	  this.moveY = my;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+  
+  
+}
 </PRE></CODE>
 </BODY>
 </HTML>

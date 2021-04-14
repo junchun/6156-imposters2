@@ -1,33 +1,83 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/14/Player.java</TITLE>
+<TITLE>plaggie_data/36/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/14/Player.java</H1>
+<H1>plaggie_data/36/GameBoard.java</H1>
 <CODE><PRE>
 package models;
 
-public class Player {
+public class GameBoard {
 
-<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  public char getType() {
-0:    return type;
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+
+  public Player getP1() {
+    return p1;
+<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  }
+0:
+0:  public void setP1(Player p1) {
+0:    this.p1 = p1;
 0:  }
 0:
-0:  public void setType(char type) {
-0:    this.type = type;
+0:  public Player getP2() {
+0:    return p2;
 0:  }
 0:
-0:  public int getId() {
-0:    return id;
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
 0:  }
 0:
-0:  public void setId(int id) {
-0:    this.id = id;
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
 0:  }
 0:
-0:  private char type;
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
+0:  }
 0:
-0:  private int id;
+0:  public int getTurn() {
+0:    return turn;
+0:  }
+0:
+0:  public void setTurn(int turn) {
+    this.turn = turn;
+  }
+
+  public char[][] getBoardState() {
+    return boardState;
+  }
+
+  public void setBoardState(char[][] boardState) {
+    this.boardState = boardState;
+  }
+
+  public int getWinner() {
+    return winner;
+  }
+
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
 
 }
 </PRE></CODE>

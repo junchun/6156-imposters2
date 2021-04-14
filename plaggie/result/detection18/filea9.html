@@ -1,59 +1,100 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/5/Message.java</TITLE>
+<TITLE>plaggie_data/10/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/5/Message.java</H1>
+<H1>plaggie_data/10/GameBoard.java</H1>
 <CODE><PRE>
 package models;
 
-public class Message {
+import java.io.IOException;
 
+public class GameBoard {
+
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+  
   /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+   * GameBoard Class Constructor, initialize objects and arrays.
    */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
+  public GameBoard() {
+    this.boardState = new char[3][3];
+    this.gameStarted = false;
+    this.turn = 1;
+    this.winner = 0;
+    this.isDraw = false;
+  }
+  
+  public Player getP1() {
+    return p1;
+<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  }
+0:
+0:  public void setP1(Player p1) {
+0:    this.p1 = p1;
+0:  }
+0:
+0:  public Player getP2() {
+0:    return p2;
+0:  }
+0:
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
+0:  }
+0:
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
+0:  }
+0:
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
+0:  }
+0:
+0:  public int getTurn() {
+0:    return turn;
+0:  }
+0:
+0:  public void setTurn(int turn) {
+    this.turn = turn;
   }
 
-  public boolean isMoveValidity() {
-    return moveValidity;
+  public char[][] getBoardState() {
+    return boardState;
   }
 
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
+  public void setBoardState(char[][] boardState) {
+    this.boardState = boardState;
+  }
+  
+  public void setBoardState(int x, int y, char value) {
+    this.boardState[x][y] = value;
+  }
+  
+  public int getWinner() {
+    return winner;
   }
 
-<A NAME="match0"></A><A HREF="fileb9.html#match0" TARGET="right">0</A>:  public int getCode() {
-0:    return code;
-0:  }
-0:
-0:  public void setCode(int code) {
-0:    this.code = code;
-0:  }
-0:
-0:  public String getMessage() {
-0:    return message;
-0:  }
-0:
-0:  public void setMessage(String message) {
-0:    this.message = message;
-0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
 
-  private String message;
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
 
 }
 </PRE></CODE>

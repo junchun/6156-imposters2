@@ -2,50 +2,57 @@ package models;
 
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
-   */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
-  }
-
-  public boolean isMoveValidity() {
-    return moveValidity;
-  }
-
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public void setCode(int code) {
-    this.code = code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
   private boolean moveValidity;
 
   private int code;
 
   private String message;
 
+  /**
+   * Get moveValidity.
+   * @return moveValidity
+   */
+  public boolean getMoveValidity() {
+    return moveValidity;
+  }
+
+  /**
+   * set moveValidity.
+   * @param moveValidity true if move is valid
+   */
+  public void setMoveValidity(boolean moveValidity) {
+    this.moveValidity = moveValidity;
+  }
+
+  /**
+   * Get HTTP code.
+   * @return HTTP status code
+   */
+  public int getCode() {
+    return code;
+  }
+
+  /**
+   * Set HTTP code.
+   * @param code HTTP status code
+   */
+  public void setCode(int code) {
+    this.code = code;
+  }
+
+  /**
+   * Get message.
+   * @return message
+   */
+  public String getMessage() {
+    return message;
+  }
+
+  /**
+   * Set message.
+    * @param message message
+    */
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

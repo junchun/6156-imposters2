@@ -1,61 +1,79 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/27/Message.java</TITLE>
+<TITLE>plaggie_data/3/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/27/Message.java</H1>
+<H1>plaggie_data/3/Message.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="filea4.html#match0" TARGET="left">0</A>:package models;
-0:
-0:public class Message {
-0:
-0:  /**
-0:   * A Message is sent as feedback for every movement.
-0:   * 
-0:   * @param moveValidity To validate move
-0:   * @param code Type of message
-0:   * @param message Text to display as feedback
-0:   */
-0:
-0:
-0:  public Message(boolean moveValidity, int code, String message) {
-0:    super();
-0:    this.moveValidity = moveValidity;
-0:    this.code = code;
-0:    this.message = message;
+package models;
+
+import com.google.gson.Gson;
+
+public class Message {
+
+  private boolean moveValidity;
+  private int code;
+  private String message;
+
+  /** Constructor - sets code to 100 by default.
+   * 
+   */
+  public Message() {
+<A NAME="match0"></A><A HREF="filea4.html#match0" TARGET="left">0</A>:    code = 100;
 0:  }
 0:
-0:  public boolean isMoveValidity() {
+0:  /** Get move validity.
+0:   * @return
+0:   */
+0:  public boolean getMoveValidity() {
 0:    return moveValidity;
 0:  }
 0:
+0:  /** Set move validity.
+0:   * @param moveValidity move validity
+0:   */
 0:  public void setMoveValidity(boolean moveValidity) {
 0:    this.moveValidity = moveValidity;
 0:  }
 0:
+0:  /** Get code.
+0:   * @return
+0:   */
 0:  public int getCode() {
 0:    return code;
 0:  }
 0:
+0:  /** Set code.
+0:   * @param code the message code
+0:   */
 0:  public void setCode(int code) {
 0:    this.code = code;
 0:  }
 0:
+0:  /** Get message.
+0:   * @return
+0:   */
 0:  public String getMessage() {
 0:    return message;
 0:  }
 0:
+0:  /** Set message.
+0:   * @param message the text message
+0:   */
 0:  public void setMessage(String message) {
 0:    this.message = message;
 0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
-0:
-0:  private String message;
-0:
-0:}
+
+  /** Converts object to JSON.
+   * @return
+   */
+  public String toJson() { //https://stackoverflow.com/questions/18106778/convert-java-object-to-json-and-vice-versa
+
+    Gson gson = new Gson(); 
+    return gson.toJson(this);
+  }
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

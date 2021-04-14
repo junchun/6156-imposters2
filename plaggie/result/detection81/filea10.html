@@ -1,60 +1,100 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/14/Message.java</TITLE>
+<TITLE>plaggie_data/15/PlayGame.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/14/Message.java</H1>
+<H1>plaggie_data/15/PlayGame.java</H1>
 <CODE><PRE>
-package models;
+package controllers;
 
-public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  /** Main method of the application.
+   * @param args Command line arguments
    */
+  public static void main(final String[] args) {
 
 
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
+    // Test Echo Server
+    if (app=="/echo") {
+      ctx.result(ctx.body());
+    }
+    
+    // Default info
+    if (app=="/") {
+      ctx.result("Please go to /newgame to start a game.");
+    }
+
+    GameBoard game = new GameBoard();
+    Gson gson = new Gson();
+    
+    // New game
+    if (app=="/newgame") {
+      ctx.redirect("tictactoe.html");
+      ctx.result("Redirect to tictactoe.html");
+    }
+    
+    // Player 1 to pick a chess piece and start the game
+    if (app=="/startgame") {
+      // Request body: "type=x"
+      char type = ctx.req.getParameter("type").toCharArray()[0];
+      game.setP1(new Player(type, 1));
+      ctx.json(gson.toJson(game));
+    }
+    
+    // Player 2 to join the game
+    if (app=="/joingame") {
+      game.setP2();
+      ctx.redirect("/tictactoe.html?p=2");
+<A NAME="match0"></A><A HREF="fileb10.html#match0" TARGET="right">0</A>:      sendGameBoardToAllPlayers(gson.toJson(game));
+0:    }
+0:    
+0:    // Players make a move on the board
+0:    if (app=="/move/:playerId") {
+0:      int id = Integer.parseInt(ctx.pathParam("playerId"));
+0:      int x = Integer.parseInt(ctx.req.getParameter("x"));
+0:      int y = Integer.parseInt(ctx.req.getParameter("y"));
+      ctx.json(gson.toJson(game.makeMove(id, x, y)));
+      sendGameBoardToAllPlayers(gson.toJson(game));
+    }
+    
+    
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
   }
 
-  public boolean isMoveValidity() {
-    return moveValidity;
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+      }
+    }
   }
 
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
+  public static void stop() {
+    app.stop();
   }
-
-<A NAME="match0"></A><A HREF="fileb10.html#match0" TARGET="right">0</A>:  public int getCode() {
-0:    return code;
-0:  }
-0:
-0:  public void setCode(int code) {
-0:    this.code = code;
-0:  }
-0:
-0:  public String getMessage() {
-0:    return message;
-0:  }
-0:
-0:  public void setMessage(String message) {
-0:    this.message = message;
-0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
-
-  private String message;
-
 }
 </PRE></CODE>
 </BODY>

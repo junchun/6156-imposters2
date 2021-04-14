@@ -3,22 +3,41 @@
 <BODY>
 <CODE><PRE>
 <A NAME="token0">0:</A>1(0)-1(14):PACKAGE_DECLARATION:package models;
-<A NAME="token1">1:</A>3(17)-3(37):CLASS_DECLARATION:public class Player {
-<A NAME="token2">2:</A>5(54)-5(64):METHOD_DECLARATION:getType() {
-<A NAME="token3">3:</A>6(70)-6(81):RETURN:return type;
-<A NAME="token4">4:</A>7(85)-7(85):METHOD_DECLARATION_END:}
-<A NAME="token5">5:</A>9(102)-9(121):METHOD_DECLARATION:setType(char type) {
-<A NAME="token6">6:</A>10(127)-10(142):ASSIGNMENT:this.type = type
-<A NAME="token7">7:</A>11(147)-11(147):METHOD_DECLARATION_END:}
-<A NAME="token8">8:</A>13(163)-13(171):METHOD_DECLARATION:getId() {
-<A NAME="token9">9:</A>14(177)-14(186):RETURN:return id;
-<A NAME="token10">10:</A>15(190)-15(190):METHOD_DECLARATION_END:}
-<A NAME="token11">11:</A>17(207)-17(221):METHOD_DECLARATION:setId(int id) {
-<A NAME="token12">12:</A>18(227)-18(238):ASSIGNMENT:this.id = id
-<A NAME="token13">13:</A>19(243)-19(243):METHOD_DECLARATION_END:}
-<A NAME="token14">14:</A>21(261)-21(264):VARIABLE_DECLARATION:type
-<A NAME="token15">15:</A>23(282)-23(283):VARIABLE_DECLARATION:id
-<A NAME="token16">16:</A>25(287)-25(287):CLASS_DECLARATION_END:}
+<A NAME="token1">1:</A>3(17)-3(44):IMPORT_DECLARATION:import com.google.gson.Gson;
+<A NAME="token2">2:</A>5(47)-5(68):CLASS_DECLARATION:public class Message {
+<A NAME="token3">3:</A>7(89)-7(100):VARIABLE_DECLARATION:moveValidity
+<A NAME="token4">4:</A>8(117)-8(120):VARIABLE_DECLARATION:code
+<A NAME="token5">5:</A>9(140)-9(146):VARIABLE_DECLARATION:message
+<A NAME="token6">6:</A>17(409)-17(472):CONSTRUCTOR_DECLARATION:public Message(boolean moveValidity, int code, String message) {
+<A NAME="token7">7:</A>18(478)-18(506):METHOD_INVOCATION:setMoveValidity(moveValidity)
+<A NAME="token8">8:</A>19(513)-19(525):METHOD_INVOCATION:setCode(code)
+<A NAME="token9">9:</A>20(532)-20(550):METHOD_INVOCATION:setMessage(message)
+<A NAME="token10">10:</A>21(555)-21(555):CONSTRUCTOR_DECLARATION_END:}
+<A NAME="token11">11:</A>25(602)-25(619):METHOD_DECLARATION:isMoveValidity() {
+<A NAME="token12">12:</A>26(625)-26(644):RETURN:return moveValidity;
+<A NAME="token13">13:</A>27(648)-27(648):METHOD_DECLARATION_END:}
+<A NAME="token14">14:</A>30(688)-30(726):METHOD_DECLARATION:setMoveValidity(boolean moveValidity) {
+<A NAME="token15">15:</A>31(732)-31(763):ASSIGNMENT:this.moveValidity = moveValidity
+<A NAME="token16">16:</A>32(768)-32(768):METHOD_DECLARATION_END:}
+<A NAME="token17">17:</A>35(806)-35(816):METHOD_DECLARATION:getCode() {
+<A NAME="token18">18:</A>36(822)-36(833):RETURN:return code;
+<A NAME="token19">19:</A>37(837)-37(837):METHOD_DECLARATION_END:}
+<A NAME="token20">20:</A>40(873)-40(891):METHOD_DECLARATION:setCode(int code) {
+<A NAME="token21">21:</A>41(897)-41(912):ASSIGNMENT:this.code = code
+<A NAME="token22">22:</A>42(917)-42(917):METHOD_DECLARATION_END:}
+<A NAME="token23">23:</A>45(961)-45(974):METHOD_DECLARATION:getMessage() {
+<A NAME="token24">24:</A>46(980)-46(994):RETURN:return message;
+<A NAME="token25">25:</A>47(998)-47(998):METHOD_DECLARATION_END:}
+<A NAME="token26">26:</A>50(1037)-50(1064):METHOD_DECLARATION:setMessage(String message) {
+<A NAME="token27">27:</A>51(1070)-51(1091):ASSIGNMENT:this.message = message
+<A NAME="token28">28:</A>52(1096)-52(1096):METHOD_DECLARATION_END:}
+<A NAME="token29">29:</A>55(1160)-55(1169):METHOD_DECLARATION:toJson() {
+<A NAME="token30">30:</A>56(1180)-56(1196):VARIABLE_DECLARATION:gson = new Gson()
+<A NAME="token31">31:</A>56(1187)-56(1196):NEW:new Gson()
+<A NAME="token32">32:</A>57(1203)-57(1227):RETURN:return gson.toJson(this);
+<A NAME="token33">33:</A>57(1210)-57(1226):METHOD_INVOCATION:gson.toJson(this)
+<A NAME="token34">34:</A>58(1231)-58(1231):METHOD_DECLARATION_END:}
+<A NAME="token35">35:</A>59(1233)-59(1233):CLASS_DECLARATION_END:}
 </PRE></CODE>
 </BODY>
 </HTML>

@@ -2,34 +2,46 @@ package models;
 
 public class Move {
 
-  public Player getPlayer() {
-    return player;
+  private Player player;
+  
+  private int moveX;
+  
+  private int moveY;
+  
+  /** 
+   * This is Move class.
+   * moveX and moveY represents the move
+   * player is the one who moves
+   */
+  
+  public Move(int moveX, int moveY) {
+    this.player = new Player();
+    this.moveX = moveX;
+    this.moveY = moveY;
   }
-
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
-
-  public int getMoveX() {
-    return moveX;
-  }
-
+  
   public void setMoveX(int moveX) {
     this.moveX = moveX;
   }
-
-  public int getMoveY() {
-    return moveY;
+  
+  public int getMoveX() {
+    return moveX;
   }
-
+  
   public void setMoveY(int moveY) {
     this.moveY = moveY;
   }
-
-  private Player player;
-
-  private int moveX;
-
-  private int moveY;
-
+  
+  public int getMoveY() {
+    return moveY;
+  }
+ 
+  public void setplayer(Player player) {
+    this.player = player;
+  }
+  
+  public Player getplayer() {
+    return player;
+  }
+  
 }

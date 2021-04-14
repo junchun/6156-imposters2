@@ -1,43 +1,43 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/18/Move.java</TITLE>
+<TITLE>plaggie_data/9/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/18/Move.java</H1>
+<H1>plaggie_data/9/Message.java</H1>
 <CODE><PRE>
 <A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:package models;
 0:
-0:public class Move {
+0:public class Message {
 0:
-0:  public Player getPlayer() {
-0:    return player;
+0:  private boolean moveValidity;
+0:
+0:  private int code;
+0:
+0:  private String message;
+0:
+0:  public boolean isMoveValidity() {
+0:    return moveValidity;
 0:  }
 0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
 0:  }
 0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  public int getCode() {
+0:    return code;
 0:  }
 0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  public void setCode(int code) {
+0:    this.code = code;
 0:  }
 0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  public String getMessage() {
+0:    return message;
 0:  }
 0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
+0:  public void setMessage(String message) {
+0:    this.message = message;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
 0:
 0:}
 </PRE></CODE>

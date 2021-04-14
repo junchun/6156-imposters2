@@ -1,45 +1,78 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/37/Move.java</TITLE>
+<TITLE>plaggie_data/4/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/37/Move.java</H1>
+<H1>plaggie_data/4/Message.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb2.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Move {
-0:
-0:  public Player getPlayer() {
-0:    return player;
+package models;
+
+public class Message {
+
+  /**
+   * Indicate if move is valid.
+   */
+  private boolean moveValidity;
+
+  /**
+   * 3-digit code that record the move.
+   */
+  private int code;
+
+  /**
+   * Message return to player after move (if any).
+   */
+  private String message;
+
+  /**
+   * Set moveValidity.
+   * @param validity
+   */
+<A NAME="match0"></A><A HREF="fileb2.html#match0" TARGET="right">0</A>:  public void setMoveValidity(final boolean validity) {
+0:    this.moveValidity = validity;
 0:  }
 0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  /**
+0:   * Get moveValidity variable.
+0:   * @return moveValidity boolean
+0:   */
+0:  public boolean getMoveValidity() {
+0:    return moveValidity;
 0:  }
 0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  /**
+0:   * Set Code for a move.
+0:   * @param c
+0:   */
+0:  public void setCode(final int c) {
+0:    this.code = c;
 0:  }
 0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  /**
+0:   * Get code of a move.
+0:   * @return code integer
+0:   */
+0:  public int getCode() {
+0:    return code;
 0:  }
 0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  /**
+0:   * Set message.
+0:   * @param msg
+0:   */
+0:  public void setMessage(final String msg) {
+0:    this.message = msg;
 0:  }
-0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
-0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+
+  /**
+   * Get message.
+   * @return message string
+   */
+  public String getMessage() {
+    return message;
+  }
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

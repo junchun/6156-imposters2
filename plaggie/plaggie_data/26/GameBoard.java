@@ -1,33 +1,8 @@
 package models;
 
-
 public class GameBoard {
-  /**
-   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
-   * have joined turn Which player's turn it is boardState The board representation winner Whether
-   * there is a winner isDraw Whether there is a draw
-   */
-  public GameBoard() {
-    super();
-    this.gameStarted = false;
-    this.turn = 1;
-    this.boardState = new char[3][3];
-    this.winner = 0;
-    this.isDraw = false;
-  }
-
-  // public GameBoard() {
-  // gameStarted = false;
-  // turn = 1;
-  // boardState = new char[3][3];
-  // winner = 0;
-  // isDraw = false;
-  // }
-
 
   private Player p1;
-
-
 
   private Player p2;
 
@@ -41,7 +16,18 @@ public class GameBoard {
 
   private boolean isDraw;
 
-
+  /** Construct and initialize the GameBoard with Player1.
+   *
+   * @param p1 Player
+   */
+  public GameBoard(Player p1) {
+    this.p1 = p1;
+    this.gameStarted = false;
+    this.turn = 1;
+    this.boardState = new char[3][3];
+    this.winner = 0;
+    this.isDraw = false;
+  }
 
   public Player getP1() {
     return p1;
@@ -79,8 +65,8 @@ public class GameBoard {
     return boardState;
   }
 
-  public void setBoardState(char[][] boardState) {
-    this.boardState = boardState;
+  public void setBoardState(int x, int y, char state) {
+    this.boardState[x][y] = state;
   }
 
   public int getWinner() {
@@ -95,9 +81,7 @@ public class GameBoard {
     return isDraw;
   }
 
-  public void setDraw(boolean isDraw) {
-    this.isDraw = isDraw;
+  public void setDraw(boolean draw) {
+    isDraw = draw;
   }
-
-
 }

@@ -1,33 +1,100 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/33/Player.java</TITLE>
+<TITLE>plaggie_data/10/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/33/Player.java</H1>
+<H1>plaggie_data/10/GameBoard.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="filea7.html#match0" TARGET="left">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
-0:  }
-0:
-0:  public void setType(char type) {
-0:    this.type = type;
-0:  }
-0:
-0:  public int getId() {
-0:    return id;
-0:  }
-0:
-0:  public void setId(int id) {
-0:    this.id = id;
-0:  }
+package models;
 
-  private char type;
+import java.io.IOException;
 
-  private int id;
+public class GameBoard {
+
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  /**
+   * GameBoard Class Constructor, initialize objects and arrays.
+   */
+  public GameBoard() {
+    this.boardState = new char[3][3];
+    this.gameStarted = false;
+    this.turn = 1;
+    this.winner = 0;
+    this.isDraw = false;
+  }
+  
+<A NAME="match0"></A><A HREF="filea7.html#match0" TARGET="left">0</A>:  public Player getP1() {
+0:    return p1;
+0:  }
+0:
+0:  public void setP1(Player p1) {
+0:    this.p1 = p1;
+0:  }
+0:
+0:  public Player getP2() {
+0:    return p2;
+0:  }
+0:
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
+0:  }
+0:
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
+0:  }
+0:
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
+0:  }
+0:
+0:  public int getTurn() {
+0:    return turn;
+0:  }
+0:
+0:  public void setTurn(int turn) {
+0:    this.turn = turn;
+0:  }
+0:
+0:  public char[][] getBoardState() {
+0:    return boardState;
+0:  }
+0:
+0:  public void setBoardState(char[][] boardState) {
+0:    this.boardState = boardState;
+0:  }
+0:  
+0:  public void setBoardState(int x, int y, char value) {
+    this.boardState[x][y] = value;
+  }
+  
+  public int getWinner() {
+    return winner;
+  }
+
+  public void setWinner(int winner) {
+    this.winner = winner;
+  }
+
+  public boolean isDraw() {
+    return isDraw;
+  }
+
+  public void setDraw(boolean isDraw) {
+    this.isDraw = isDraw;
+  }
 
 }
 </PRE></CODE>

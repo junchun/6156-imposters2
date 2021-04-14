@@ -2,6 +2,12 @@ package models;
 
 public class Move {
 
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+
   public Player getPlayer() {
     return player;
   }
@@ -25,11 +31,5 @@ public class Move {
   public void setMoveY(int moveY) {
     this.moveY = moveY;
   }
-
-  private Player player;
-
-  private int moveX;
-
-  private int moveY;
 
 }

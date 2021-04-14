@@ -3,35 +3,57 @@
 <BODY>
 <CODE><PRE>
 <A NAME="token0">0:</A>1(0)-1(14):PACKAGE_DECLARATION:package models;
-<A NAME="token1">1:</A>3(17)-3(38):CLASS_DECLARATION:public class Message {
-<A NAME="token2">2:</A>14(241)-14(304):CONSTRUCTOR_DECLARATION:public Message(boolean moveValidity, int code, String message) {
-<A NAME="token3">3:</A>15(310)-15(317):CONSTRUCTOR_INVOCATION_SUPER:super();
-<A NAME="token4">4:</A>16(323)-16(354):ASSIGNMENT:this.moveValidity = moveValidity
-<A NAME="token5">5:</A>17(361)-17(376):ASSIGNMENT:this.code = code
-<A NAME="token6">6:</A>18(383)-18(404):ASSIGNMENT:this.message = message
-<A NAME="token7">7:</A>19(409)-19(409):CONSTRUCTOR_DECLARATION_END:}
-<A NAME="token8">8:</A>21(429)-21(446):METHOD_DECLARATION:isMoveValidity() {
-<A NAME="token9">9:</A>22(452)-22(471):RETURN:return moveValidity;
-<A NAME="token10">10:</A>23(475)-23(475):METHOD_DECLARATION_END:}
-<A NAME="token11">11:</A>25(492)-25(530):METHOD_DECLARATION:setMoveValidity(boolean moveValidity) {
-<A NAME="token12">12:</A>26(536)-26(567):ASSIGNMENT:this.moveValidity = moveValidity
-<A NAME="token13">13:</A>27(572)-27(572):METHOD_DECLARATION_END:}
-<A NAME="token14">14:</A>29(588)-29(598):METHOD_DECLARATION:getCode() {
-<A NAME="token15">15:</A>30(604)-30(615):RETURN:return code;
-<A NAME="token16">16:</A>31(619)-31(619):METHOD_DECLARATION_END:}
-<A NAME="token17">17:</A>33(636)-33(654):METHOD_DECLARATION:setCode(int code) {
-<A NAME="token18">18:</A>34(660)-34(675):ASSIGNMENT:this.code = code
-<A NAME="token19">19:</A>35(680)-35(680):METHOD_DECLARATION_END:}
-<A NAME="token20">20:</A>37(699)-37(712):METHOD_DECLARATION:getMessage() {
-<A NAME="token21">21:</A>38(718)-38(732):RETURN:return message;
-<A NAME="token22">22:</A>39(736)-39(736):METHOD_DECLARATION_END:}
-<A NAME="token23">23:</A>41(753)-41(780):METHOD_DECLARATION:setMessage(String message) {
-<A NAME="token24">24:</A>42(786)-42(807):ASSIGNMENT:this.message = message
-<A NAME="token25">25:</A>43(812)-43(812):METHOD_DECLARATION_END:}
-<A NAME="token26">26:</A>45(833)-45(844):VARIABLE_DECLARATION:moveValidity
-<A NAME="token27">27:</A>47(862)-47(865):VARIABLE_DECLARATION:code
-<A NAME="token28">28:</A>49(886)-49(892):VARIABLE_DECLARATION:message
-<A NAME="token29">29:</A>51(896)-51(896):CLASS_DECLARATION_END:}
+<A NAME="token1">1:</A>3(17)-3(40):CLASS_DECLARATION:public class GameBoard {
+<A NAME="token2">2:</A>5(60)-5(61):VARIABLE_DECLARATION:p1
+<A NAME="token3">3:</A>7(82)-7(83):VARIABLE_DECLARATION:p2
+<A NAME="token4">4:</A>9(105)-9(115):VARIABLE_DECLARATION:gameStarted
+<A NAME="token5">5:</A>11(133)-11(136):VARIABLE_DECLARATION:turn
+<A NAME="token6">6:</A>13(159)-13(168):VARIABLE_DECLARATION:boardState
+<A NAME="token7">7:</A>15(186)-15(191):VARIABLE_DECLARATION:winner
+<A NAME="token8">8:</A>17(213)-17(218):VARIABLE_DECLARATION:isDraw
+<A NAME="token9">9:</A>19(238)-19(246):METHOD_DECLARATION:getP1() {
+<A NAME="token10">10:</A>20(252)-20(261):RETURN:return p1;
+<A NAME="token11">11:</A>21(265)-21(265):METHOD_DECLARATION_END:}
+<A NAME="token12">12:</A>23(282)-23(299):METHOD_DECLARATION:setP1(Player p1) {
+<A NAME="token13">13:</A>24(305)-24(316):ASSIGNMENT:this.p1 = p1
+<A NAME="token14">14:</A>25(321)-25(321):METHOD_DECLARATION_END:}
+<A NAME="token15">15:</A>27(340)-27(348):METHOD_DECLARATION:getP2() {
+<A NAME="token16">16:</A>28(354)-28(363):RETURN:return p2;
+<A NAME="token17">17:</A>29(367)-29(367):METHOD_DECLARATION_END:}
+<A NAME="token18">18:</A>31(384)-31(401):METHOD_DECLARATION:setP2(Player p2) {
+<A NAME="token19">19:</A>32(407)-32(418):ASSIGNMENT:this.p2 = p2
+<A NAME="token20">20:</A>33(423)-33(423):METHOD_DECLARATION_END:}
+<A NAME="token21">21:</A>35(443)-35(459):METHOD_DECLARATION:isGameStarted() {
+<A NAME="token22">22:</A>36(465)-36(483):RETURN:return gameStarted;
+<A NAME="token23">23:</A>37(487)-37(487):METHOD_DECLARATION_END:}
+<A NAME="token24">24:</A>39(504)-39(540):METHOD_DECLARATION:setGameStarted(boolean gameStarted) {
+<A NAME="token25">25:</A>40(546)-40(575):ASSIGNMENT:this.gameStarted = gameStarted
+<A NAME="token26">26:</A>41(580)-41(580):METHOD_DECLARATION_END:}
+<A NAME="token27">27:</A>43(596)-43(606):METHOD_DECLARATION:getTurn() {
+<A NAME="token28">28:</A>44(612)-44(623):RETURN:return turn;
+<A NAME="token29">29:</A>45(627)-45(627):METHOD_DECLARATION_END:}
+<A NAME="token30">30:</A>47(644)-47(662):METHOD_DECLARATION:setTurn(int turn) {
+<A NAME="token31">31:</A>48(668)-48(683):ASSIGNMENT:this.turn = turn
+<A NAME="token32">32:</A>49(688)-49(688):METHOD_DECLARATION_END:}
+<A NAME="token33">33:</A>51(709)-51(725):METHOD_DECLARATION:getBoardState() {
+<A NAME="token34">34:</A>52(731)-52(748):RETURN:return boardState;
+<A NAME="token35">35:</A>53(752)-53(752):METHOD_DECLARATION_END:}
+<A NAME="token36">36:</A>55(769)-55(804):METHOD_DECLARATION:setBoardState(char[][] boardState) {
+<A NAME="token37">37:</A>56(810)-56(837):ASSIGNMENT:this.boardState = boardState
+<A NAME="token38">38:</A>57(842)-57(842):METHOD_DECLARATION_END:}
+<A NAME="token39">39:</A>59(858)-59(870):METHOD_DECLARATION:getWinner() {
+<A NAME="token40">40:</A>60(876)-60(889):RETURN:return winner;
+<A NAME="token41">41:</A>61(893)-61(893):METHOD_DECLARATION_END:}
+<A NAME="token42">42:</A>63(910)-63(932):METHOD_DECLARATION:setWinner(int winner) {
+<A NAME="token43">43:</A>64(938)-64(957):ASSIGNMENT:this.winner = winner
+<A NAME="token44">44:</A>65(962)-65(962):METHOD_DECLARATION_END:}
+<A NAME="token45">45:</A>67(982)-67(991):METHOD_DECLARATION:isDraw() {
+<A NAME="token46">46:</A>68(997)-68(1010):RETURN:return isDraw;
+<A NAME="token47">47:</A>69(1014)-69(1014):METHOD_DECLARATION_END:}
+<A NAME="token48">48:</A>71(1031)-71(1055):METHOD_DECLARATION:setDraw(boolean isDraw) {
+<A NAME="token49">49:</A>72(1061)-72(1080):ASSIGNMENT:this.isDraw = isDraw
+<A NAME="token50">50:</A>73(1085)-73(1085):METHOD_DECLARATION_END:}
+<A NAME="token51">51:</A>75(1088)-75(1088):CLASS_DECLARATION_END:}
 </PRE></CODE>
 </BODY>
 </HTML>

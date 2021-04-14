@@ -2,24 +2,24 @@ package models;
 
 public class Player {
 
-  public char getType() {
-    return type;
-  }
+  private char type;
+
+  private int id;
 
   public void setType(char type) {
     this.type = type;
-  }
-
-  public int getId() {
-    return id;
   }
 
   public void setId(int id) {
     this.id = id;
   }
 
-  private char type;
+  public char getType() {
+    return type;
+  }
 
-  private int id;
+  public int getId() {
+    return id;
+  }
 
 }

@@ -1,35 +1,37 @@
 package models;
 
+
 public class Move {
-
-  public Player getPlayer() {
-    return player;
-  }
-
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
-
-  public int getMoveX() {
-    return moveX;
-  }
-
-  public void setMoveX(int moveX) {
+  /**
+   * Primary Constructor for Message().
+   *  
+   * @param playerId , current playerID
+   * @param moveX , x location
+   * @param moveY , y location
+   */
+  public Move(int playerId, int moveX, int moveY) {
+    this.playerId = playerId;
     this.moveX = moveX;
-  }
-
-  public int getMoveY() {
-    return moveY;
-  }
-
-  public void setMoveY(int moveY) {
     this.moveY = moveY;
   }
 
-  private Player player;
+  private int playerId;
 
   private int moveX;
 
   private int moveY;
+  
 
+  
+  public int getPlayerId() {
+    return playerId;
+  }
+  
+  public int getMoveX() {
+    return moveX;
+  }
+  
+  public int getMoveY() {
+    return moveY;
+  }
 }

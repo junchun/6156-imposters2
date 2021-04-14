@@ -1,33 +1,13 @@
 package models;
 
+import models.error.AlreadyOccupiedExcpetion;
+import models.error.InvalidMoveException;
+import models.error.InvalidPositionException;
+import models.error.NotYourTurnException;
 
 public class GameBoard {
-  /**
-   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
-   * have joined turn Which player's turn it is boardState The board representation winner Whether
-   * there is a winner isDraw Whether there is a draw
-   */
-  public GameBoard() {
-    super();
-    this.gameStarted = false;
-    this.turn = 1;
-    this.boardState = new char[3][3];
-    this.winner = 0;
-    this.isDraw = false;
-  }
-
-  // public GameBoard() {
-  // gameStarted = false;
-  // turn = 1;
-  // boardState = new char[3][3];
-  // winner = 0;
-  // isDraw = false;
-  // }
-
 
   private Player p1;
-
-
 
   private Player p2;
 
@@ -41,63 +21,139 @@ public class GameBoard {
 
   private boolean isDraw;
 
+  /**
+   * Create a new board with reasonable initial state.
+   */
+  public GameBoard() {
+    newGame();
+  }
+  
+  /**
+   *  Reset the board to initial state.
+   */
+  public void newGame() {
+    this.p1 = this.p2 = null;
+    this.gameStarted = false;;
+    this.turn = 1;
 
-
-  public Player getP1() {
-    return p1;
+    this.boardState = new char[3][3];
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        this.boardState[i][j] = 0;
+      }
+    }
+    
+    this.winner = 0;
+    this.isDraw = false;
   }
 
-  public void setP1(Player p1) {
-    this.p1 = p1;
+  /**
+   * Set the first player of this game to specified player.
+   */
+  public void setPlayer1(Player player) {
+    this.p1 = player;
   }
 
-  public Player getP2() {
-    return p2;
+  /**
+   * Set the second player of this game to specified player.
+   */
+  public void setPlayer2(Player player) {
+    this.p2 = player;
+  }
+  
+  /**
+   * Get the first player.
+   */
+  public Player getPlayer1() {
+    return this.p1;
   }
 
-  public void setP2(Player p2) {
-    this.p2 = p2;
+  /**
+   * Get the second player.
+   */
+  public Player getPlayer2() {
+    return this.p2;
   }
-
-  public boolean isGameStarted() {
-    return gameStarted;
+  
+  /**
+   * Start the game.
+   */
+  public void startGame() {
+    this.gameStarted = true;
   }
+  
+  /**
+   * Let the player p place a move at position specified by x and y.
+   */
+  public void move(Move move) throws InvalidMoveException {
+    Player player = move.getPlayer();
+    int x = move.getX();
+    int y = move.getY();
 
-  public void setGameStarted(boolean gameStarted) {
-    this.gameStarted = gameStarted;
+    if (x < 0 || x >= 3 || y < 0 || y >= 3) {
+      throw new InvalidPositionException();
+    }
+
+    if (turn != player.getId()) {
+      throw new NotYourTurnException();
+    }
+
+    if (boardState[x][y] != 0) {
+      throw new AlreadyOccupiedExcpetion();
+    }
+          
+    boardState[x][y] = player.getType();
+    turn = player.getId() == p1.getId() ? p2.getId() : p1.getId();
+    
+    checkWinner();
   }
-
-  public int getTurn() {
-    return turn;
+  
+  private static boolean threeEqual(char a, char b, char c) {
+    return a == b && b == c && a != 0;
   }
+  
+  private void checkWinner() {
+    // Horizontal && Vertical
+    for (int i = 0; i < 3; ++i) {
+      if (threeEqual(boardState[i][0], boardState[i][1], boardState[i][2])) {
+        setWinner(boardState[i][0]);
+        return;
+      }
 
-  public void setTurn(int turn) {
-    this.turn = turn;
+      if (threeEqual(boardState[0][i], boardState[1][i], boardState[2][i])) {
+        setWinner(boardState[0][i]);
+        return;
+      }
+    }
+    
+    // Diagonals
+    if (threeEqual(boardState[0][0], boardState[1][1], boardState[2][2])) {
+      setWinner(boardState[1][1]);
+      return;
+    }
+
+    if (threeEqual(boardState[2][0], boardState[1][1], boardState[0][2])) {
+      setWinner(boardState[1][1]);
+      return;
+    }
+    
+    // Check if is draw
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        if (boardState[i][j] == 0) {
+          return;
+        }
+      }
+    }
+    
+    isDraw = true;
   }
-
-  public char[][] getBoardState() {
-    return boardState;
+  
+  private void setWinner(char c) {
+    if (c == p1.getType()) {
+      winner = p1.getId();
+    } else {
+      winner = p2.getId();
+    }
   }
-
-  public void setBoardState(char[][] boardState) {
-    this.boardState = boardState;
-  }
-
-  public int getWinner() {
-    return winner;
-  }
-
-  public void setWinner(int winner) {
-    this.winner = winner;
-  }
-
-  public boolean isDraw() {
-    return isDraw;
-  }
-
-  public void setDraw(boolean isDraw) {
-    this.isDraw = isDraw;
-  }
-
-
 }

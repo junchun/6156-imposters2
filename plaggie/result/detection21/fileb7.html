@@ -1,37 +1,13 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/20/Move.java</TITLE>
+<TITLE>plaggie_data/11/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/20/Move.java</H1>
+<H1>plaggie_data/11/Move.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="filea7.html#match0" TARGET="left">0</A>:package models;
-0:
-0:public class Move {
-0:
-0:  public Player getPlayer() {
-0:    return player;
-0:  }
-0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
-0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
-0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
-0:  }
+package models;
 
-  public int getMoveY() {
-    return moveY;
-  }
-
-  public void setMoveY(int moveY) {
-    this.moveY = moveY;
-  }
+public class Move {
 
   private Player player;
 
@@ -39,6 +15,73 @@
 
   private int moveY;
 
+
+  /**
+   * Move constructor.
+   *
+   * @param player player type
+   * @param moveX  move x position
+   * @param moveY  move y position
+   */
+  public Move(Player player, int moveX, int moveY) {
+    this.player = player;
+    this.moveX = moveX;
+    this.moveY = moveY;
+  }
+
+  /**
+   * Set player.
+   *
+   * @param player game player.
+   */
+<A NAME="match0"></A><A HREF="filea7.html#match0" TARGET="left">0</A>:  public void setPlayer(Player player) {
+0:    this.player = player;
+0:  }
+0:
+0:  /**
+0:   * Get player.
+0:   *
+0:   * @return game player.
+0:   */
+0:  public Player getPlayer() {
+0:    return player;
+0:  }
+0:
+0:  /**
+0:   * Set moveX.
+0:   *
+0:   * @param moveX move x position.
+0:   */
+0:  public void setMoveX(int moveX) {
+0:    this.moveX = moveX;
+0:  }
+0:
+0:  /**
+0:   * Set moveY.
+0:   *
+0:   * @param moveY move y position.
+0:   */
+0:  public void setMoveY(int moveY) {
+0:    this.moveY = moveY;
+0:  }
+0:
+0:  /**
+0:   * Get moveX.
+0:   *
+0:   * @return move x position.
+0:   */
+0:  public int getMoveX() {
+0:    return moveX;
+0:  }
+0:
+0:  /**
+0:   * Get moveY.
+0:   *
+0:   * @return move y position.
+0:   */
+0:  public int getMoveY() {
+    return moveY;
+  }
 }
 </PRE></CODE>
 </BODY>

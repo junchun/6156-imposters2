@@ -1,45 +1,85 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/37/Move.java</TITLE>
+<TITLE>plaggie_data/31/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/37/Move.java</H1>
+<H1>plaggie_data/31/GameBoard.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Move {
-0:
-0:  public Player getPlayer() {
-0:    return player;
-0:  }
-0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
-0:  }
-0:
-0:  public int getMoveX() {
-0:    return moveX;
-0:  }
-0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
-0:  }
+package models;
 
-  public int getMoveY() {
-    return moveY;
+public class GameBoard {
+
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+
+  public Player getP1() {
+    return p1;
   }
 
-  public void setMoveY(int moveY) {
-    this.moveY = moveY;
+  public void setP1(Player p1) {
+    this.p1 = p1;
   }
 
-  private Player player;
+  public Player getP2() {
+    return p2;
+  }
 
-  private int moveX;
+  public void setP2(Player p2) {
+    this.p2 = p2;
+  }
 
-  private int moveY;
+  public boolean isGameStarted() {
+    return gameStarted;
+  }
 
-}
+  public void setGameStarted(boolean gameStarted) {
+    this.gameStarted = gameStarted;
+  }
+
+  public int getTurn() {
+    return turn;
+  }
+
+  public void setTurn(int turn) {
+    this.turn = turn;
+  }
+
+<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:  public char[][] getBoardState() {
+0:    return boardState;
+0:  }
+0:
+0:  public void setBoardState(char[][] boardState) {
+0:    this.boardState = boardState;
+0:  }
+0:
+0:  public int getWinner() {
+0:    return winner;
+0:  }
+0:
+0:  public void setWinner(int winner) {
+0:    this.winner = winner;
+0:  }
+0:
+0:  public boolean isDraw() {
+0:    return isDraw;
+0:  }
+0:
+0:  public void setDraw(boolean isDraw) {
+0:    this.isDraw = isDraw;
+0:  }
+0:
+0:}
 </PRE></CODE>
 </BODY>
 </HTML>

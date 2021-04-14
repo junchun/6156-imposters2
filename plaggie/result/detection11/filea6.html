@@ -1,45 +1,88 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/11/Move.java</TITLE>
+<TITLE>plaggie_data/28/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/11/Move.java</H1>
+<H1>plaggie_data/28/Message.java</H1>
 <CODE><PRE>
 package models;
 
-public class Move {
+public class Message {
 
-<A NAME="match0"></A><A HREF="fileb6.html#match0" TARGET="right">0</A>:  public Player getPlayer() {
-0:    return player;
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+
+  /**
+   * Constructor for the Message class.
+   * 
+   * @param moveValidity indicating whether move was valid or not.
+   * @param code to identify types of errors from one another.
+   * @param message describing move
+   */
+  public Message(boolean moveValidity, int code, String message) {
+    this.moveValidity = moveValidity;
+    this.code = code;
+    this.message = message;
+<A NAME="match0"></A><A HREF="fileb6.html#match0" TARGET="right">0</A>:  }
+0:
+0:  /**
+0:   * Returns boolean indicating the moveValidity.
+0:   * 
+0:   * @return the moveValidity
+0:   */
+0:  public boolean isMoveValidity() {
+0:    return moveValidity;
 0:  }
 0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  /**
+0:   * Sets moveValidity. 
+0:   * 
+0:   * @param moveValidity the moveValidity to set
+0:   */
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
 0:  }
 0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  /**
+0:   * Returns code of message.
+0:   * 
+0:   * @return the code
+0:   */
+0:  public int getCode() {
+0:    return code;
 0:  }
 0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  /**
+0:   * Sets code of message. 
+0:   * 
+0:   * @param code the code to set
+0:   */
+0:  public void setCode(int code) {
+0:    this.code = code;
 0:  }
 0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  /**
+0:   * Gets string message within Message object.
+0:   * 
+0:   * @return the message
+0:   */
+0:  public String getMessage() {
+0:    return message;
 0:  }
 0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
+0:  /**
+0:   * Sets message string.
+0:   * 
+0:   * @param message the message to set
+0:   */
+0:  public void setMessage(String message) {
+0:    this.message = message;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
-0:}
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

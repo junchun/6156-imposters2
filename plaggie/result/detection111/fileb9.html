@@ -1,35 +1,56 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/16/Player.java</TITLE>
+<TITLE>plaggie_data/26/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/16/Player.java</H1>
+<H1>plaggie_data/26/Move.java</H1>
 <CODE><PRE>
 package models;
 
-public class Player {
+public class Move {
 
-<A NAME="match0"></A><A HREF="filea9.html#match0" TARGET="left">0</A>:  public char getType() {
-0:    return type;
-0:  }
-0:
-0:  public void setType(char type) {
-0:    this.type = type;
-0:  }
-0:
-0:  public int getId() {
-0:    return id;
-0:  }
-0:
-0:  public void setId(int id) {
-0:    this.id = id;
-0:  }
-0:
-0:  private char type;
-0:
-0:  private int id;
+  private Player player;
 
-}
+  private int moveX;
+
+  private int moveY;
+
+  /** Constructor for Move with all parameters.
+   *
+   * @param player Player: The player who made this move
+   * @param x int: Row position
+   * @param y int: Column position
+   */
+  public Move(Player player, int x, int y) {
+    this.player = player;
+    this.moveX = x;
+    this.moveY = y;
+  }
+
+<A NAME="match0"></A><A HREF="filea9.html#match0" TARGET="left">0</A>:  public Player getPlayer() {
+0:    return player;
+0:  }
+0:
+0:  public void setPlayer(Player player) {
+0:    this.player = player;
+0:  }
+0:
+0:  public int getMoveX() {
+0:    return moveX;
+0:  }
+0:
+0:  public void setMoveX(int moveX) {
+0:    this.moveX = moveX;
+0:  }
+0:
+0:  public int getMoveY() {
+0:    return moveY;
+0:  }
+0:
+0:  public void setMoveY(int moveY) {
+0:    this.moveY = moveY;
+0:  }
+0:}
 </PRE></CODE>
 </BODY>
 </HTML>

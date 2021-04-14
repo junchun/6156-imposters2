@@ -1,33 +1,10 @@
 package models;
 
+import java.io.IOException;
 
 public class GameBoard {
-  /**
-   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
-   * have joined turn Which player's turn it is boardState The board representation winner Whether
-   * there is a winner isDraw Whether there is a draw
-   */
-  public GameBoard() {
-    super();
-    this.gameStarted = false;
-    this.turn = 1;
-    this.boardState = new char[3][3];
-    this.winner = 0;
-    this.isDraw = false;
-  }
-
-  // public GameBoard() {
-  // gameStarted = false;
-  // turn = 1;
-  // boardState = new char[3][3];
-  // winner = 0;
-  // isDraw = false;
-  // }
-
 
   private Player p1;
-
-
 
   private Player p2;
 
@@ -40,9 +17,18 @@ public class GameBoard {
   private int winner;
 
   private boolean isDraw;
-
-
-
+  
+  /**
+   * GameBoard Class Constructor, initialize objects and arrays.
+   */
+  public GameBoard() {
+    this.boardState = new char[3][3];
+    this.gameStarted = false;
+    this.turn = 1;
+    this.winner = 0;
+    this.isDraw = false;
+  }
+  
   public Player getP1() {
     return p1;
   }
@@ -82,7 +68,11 @@ public class GameBoard {
   public void setBoardState(char[][] boardState) {
     this.boardState = boardState;
   }
-
+  
+  public void setBoardState(int x, int y, char value) {
+    this.boardState[x][y] = value;
+  }
+  
   public int getWinner() {
     return winner;
   }
@@ -98,6 +88,5 @@ public class GameBoard {
   public void setDraw(boolean isDraw) {
     this.isDraw = isDraw;
   }
-
 
 }

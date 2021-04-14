@@ -1,33 +1,67 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/36/Player.java</TITLE>
+<TITLE>plaggie_data/25/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/36/Player.java</H1>
+<H1>plaggie_data/25/Move.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
-0:  }
-0:
-0:  public void setType(char type) {
-0:    this.type = type;
-0:  }
-0:
-0:  public int getId() {
-0:    return id;
-0:  }
-0:
-0:  public void setId(int id) {
-0:    this.id = id;
-0:  }
+package models;
 
-  private char type;
+public class Move {
 
-  private int id;
+  private Player player;
+
+  private int moveX;
+
+  private int moveY;
+
+  /**
+   * Getter for player.
+   * @return the player
+   */
+<A NAME="match0"></A><A HREF="fileb7.html#match0" TARGET="right">0</A>:  public Player getPlayer() {
+0:    return player;
+0:  }
+0:
+0:  /**
+0:   * Setter for player.
+0:   * @param player the player to set
+0:   */
+0:  public void setPlayer(Player player) {
+0:    this.player = player;
+0:  }
+0:
+0:  /**
+0:   * Getter for moveX.
+0:   * @return the moveX
+0:   */
+0:  public int getMoveX() {
+0:    return moveX;
+0:  }
+0:
+0:  /**
+0:   * Setter for moveX.
+0:   * @param moveX the moveX to set
+0:   */
+0:  public void setMoveX(int moveX) {
+0:    this.moveX = moveX;
+0:  }
+0:
+0:  /**
+0:   * Getter for moveY.
+0:   * @return the moveY
+0:   */
+0:  public int getMoveY() {
+0:    return moveY;
+0:  }
+0:
+0:  /**
+0:   * Setter for moveY.
+0:   * @param moveY the moveY to set
+0:   */
+0:  public void setMoveY(int moveY) {
+0:    this.moveY = moveY;
+0:  }
 
 }
 </PRE></CODE>

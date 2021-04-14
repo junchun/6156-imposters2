@@ -1,113 +1,149 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/14/GameBoard.java</TITLE>
+<TITLE>plaggie_data/14/PlayGame.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/14/GameBoard.java</H1>
+<H1>plaggie_data/14/PlayGame.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb4.html#match0" TARGET="right">0</A>:package models;
+<A NAME="match0"></A><A HREF="fileb4.html#match0" TARGET="right">0</A>:package controllers;
 0:
+0:import com.google.gson.Gson;
+0:import io.javalin.Javalin;
+0:import java.io.IOException;
+0:import java.util.Queue;
+0:import models.GameBoard;
+0:import models.Message;
+0:import models.Move;
+0:import models.Player;
+0:import org.eclipse.jetty.websocket.api.Session;
+0:import org.slf4j.Logger;
+0:import org.slf4j.LoggerFactory;
 0:
-0:public class GameBoard {
-0:  /**
-0:   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
-0:   * have joined turn Which player's turn it is boardState The board representation winner Whether
-0:   * there is a winner isDraw Whether there is a draw
-0:   */
-0:  public GameBoard() {
-0:    super();
-0:    this.gameStarted = false;
-0:    this.turn = 1;
-0:    this.boardState = new char[3][3];
-0:    this.winner = 0;
-0:    this.isDraw = false;
-0:  }
+0:class PlayGame {
 0:
-0:  // public GameBoard() {
-0:  // gameStarted = false;
-0:  // turn = 1;
-0:  // boardState = new char[3][3];
-0:  // winner = 0;
-0:  // isDraw = false;
-0:  // }
+0:  private static final int PORT_NUMBER = 8080;
 0:
-0:
-0:  private Player p1;
-0:
-0:
-0:
-0:  private Player p2;
-0:
-0:  private boolean gameStarted;
-0:
-0:  private int turn;
-0:
-0:  private char[][] boardState;
-0:
-0:  private int winner;
-0:
-0:  private boolean isDraw;
-0:
-0:
-0:
-0:  public Player getP1() {
-0:    return p1;
-0:  }
-0:
-0:  public void setP1(Player p1) {
-0:    this.p1 = p1;
-0:  }
-0:
-0:  public Player getP2() {
-0:    return p2;
-0:  }
-0:
-0:  public void setP2(Player p2) {
-0:    this.p2 = p2;
-0:  }
-0:
-0:  public boolean isGameStarted() {
-0:    return gameStarted;
-0:  }
-0:
-0:  public void setGameStarted(boolean gameStarted) {
-0:    this.gameStarted = gameStarted;
-0:  }
-0:
-0:  public int getTurn() {
-0:    return turn;
-0:  }
-0:
-0:  public void setTurn(int turn) {
-0:    this.turn = turn;
-0:  }
-0:
-0:  public char[][] getBoardState() {
-0:    return boardState;
-0:  }
-0:
-0:  public void setBoardState(char[][] boardState) {
-0:    this.boardState = boardState;
-0:  }
-0:
-0:  public int getWinner() {
-0:    return winner;
-0:  }
-0:
-0:  public void setWinner(int winner) {
-0:    this.winner = winner;
-0:  }
-0:
-0:  public boolean isDraw() {
-0:    return isDraw;
-0:  }
-0:
-0:  public void setDraw(boolean isDraw) {
-0:    this.isDraw = isDraw;
-0:  }
-0:
-0:
-0:}
+0:  private static Javalin app;
+0:  
+0:  private static GameBoard gameBoard;
+0:  
+0:  private static Player player1;
+  
+  private static Player player2;
+  
+  private static Logger logger = LoggerFactory.getLogger(PlayGame.class);
+
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+
+    // Test Echo Server
+    if (app=="/echo") {
+      ctx.result(ctx.body());
+    }
+    
+    if (app=="/newgame") {
+      ctx.redirect("/tictactoe.html");
+    }
+    
+    if (app=="/startgame") {
+      String requestBody = ctx.body();
+            
+      gameBoard = new GameBoard();
+      char type = requestBody.charAt(requestBody.indexOf("type=") + "type=".length());
+      player1 = new Player();
+      player1.setId(1);
+      player1.setType(type);
+      
+      gameBoard.setP1(player1);
+      
+      Gson gson = new Gson();
+      ctx.result(gson.toJson(gameBoard));
+    }
+    
+    if (app=="/joingame") {
+      ctx.redirect("/tictactoe.html?p=2");
+      
+      char playerType = player1.getType() == 'O' ? 'X' : 'O';
+      
+      player2 = new Player();
+      player2.setId(2);
+      player2.setType(playerType);
+      
+      gameBoard.setP2(player2);
+      gameBoard.setGameStarted(true);
+      
+      Gson gson = new Gson();
+      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+    }
+    
+    if (app=="/move/:playerId") {
+      String requestBody = ctx.body();
+      String playerId = ctx.pathParam("playerId");
+      Player player;
+      Move move = new Move();
+      if (playerId.equals("1")) {
+        player = player1;
+      } else {
+        player = player2;
+      }
+      int moveX = Character.getNumericValue(
+              requestBody.charAt(requestBody.indexOf("x=") + "x=".length()));
+      int moveY = Character.getNumericValue(
+              requestBody.charAt(requestBody.indexOf("y=") + "y=".length()));
+      move.setPlayer(player);
+      move.setMoveX(moveX);
+      move.setMoveY(moveY);
+      
+      Message message = new Message();
+      message.setMoveValidity(gameBoard.isMoveValid(move));
+      message.setCode(100);
+      if (!gameBoard.isMoveValid(move)) {
+        message.setMessage("Invalid move!");
+      } else {
+        if (gameBoard.setMove(move)) {
+          if (gameBoard.isDraw()) {
+            message.setMessage("The game is a draw!");
+          } else {
+            int winner = gameBoard.getWinner();
+            message.setMessage(String.format("Player %d won!", winner));
+          }
+        } else {
+          message.setMessage("");
+        }
+      }
+      
+      Gson gson = new Gson();
+      ctx.result(gson.toJson(message));
+      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        logger.error("An IO exception occurred!");
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
 </PRE></CODE>
 </BODY>
 </HTML>

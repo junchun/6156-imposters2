@@ -1,44 +1,96 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/30/Move.java</TITLE>
+<TITLE>plaggie_data/26/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/30/Move.java</H1>
+<H1>plaggie_data/26/GameBoard.java</H1>
 <CODE><PRE>
 package models;
 
-public class Move {
+public class GameBoard {
 
-<A NAME="match0"></A><A HREF="filea6.html#match0" TARGET="left">0</A>:  public Player getPlayer() {
-0:    return player;
+  private Player p1;
+
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+  private int winner;
+
+  private boolean isDraw;
+
+  /** Construct and initialize the GameBoard with Player1.
+   *
+   * @param p1 Player
+   */
+  public GameBoard(Player p1) {
+    this.p1 = p1;
+    this.gameStarted = false;
+    this.turn = 1;
+    this.boardState = new char[3][3];
+    this.winner = 0;
+    this.isDraw = false;
+  }
+
+  public Player getP1() {
+    return p1;
+  }
+
+  public void setP1(Player p1) {
+    this.p1 = p1;
+  }
+
+  public Player getP2() {
+    return p2;
+  }
+
+  public void setP2(Player p2) {
+    this.p2 = p2;
+  }
+
+  public boolean isGameStarted() {
+    return gameStarted;
+  }
+
+  public void setGameStarted(boolean gameStarted) {
+    this.gameStarted = gameStarted;
+  }
+
+  public int getTurn() {
+    return turn;
+  }
+
+  public void setTurn(int turn) {
+    this.turn = turn;
+  }
+
+<A NAME="match0"></A><A HREF="filea6.html#match0" TARGET="left">0</A>:  public char[][] getBoardState() {
+0:    return boardState;
 0:  }
 0:
-0:  public void setPlayer(Player player) {
-0:    this.player = player;
+0:  public void setBoardState(int x, int y, char state) {
+0:    this.boardState[x][y] = state;
 0:  }
 0:
-0:  public int getMoveX() {
-0:    return moveX;
+0:  public int getWinner() {
+0:    return winner;
 0:  }
 0:
-0:  public void setMoveX(int moveX) {
-0:    this.moveX = moveX;
+0:  public void setWinner(int winner) {
+0:    this.winner = winner;
 0:  }
 0:
-0:  public int getMoveY() {
-0:    return moveY;
+0:  public boolean isDraw() {
+0:    return isDraw;
 0:  }
 0:
-0:  public void setMoveY(int moveY) {
-0:    this.moveY = moveY;
+0:  public void setDraw(boolean draw) {
+0:    isDraw = draw;
 0:  }
-0:
-0:  private Player player;
-0:
-0:  private int moveX;
-0:
-0:  private int moveY;
-0:
 0:}
 </PRE></CODE>
 </BODY>

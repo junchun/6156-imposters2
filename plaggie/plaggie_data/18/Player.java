@@ -2,24 +2,27 @@ package models;
 
 public class Player {
 
-  public char getType() {
-    return type;
-  }
-
-  public void setType(char type) {
+  /**
+   * Constructs a player with their chosen token type.
+   * 
+   * @param type Token--'x' or 'o
+   * @param id player identifier
+   */
+  public Player(char type, int id) {
     this.type = type;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
     this.id = id;
   }
 
   private char type;
 
   private int id;
+
+  public char getType() {
+    return type;
+  }
+
+  public int getId() {
+    return id;
+  }
 
 }

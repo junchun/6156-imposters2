@@ -1,33 +1,8 @@
 package models;
 
-
 public class GameBoard {
-  /**
-   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
-   * have joined turn Which player's turn it is boardState The board representation winner Whether
-   * there is a winner isDraw Whether there is a draw
-   */
-  public GameBoard() {
-    super();
-    this.gameStarted = false;
-    this.turn = 1;
-    this.boardState = new char[3][3];
-    this.winner = 0;
-    this.isDraw = false;
-  }
-
-  // public GameBoard() {
-  // gameStarted = false;
-  // turn = 1;
-  // boardState = new char[3][3];
-  // winner = 0;
-  // isDraw = false;
-  // }
-
 
   private Player p1;
-
-
 
   private Player p2;
 
@@ -40,64 +15,96 @@ public class GameBoard {
   private int winner;
 
   private boolean isDraw;
-
-
-
-  public Player getP1() {
-    return p1;
+  
+  
+  /**
+   * GameBoard class of the model. 
+   * boardState is a char 2D array recording 'X' and 'O'
+   * winner, isDraw, gameStarted are boolean reflecting game status
+   * turn is would be 1 or 2
+   */
+  
+  public GameBoard() {
+    gameStarted = false;
+    turn = 1;
+    this.boardState = new char[3][3];
+    winner = 0;
+    isDraw = false;
+    
   }
-
+  
   public void setP1(Player p1) {
     this.p1 = p1;
   }
-
-  public Player getP2() {
-    return p2;
+  
+  public Player getP1() {
+    return p1;
   }
-
+  
   public void setP2(Player p2) {
     this.p2 = p2;
   }
-
-  public boolean isGameStarted() {
-    return gameStarted;
+  
+  public Player getP2() {
+    return p2;
   }
-
+  
   public void setGameStarted(boolean gameStarted) {
     this.gameStarted = gameStarted;
   }
-
-  public int getTurn() {
-    return turn;
+  
+  public boolean getGameStarted() {
+    return gameStarted;
   }
-
-  public void setTurn(int turn) {
-    this.turn = turn;
+  
+  /**
+   * Set 'X' or 'O' to the 3x3 board.
+   * Check if the game ends 
+   * Switch turn
+   */
+  public void setBoardState(Move move) {
+    Message message = new Message();
+    boardState[move.getMoveX()][move.getMoveY()] = move.getplayer().getType();
+    if (message.checkWin(this, move)) {
+      winner = this.turn;
+      return;
+    }
+    if (message.checkDraw(this)) {
+      isDraw = true;
+      return;
+    }
+    turn = (move.getplayer().getId() == 1) ? 2 : 1;
   }
-
+  
   public char[][] getBoardState() {
     return boardState;
   }
-
-  public void setBoardState(char[][] boardState) {
-    this.boardState = boardState;
+  
+  /** 
+   * Call this when newGame.
+   * Clear the board, ready to serve a new game.
+   */
+  
+  public void setNewGame() {
+    gameStarted = false;
+    turn = 1;
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        boardState[i][j] = 0;
+      }
+    }
+    winner = 0;
+    isDraw = false;
   }
-
-  public int getWinner() {
-    return winner;
+  
+  public void setTurn(Player player) {
+    turn = player.getId();
   }
-
-  public void setWinner(int winner) {
-    this.winner = winner;
+  
+  public int getTurn() {
+    return turn;
   }
-
-  public boolean isDraw() {
-    return isDraw;
-  }
-
-  public void setDraw(boolean isDraw) {
-    this.isDraw = isDraw;
-  }
-
-
+  
 }
+
+

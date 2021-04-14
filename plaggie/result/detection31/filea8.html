@@ -1,34 +1,56 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/16/Player.java</TITLE>
+<TITLE>plaggie_data/19/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/16/Player.java</H1>
+<H1>plaggie_data/19/Message.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="fileb8.html#match0" TARGET="right">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
-0:  }
-0:
-0:  public void setType(char type) {
-0:    this.type = type;
-0:  }
-0:
-0:  public int getId() {
-0:    return id;
-0:  }
-0:
-0:  public void setId(int id) {
-0:    this.id = id;
-0:  }
+package models;
 
-  private char type;
+public class Message {
+  /**
+   * A Message is sent as feedback for every move attempted.
+   *
+   * @param moveValidity Whether the move was valid or not
+   * @param code An identifier for the type of Message
+   * @param message Text to display as feedback to the user
+   */
+  public Message(boolean moveValidity, int code, String message) {
+    super();
+    this.moveValidity = moveValidity;
+    this.code = code;
+    this.message = message;
+  }
 
-  private int id;
+  private boolean moveValidity;
 
+  private int code;
+
+  private String message;
+
+<A NAME="match0"></A><A HREF="fileb8.html#match0" TARGET="right">0</A>:  public boolean isMoveValidity() {
+0:    return moveValidity;
+0:  }
+0:
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
+0:  }
+0:
+0:  public int getCode() {
+0:    return code;
+0:  }
+0:
+0:  public void setCode(int code) {
+0:    this.code = code;
+0:  }
+0:
+0:  public String getMessage() {
+0:    return message;
+0:  }
+0:
+0:  public void setMessage(String message) {
+0:    this.message = message;
+0:  }
 }
 </PRE></CODE>
 </BODY>

@@ -3,22 +3,34 @@
 <BODY>
 <CODE><PRE>
 <A NAME="token0">0:</A>1(0)-1(14):PACKAGE_DECLARATION:package models;
-<A NAME="token1">1:</A>3(17)-3(37):CLASS_DECLARATION:public class Player {
-<A NAME="token2">2:</A>5(54)-5(64):METHOD_DECLARATION:getType() {
-<A NAME="token3">3:</A>6(70)-6(81):RETURN:return type;
-<A NAME="token4">4:</A>7(85)-7(85):METHOD_DECLARATION_END:}
-<A NAME="token5">5:</A>9(102)-9(121):METHOD_DECLARATION:setType(char type) {
-<A NAME="token6">6:</A>10(127)-10(142):ASSIGNMENT:this.type = type
-<A NAME="token7">7:</A>11(147)-11(147):METHOD_DECLARATION_END:}
-<A NAME="token8">8:</A>13(163)-13(171):METHOD_DECLARATION:getId() {
-<A NAME="token9">9:</A>14(177)-14(186):RETURN:return id;
-<A NAME="token10">10:</A>15(190)-15(190):METHOD_DECLARATION_END:}
-<A NAME="token11">11:</A>17(207)-17(221):METHOD_DECLARATION:setId(int id) {
-<A NAME="token12">12:</A>18(227)-18(238):ASSIGNMENT:this.id = id
-<A NAME="token13">13:</A>19(243)-19(243):METHOD_DECLARATION_END:}
-<A NAME="token14">14:</A>21(261)-21(264):VARIABLE_DECLARATION:type
-<A NAME="token15">15:</A>23(282)-23(283):VARIABLE_DECLARATION:id
-<A NAME="token16">16:</A>25(287)-25(287):CLASS_DECLARATION_END:}
+<A NAME="token1">1:</A>3(17)-3(35):CLASS_DECLARATION:public class Move {
+<A NAME="token2">2:</A>5(55)-5(60):VARIABLE_DECLARATION:player
+<A NAME="token3">3:</A>7(78)-7(82):VARIABLE_DECLARATION:moveX
+<A NAME="token4">4:</A>9(100)-9(104):VARIABLE_DECLARATION:moveY
+<A NAME="token5">5:</A>18(299)-18(348):CONSTRUCTOR_DECLARATION:public Move(Player player, int moveX, int moveY) {
+<A NAME="token6">6:</A>19(354)-19(373):ASSIGNMENT:this.player = player
+<A NAME="token7">7:</A>20(380)-20(397):ASSIGNMENT:this.moveX = moveX
+<A NAME="token8">8:</A>21(404)-21(421):ASSIGNMENT:this.moveY = moveY
+<A NAME="token9">9:</A>22(426)-22(426):CONSTRUCTOR_DECLARATION_END:}
+<A NAME="token10">10:</A>29(523)-29(535):METHOD_DECLARATION:getPlayer() {
+<A NAME="token11">11:</A>30(541)-30(554):RETURN:return player;
+<A NAME="token12">12:</A>31(558)-31(558):METHOD_DECLARATION_END:}
+<A NAME="token13">13:</A>38(656)-38(681):METHOD_DECLARATION:setPlayer(Player player) {
+<A NAME="token14">14:</A>39(687)-39(706):ASSIGNMENT:this.player = player
+<A NAME="token15">15:</A>40(711)-40(711):METHOD_DECLARATION_END:}
+<A NAME="token16">16:</A>47(803)-47(814):METHOD_DECLARATION:getMoveX() {
+<A NAME="token17">17:</A>48(820)-48(832):RETURN:return moveX;
+<A NAME="token18">18:</A>49(836)-49(836):METHOD_DECLARATION_END:}
+<A NAME="token19">19:</A>56(938)-56(958):METHOD_DECLARATION:setMoveX(int moveX) {
+<A NAME="token20">20:</A>57(964)-57(981):ASSIGNMENT:this.moveX = moveX
+<A NAME="token21">21:</A>58(986)-58(986):METHOD_DECLARATION_END:}
+<A NAME="token22">22:</A>65(1078)-65(1089):METHOD_DECLARATION:getMoveY() {
+<A NAME="token23">23:</A>66(1095)-66(1107):RETURN:return moveY;
+<A NAME="token24">24:</A>67(1111)-67(1111):METHOD_DECLARATION_END:}
+<A NAME="token25">25:</A>74(1213)-74(1233):METHOD_DECLARATION:setMoveY(int moveY) {
+<A NAME="token26">26:</A>75(1239)-75(1256):ASSIGNMENT:this.moveY = moveY
+<A NAME="token27">27:</A>76(1261)-76(1261):METHOD_DECLARATION_END:}
+<A NAME="token28">28:</A>78(1264)-78(1264):CLASS_DECLARATION_END:}
 </PRE></CODE>
 </BODY>
 </HTML>

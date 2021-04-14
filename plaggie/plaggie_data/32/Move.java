@@ -2,34 +2,42 @@ package models;
 
 public class Move {
 
-  public Player getPlayer() {
-    return player;
-  }
-
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
-
-  public int getMoveX() {
-    return moveX;
-  }
-
-  public void setMoveX(int moveX) {
-    this.moveX = moveX;
-  }
-
-  public int getMoveY() {
-    return moveY;
-  }
-
-  public void setMoveY(int moveY) {
-    this.moveY = moveY;
-  }
-
   private Player player;
 
   private int moveX;
 
   private int moveY;
 
+  //getter of the player of a specific move
+  public Player getPlayer() {
+	return player;
+  }
+
+  //setter of the player of a specific move
+  public void setPlayer(Player player) {
+	this.player = player;
+  }
+
+  //getter of the move in x coordinate
+  public int getMoveX() {
+	return moveX;
+  }
+
+  //setter of the move in x coordinate
+  public void setMoveX(int moveX) {
+	this.moveX = moveX;
+  }
+
+  //getter of the move in y coordinate
+  public int getMoveY() {
+	return moveY;
+  }
+
+  //setter of the move in y coordinate
+  public void setMoveY(int moveY) {
+	this.moveY = moveY;
+  }
+
 }
+
+

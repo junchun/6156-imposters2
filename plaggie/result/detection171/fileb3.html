@@ -1,35 +1,78 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/32/Player.java</TITLE>
+<TITLE>plaggie_data/4/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/32/Player.java</H1>
+<H1>plaggie_data/4/Message.java</H1>
 <CODE><PRE>
-<A NAME="match0"></A><A HREF="filea3.html#match0" TARGET="left">0</A>:package models;
-0:
-0:public class Player {
-0:
-0:  public char getType() {
-0:    return type;
+package models;
+
+public class Message {
+
+  /**
+   * Indicate if move is valid.
+   */
+  private boolean moveValidity;
+
+  /**
+   * 3-digit code that record the move.
+   */
+  private int code;
+
+  /**
+   * Message return to player after move (if any).
+   */
+  private String message;
+
+  /**
+   * Set moveValidity.
+   * @param validity
+   */
+  public void setMoveValidity(final boolean validity) {
+    this.moveValidity = validity;
+  }
+
+  /**
+   * Get moveValidity variable.
+   * @return moveValidity boolean
+   */
+<A NAME="match0"></A><A HREF="filea3.html#match0" TARGET="left">0</A>:  public boolean getMoveValidity() {
+0:    return moveValidity;
 0:  }
 0:
-0:  public void setType(char type) {
-0:    this.type = type;
+0:  /**
+0:   * Set Code for a move.
+0:   * @param c
+0:   */
+0:  public void setCode(final int c) {
+0:    this.code = c;
 0:  }
 0:
-0:  public int getId() {
-0:    return id;
+0:  /**
+0:   * Get code of a move.
+0:   * @return code integer
+0:   */
+0:  public int getCode() {
+0:    return code;
 0:  }
 0:
-0:  public void setId(int id) {
-0:    this.id = id;
+0:  /**
+0:   * Set message.
+0:   * @param msg
+0:   */
+0:  public void setMessage(final String msg) {
+0:    this.message = msg;
 0:  }
 0:
-0:  private char type;
-0:
-0:  private int id;
-0:
-0:}
+0:  /**
+0:   * Get message.
+0:   * @return message string
+0:   */
+0:  public String getMessage() {
+0:    return message;
+0:  }
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

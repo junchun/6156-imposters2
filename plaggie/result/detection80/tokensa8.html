@@ -3,29 +3,327 @@
 <BODY>
 <CODE><PRE>
 <A NAME="token0">0:</A>1(0)-1(14):PACKAGE_DECLARATION:package models;
-<A NAME="token1">1:</A>3(17)-3(35):CLASS_DECLARATION:public class Move {
-<A NAME="token2">2:</A>5(54)-5(66):METHOD_DECLARATION:getPlayer() {
-<A NAME="token3">3:</A>6(72)-6(85):RETURN:return player;
-<A NAME="token4">4:</A>7(89)-7(89):METHOD_DECLARATION_END:}
-<A NAME="token5">5:</A>9(106)-9(131):METHOD_DECLARATION:setPlayer(Player player) {
-<A NAME="token6">6:</A>10(137)-10(156):ASSIGNMENT:this.player = player
-<A NAME="token7">7:</A>11(161)-11(161):METHOD_DECLARATION_END:}
-<A NAME="token8">8:</A>13(177)-13(188):METHOD_DECLARATION:getMoveX() {
-<A NAME="token9">9:</A>14(194)-14(206):RETURN:return moveX;
-<A NAME="token10">10:</A>15(210)-15(210):METHOD_DECLARATION_END:}
-<A NAME="token11">11:</A>17(227)-17(247):METHOD_DECLARATION:setMoveX(int moveX) {
-<A NAME="token12">12:</A>18(253)-18(270):ASSIGNMENT:this.moveX = moveX
-<A NAME="token13">13:</A>19(275)-19(275):METHOD_DECLARATION_END:}
-<A NAME="token14">14:</A>21(291)-21(302):METHOD_DECLARATION:getMoveY() {
-<A NAME="token15">15:</A>22(308)-22(320):RETURN:return moveY;
-<A NAME="token16">16:</A>23(324)-23(324):METHOD_DECLARATION_END:}
-<A NAME="token17">17:</A>25(341)-25(361):METHOD_DECLARATION:setMoveY(int moveY) {
-<A NAME="token18">18:</A>26(367)-26(384):ASSIGNMENT:this.moveY = moveY
-<A NAME="token19">19:</A>27(389)-27(389):METHOD_DECLARATION_END:}
-<A NAME="token20">20:</A>29(409)-29(414):VARIABLE_DECLARATION:player
-<A NAME="token21">21:</A>31(432)-31(436):VARIABLE_DECLARATION:moveX
-<A NAME="token22">22:</A>33(454)-33(458):VARIABLE_DECLARATION:moveY
-<A NAME="token23">23:</A>35(462)-35(462):CLASS_DECLARATION_END:}
+<A NAME="token1">1:</A>3(17)-3(40):CLASS_DECLARATION:public class GameBoard {
+<A NAME="token2">2:</A>5(57)-5(59):VARIABLE_DECLARATION:row
+<A NAME="token3">3:</A>7(79)-7(81):VARIABLE_DECLARATION:col
+<A NAME="token4">4:</A>9(104)-9(105):VARIABLE_DECLARATION:p1
+<A NAME="token5">5:</A>11(126)-11(127):VARIABLE_DECLARATION:p2
+<A NAME="token6">6:</A>13(148)-13(158):VARIABLE_DECLARATION:chessPieces
+<A NAME="token7">7:</A>15(182)-15(192):VARIABLE_DECLARATION:gameStarted
+<A NAME="token8">8:</A>17(210)-17(213):VARIABLE_DECLARATION:turn
+<A NAME="token9">9:</A>19(236)-19(245):VARIABLE_DECLARATION:boardState
+<A NAME="token10">10:</A>21(263)-21(268):VARIABLE_DECLARATION:winner
+<A NAME="token11">11:</A>23(290)-23(295):VARIABLE_DECLARATION:isDraw
+<A NAME="token12">12:</A>27(376)-27(395):CONSTRUCTOR_DECLARATION:public GameBoard() {
+<A NAME="token13">13:</A>28(401)-28(412):ASSIGNMENT:this.row = 3
+<A NAME="token14">14:</A>29(419)-29(430):ASSIGNMENT:this.col = 3
+<A NAME="token15">15:</A>30(437)-30(476):ASSIGNMENT:this.chessPieces = new char[] {'X', 'O'}
+<A NAME="token16">16:</A>31(483)-31(519):ASSIGNMENT:this.boardState = new char [row][col]
+<A NAME="token17">17:</A>32(526)-32(559):FOR:for (int i = 0; i &lt; this.row; i++)
+<A NAME="token18">18:</A>32(535)-32(539):VARIABLE_DECLARATION:i = 0
+<A NAME="token19">19:</A>32(556)-32(558):ASSIGNMENT:i++
+<A NAME="token20">20:</A>32(561)-32(561):BLOCK:{
+<A NAME="token21">21:</A>33(569)-33(602):FOR:for (int j = 0; j &lt; this.col; j++)
+<A NAME="token22">22:</A>33(578)-33(582):VARIABLE_DECLARATION:j = 0
+<A NAME="token23">23:</A>33(599)-33(601):ASSIGNMENT:j++
+<A NAME="token24">24:</A>33(604)-33(604):BLOCK:{
+<A NAME="token25">25:</A>34(614)-34(640):ASSIGNMENT:this.boardState[i][j] = ' '
+<A NAME="token26">26:</A>35(649)-35(649):BLOCK_END:}
+<A NAME="token27">27:</A>35(649)-35(649):FOR_END:}
+<A NAME="token28">28:</A>36(655)-36(655):BLOCK_END:}
+<A NAME="token29">29:</A>36(655)-36(655):FOR_END:}
+<A NAME="token30">30:</A>37(661)-37(684):ASSIGNMENT:this.gameStarted = false
+<A NAME="token31">31:</A>38(691)-38(703):ASSIGNMENT:this.turn = 1
+<A NAME="token32">32:</A>39(710)-39(724):ASSIGNMENT:this.winner = 0
+<A NAME="token33">33:</A>40(731)-40(749):ASSIGNMENT:this.isDraw = false
+<A NAME="token34">34:</A>41(754)-41(754):CONSTRUCTOR_DECLARATION_END:}
+<A NAME="token35">35:</A>52(1083)-53(1197):CONSTRUCTOR_DECLARATION:public GameBoard(Player p1, Player p2, boolean start, int turn,
+<A NAME="token36">36:</A>54(1203)-54(1214):ASSIGNMENT:this.p1 = p1
+<A NAME="token37">37:</A>55(1221)-55(1232):ASSIGNMENT:this.p2 = p2
+<A NAME="token38">38:</A>56(1239)-56(1262):ASSIGNMENT:this.gameStarted = start
+<A NAME="token39">39:</A>57(1269)-57(1284):ASSIGNMENT:this.turn = turn
+<A NAME="token40">40:</A>58(1291)-58(1313):ASSIGNMENT:this.boardState = state
+<A NAME="token41">41:</A>59(1320)-59(1339):ASSIGNMENT:this.winner = winner
+<A NAME="token42">42:</A>60(1346)-60(1365):ASSIGNMENT:this.isDraw = isDraw
+<A NAME="token43">43:</A>61(1370)-61(1370):CONSTRUCTOR_DECLARATION_END:}
+<A NAME="token44">44:</A>69(1626)-69(1657):METHOD_DECLARATION:makeMove(int id, int x, int y) {
+<A NAME="token45">45:</A>70(1670)-70(1670):VARIABLE_DECLARATION:p
+<A NAME="token46">46:</A>71(1677)-71(1702):IF:if (id == this.p1.getId())
+<A NAME="token47">47:</A>71(1687)-71(1701):METHOD_INVOCATION:this.p1.getId()
+<A NAME="token48">48:</A>71(1704)-71(1704):BLOCK:{
+<A NAME="token49">49:</A>72(1712)-72(1717):ASSIGNMENT:p = p1
+<A NAME="token50">50:</A>73(1724)-73(1724):BLOCK_END:}
+<A NAME="token51">51:</A>73(1724)-73(1724):IF_END:}
+<A NAME="token52">52:</A>73(1726)-73(1729):ELSE:else
+<A NAME="token53">53:</A>73(1731)-73(1731):BLOCK:{
+<A NAME="token54">54:</A>74(1739)-74(1744):ASSIGNMENT:p = p2
+<A NAME="token55">55:</A>75(1751)-75(1751):BLOCK_END:}
+<A NAME="token56">56:</A>75(1751)-75(1751):ELSE_END:}
+<A NAME="token57">57:</A>77(1792)-77(1812):VARIABLE_DECLARATION:m = new Move(p, x, y)
+<A NAME="token58">58:</A>77(1796)-77(1812):NEW:new Move(p, x, y)
+<A NAME="token59">59:</A>78(1827)-78(1844):VARIABLE_DECLARATION:msg = validMove(m)
+<A NAME="token60">60:</A>78(1833)-78(1844):METHOD_INVOCATION:validMove(m)
+<A NAME="token61">61:</A>79(1851)-79(1875):IF:if (msg.isMoveValidity())
+<A NAME="token62">62:</A>79(1855)-79(1874):METHOD_INVOCATION:msg.isMoveValidity()
+<A NAME="token63">63:</A>79(1877)-79(1877):BLOCK:{
+<A NAME="token64">64:</A>80(1885)-80(1931):ASSIGNMENT:this.boardState[x][y] = m.getPlayer().getType()
+<A NAME="token65">65:</A>80(1909)-80(1921):METHOD_INVOCATION:m.getPlayer()
+<A NAME="token66">66:</A>80(1909)-80(1931):METHOD_INVOCATION:m.getPlayer().getType()
+<A NAME="token67">67:</A>82(1992)-82(2005):IF:if (endGame())
+<A NAME="token68">68:</A>82(1996)-82(2004):METHOD_INVOCATION:endGame()
+<A NAME="token69">69:</A>82(2007)-82(2007):BLOCK:{
+<A NAME="token70">70:</A>83(2017)-83(2027):IF:if (isDraw)
+<A NAME="token71">71:</A>83(2029)-83(2029):BLOCK:{
+<A NAME="token72">72:</A>84(2041)-84(2056):METHOD_INVOCATION:msg.setCode(110)
+<A NAME="token73">73:</A>85(2069)-85(2089):METHOD_INVOCATION:msg.setMessage("Dra")
+<A NAME="token74">74:</A>86(2100)-86(2100):BLOCK_END:}
+<A NAME="token75">75:</A>86(2100)-86(2100):IF_END:}
+<A NAME="token76">76:</A>86(2102)-86(2105):ELSE:else
+<A NAME="token77">77:</A>86(2107)-86(2107):BLOCK:{
+<A NAME="token78">78:</A>87(2119)-87(2148):METHOD_INVOCATION:msg.setCode(100 + this.winner)
+<A NAME="token79">79:</A>88(2161)-88(2214):METHOD_INVOCATION:msg.setMessage("Win " + Integer.toString(this.winner))
+<A NAME="token80">80:</A>88(2185)-88(2213):METHOD_INVOCATION:Integer.toString(this.winner)
+<A NAME="token81">81:</A>89(2225)-89(2225):BLOCK_END:}
+<A NAME="token82">82:</A>89(2225)-89(2225):ELSE_END:}
+<A NAME="token83">83:</A>90(2233)-90(2233):BLOCK_END:}
+<A NAME="token84">84:</A>90(2233)-90(2233):IF_END:}
+<A NAME="token85">85:</A>90(2235)-90(2238):ELSE:else
+<A NAME="token86">86:</A>90(2240)-90(2240):BLOCK:{
+<A NAME="token87">87:</A>91(2250)-91(2263):IF:if (turn == 1)
+<A NAME="token88">88:</A>91(2265)-91(2265):BLOCK:{
+<A NAME="token89">89:</A>92(2277)-92(2284):ASSIGNMENT:turn = 2
+<A NAME="token90">90:</A>93(2295)-93(2295):BLOCK_END:}
+<A NAME="token91">91:</A>93(2295)-93(2295):IF_END:}
+<A NAME="token92">92:</A>93(2297)-93(2300):ELSE:else
+<A NAME="token93">93:</A>93(2302)-93(2302):BLOCK:{
+<A NAME="token94">94:</A>94(2314)-94(2321):ASSIGNMENT:turn = 1
+<A NAME="token95">95:</A>95(2332)-95(2332):BLOCK_END:}
+<A NAME="token96">96:</A>95(2332)-95(2332):ELSE_END:}
+<A NAME="token97">97:</A>96(2342)-96(2357):METHOD_INVOCATION:msg.setCode(100)
+<A NAME="token98">98:</A>97(2368)-97(2388):METHOD_INVOCATION:msg.setMessage("Con")
+<A NAME="token99">99:</A>98(2397)-98(2397):BLOCK_END:}
+<A NAME="token100">100:</A>98(2397)-98(2397):ELSE_END:}
+<A NAME="token101">101:</A>99(2403)-99(2403):BLOCK_END:}
+<A NAME="token102">102:</A>99(2403)-99(2403):IF_END:}
+<A NAME="token103">103:</A>101(2410)-101(2420):RETURN:return msg;
+<A NAME="token104">104:</A>102(2424)-102(2424):METHOD_DECLARATION_END:}
+<A NAME="token105">105:</A>112(2675)-112(2693):METHOD_DECLARATION:validMove(Move m) {
+<A NAME="token106">106:</A>113(2699)-113(2720):IF:if (!this.gameStarted)
+<A NAME="token107">107:</A>113(2722)-113(2722):BLOCK:{
+<A NAME="token108">108:</A>114(2730)-114(2783):RETURN:return new Message(false, -1, "Game has not started");
+<A NAME="token109">109:</A>114(2737)-114(2782):NEW:new Message(false, -1, "Game has not started")
+<A NAME="token110">110:</A>115(2789)-115(2789):BLOCK_END:}
+<A NAME="token111">111:</A>115(2789)-115(2789):IF_END:}
+<A NAME="token112">112:</A>116(2795)-116(2828):IF:if (m.getPlayer().getId() != turn)
+<A NAME="token113">113:</A>116(2799)-116(2811):METHOD_INVOCATION:m.getPlayer()
+<A NAME="token114">114:</A>116(2799)-116(2819):METHOD_INVOCATION:m.getPlayer().getId()
+<A NAME="token115">115:</A>116(2830)-116(2830):BLOCK:{
+<A NAME="token116">116:</A>117(2838)-117(2903):RETURN:return new Message(false, -1, "Please wait for the turn player.");
+<A NAME="token117">117:</A>117(2845)-117(2902):NEW:new Message(false, -1, "Please wait for the turn player.")
+<A NAME="token118">118:</A>118(2909)-118(2909):BLOCK_END:}
+<A NAME="token119">119:</A>118(2909)-118(2909):IF_END:}
+<A NAME="token120">120:</A>119(2919)-119(2934):VARIABLE_DECLARATION:x = m.getMoveX()
+<A NAME="token121">121:</A>119(2923)-119(2934):METHOD_INVOCATION:m.getMoveX()
+<A NAME="token122">122:</A>120(2945)-120(2960):VARIABLE_DECLARATION:y = m.getMoveY()
+<A NAME="token123">123:</A>120(2949)-120(2960):METHOD_INVOCATION:m.getMoveY()
+<A NAME="token124">124:</A>121(2967)-121(3007):IF:if (y &lt; 0 || y &gt; col || x &lt; 0 || x &gt; row)
+<A NAME="token125">125:</A>121(3009)-121(3009):BLOCK:{
+<A NAME="token126">126:</A>122(3017)-122(3068):RETURN:return new Message(false, -1, "Move not on board.");
+<A NAME="token127">127:</A>122(3024)-122(3067):NEW:new Message(false, -1, "Move not on board.")
+<A NAME="token128">128:</A>123(3074)-123(3074):BLOCK_END:}
+<A NAME="token129">129:</A>123(3074)-123(3074):IF_END:}
+<A NAME="token130">130:</A>123(3076)-123(3079):ELSE:else
+<A NAME="token131">131:</A>123(3081)-123(3108):IF:if (boardState[x][y] != ' ')
+<A NAME="token132">132:</A>123(3110)-123(3110):BLOCK:{
+<A NAME="token133">133:</A>124(3118)-124(3180):RETURN:return new Message(false, -2, "Cannot take an occupied slot.");
+<A NAME="token134">134:</A>124(3125)-124(3179):NEW:new Message(false, -2, "Cannot take an occupied slot.")
+<A NAME="token135">135:</A>125(3186)-125(3186):BLOCK_END:}
+<A NAME="token136">136:</A>125(3186)-125(3186):IF_END:}
+<A NAME="token137">137:</A>125(3186)-125(3186):ELSE_END:}
+<A NAME="token138">138:</A>126(3192)-126(3236):RETURN:return new Message(true, 100, "Valid move.");
+<A NAME="token139">139:</A>126(3199)-126(3235):NEW:new Message(true, 100, "Valid move.")
+<A NAME="token140">140:</A>127(3240)-127(3240):METHOD_DECLARATION_END:}
+<A NAME="token141">141:</A>134(3374)-134(3384):METHOD_DECLARATION:endGame() {
+<A NAME="token142">142:</A>135(3398)-135(3408):VARIABLE_DECLARATION:win = false
+<A NAME="token143">143:</A>138(3469)-138(3491):VARIABLE_DECLARATION:mark = boardState[0][0]
+<A NAME="token144">144:</A>139(3498)-139(3513):IF:if (mark == ' ')
+<A NAME="token145">145:</A>139(3515)-139(3515):BLOCK:{
+<A NAME="token146">146:</A>141(3583)-141(3583):BLOCK_END:}
+<A NAME="token147">147:</A>141(3583)-141(3583):IF_END:}
+<A NAME="token148">148:</A>141(3585)-141(3588):ELSE:else
+<A NAME="token149">149:</A>141(3590)-141(3646):IF:if (boardState[0][1] == mark &amp;&amp; boardState[0][2] == mark)
+<A NAME="token150">150:</A>141(3648)-141(3648):BLOCK:{
+<A NAME="token151">151:</A>142(3656)-142(3665):ASSIGNMENT:win = true
+<A NAME="token152">152:</A>143(3672)-143(3672):BLOCK_END:}
+<A NAME="token153">153:</A>143(3672)-143(3672):IF_END:}
+<A NAME="token154">154:</A>143(3674)-143(3677):ELSE:else
+<A NAME="token155">155:</A>143(3679)-143(3735):IF:if (boardState[1][0] == mark &amp;&amp; boardState[2][0] == mark)
+<A NAME="token156">156:</A>143(3737)-143(3737):BLOCK:{
+<A NAME="token157">157:</A>144(3745)-144(3754):ASSIGNMENT:win = true
+<A NAME="token158">158:</A>145(3761)-145(3761):BLOCK_END:}
+<A NAME="token159">159:</A>145(3761)-145(3761):IF_END:}
+<A NAME="token160">160:</A>145(3763)-145(3766):ELSE:else
+<A NAME="token161">161:</A>145(3768)-145(3824):IF:if (boardState[1][1] == mark &amp;&amp; boardState[2][2] == mark)
+<A NAME="token162">162:</A>145(3826)-145(3826):BLOCK:{
+<A NAME="token163">163:</A>146(3834)-146(3843):ASSIGNMENT:win = true
+<A NAME="token164">164:</A>147(3850)-147(3850):BLOCK_END:}
+<A NAME="token165">165:</A>147(3850)-147(3850):IF_END:}
+<A NAME="token166">166:</A>147(3850)-147(3850):ELSE_END:}
+<A NAME="token167">167:</A>149(3900)-149(3922):ASSIGNMENT:mark = boardState[0][1]
+<A NAME="token168">168:</A>150(3929)-150(3944):IF:if (mark == ' ')
+<A NAME="token169">169:</A>150(3946)-150(3946):BLOCK:{
+<A NAME="token170">170:</A>152(4014)-152(4014):BLOCK_END:}
+<A NAME="token171">171:</A>152(4014)-152(4014):IF_END:}
+<A NAME="token172">172:</A>152(4016)-152(4019):ELSE:else
+<A NAME="token173">173:</A>152(4021)-152(4077):IF:if (boardState[1][1] == mark &amp;&amp; boardState[2][1] == mark)
+<A NAME="token174">174:</A>152(4079)-152(4079):BLOCK:{
+<A NAME="token175">175:</A>153(4087)-153(4096):ASSIGNMENT:win = true
+<A NAME="token176">176:</A>154(4103)-154(4103):BLOCK_END:}
+<A NAME="token177">177:</A>154(4103)-154(4103):IF_END:}
+<A NAME="token178">178:</A>154(4103)-154(4103):ELSE_END:}
+<A NAME="token179">179:</A>156(4153)-156(4175):ASSIGNMENT:mark = boardState[0][2]
+<A NAME="token180">180:</A>157(4182)-157(4197):IF:if (mark == ' ')
+<A NAME="token181">181:</A>157(4199)-157(4199):BLOCK:{
+<A NAME="token182">182:</A>159(4267)-159(4267):BLOCK_END:}
+<A NAME="token183">183:</A>159(4267)-159(4267):IF_END:}
+<A NAME="token184">184:</A>159(4269)-159(4272):ELSE:else
+<A NAME="token185">185:</A>159(4274)-159(4330):IF:if (boardState[1][2] == mark &amp;&amp; boardState[2][2] == mark)
+<A NAME="token186">186:</A>159(4332)-159(4332):BLOCK:{
+<A NAME="token187">187:</A>160(4340)-160(4349):ASSIGNMENT:win = true
+<A NAME="token188">188:</A>161(4356)-161(4356):BLOCK_END:}
+<A NAME="token189">189:</A>161(4356)-161(4356):IF_END:}
+<A NAME="token190">190:</A>161(4358)-161(4361):ELSE:else
+<A NAME="token191">191:</A>161(4363)-161(4419):IF:if (boardState[1][1] == mark &amp;&amp; boardState[2][0] == mark)
+<A NAME="token192">192:</A>161(4421)-161(4421):BLOCK:{
+<A NAME="token193">193:</A>162(4429)-162(4438):ASSIGNMENT:win = true
+<A NAME="token194">194:</A>163(4445)-163(4445):BLOCK_END:}
+<A NAME="token195">195:</A>163(4445)-163(4445):IF_END:}
+<A NAME="token196">196:</A>163(4445)-163(4445):ELSE_END:}
+<A NAME="token197">197:</A>165(4495)-165(4517):ASSIGNMENT:mark = boardState[1][0]
+<A NAME="token198">198:</A>166(4524)-166(4539):IF:if (mark == ' ')
+<A NAME="token199">199:</A>166(4541)-166(4541):BLOCK:{
+<A NAME="token200">200:</A>168(4609)-168(4609):BLOCK_END:}
+<A NAME="token201">201:</A>168(4609)-168(4609):IF_END:}
+<A NAME="token202">202:</A>168(4611)-168(4614):ELSE:else
+<A NAME="token203">203:</A>168(4616)-168(4672):IF:if (boardState[1][1] == mark &amp;&amp; boardState[1][2] == mark)
+<A NAME="token204">204:</A>168(4674)-168(4674):BLOCK:{
+<A NAME="token205">205:</A>169(4682)-169(4691):ASSIGNMENT:win = true
+<A NAME="token206">206:</A>170(4698)-170(4698):BLOCK_END:}
+<A NAME="token207">207:</A>170(4698)-170(4698):IF_END:}
+<A NAME="token208">208:</A>170(4698)-170(4698):ELSE_END:}
+<A NAME="token209">209:</A>172(4748)-172(4770):ASSIGNMENT:mark = boardState[2][0]
+<A NAME="token210">210:</A>173(4777)-173(4792):IF:if (mark == ' ')
+<A NAME="token211">211:</A>173(4794)-173(4794):BLOCK:{
+<A NAME="token212">212:</A>175(4862)-175(4862):BLOCK_END:}
+<A NAME="token213">213:</A>175(4862)-175(4862):IF_END:}
+<A NAME="token214">214:</A>175(4864)-175(4867):ELSE:else
+<A NAME="token215">215:</A>175(4869)-175(4925):IF:if (boardState[2][1] == mark &amp;&amp; boardState[2][2] == mark)
+<A NAME="token216">216:</A>175(4927)-175(4927):BLOCK:{
+<A NAME="token217">217:</A>176(4935)-176(4944):ASSIGNMENT:win = true
+<A NAME="token218">218:</A>177(4951)-177(4951):BLOCK_END:}
+<A NAME="token219">219:</A>177(4951)-177(4951):IF_END:}
+<A NAME="token220">220:</A>177(4951)-177(4951):ELSE_END:}
+<A NAME="token221">221:</A>180(4997)-180(5005):IF:if (!win)
+<A NAME="token222">222:</A>180(5007)-180(5007):BLOCK:{
+<A NAME="token223">223:</A>181(5015)-181(5027):ASSIGNMENT:isDraw = true
+<A NAME="token224">224:</A>182(5036)-182(5078):FOR:for (int i = 0; i &lt; boardState.length; i++)
+<A NAME="token225">225:</A>182(5045)-182(5049):VARIABLE_DECLARATION:i = 0
+<A NAME="token226">226:</A>182(5075)-182(5077):ASSIGNMENT:i++
+<A NAME="token227">227:</A>182(5080)-182(5080):BLOCK:{
+<A NAME="token228">228:</A>183(5090)-183(5132):FOR:for (int j = 0; j &lt; boardState.length; j++)
+<A NAME="token229">229:</A>183(5099)-183(5103):VARIABLE_DECLARATION:j = 0
+<A NAME="token230">230:</A>183(5129)-183(5131):ASSIGNMENT:j++
+<A NAME="token231">231:</A>183(5134)-183(5134):BLOCK:{
+<A NAME="token232">232:</A>184(5146)-184(5178):IF:if (this.boardState[i][j] == ' ')
+<A NAME="token233">233:</A>184(5180)-184(5180):BLOCK:{
+<A NAME="token234">234:</A>185(5194)-185(5207):ASSIGNMENT:isDraw = false
+<A NAME="token235">235:</A>186(5222)-186(5227):BREAK:break;
+<A NAME="token236">236:</A>187(5239)-187(5239):BLOCK_END:}
+<A NAME="token237">237:</A>187(5239)-187(5239):IF_END:}
+<A NAME="token238">238:</A>188(5249)-188(5249):BLOCK_END:}
+<A NAME="token239">239:</A>188(5249)-188(5249):FOR_END:}
+<A NAME="token240">240:</A>189(5257)-189(5257):BLOCK_END:}
+<A NAME="token241">241:</A>189(5257)-189(5257):FOR_END:}
+<A NAME="token242">242:</A>190(5265)-190(5275):IF:if (isDraw)
+<A NAME="token243">243:</A>190(5277)-190(5277):BLOCK:{
+<A NAME="token244">244:</A>191(5287)-191(5296):ASSIGNMENT:winner = 0
+<A NAME="token245">245:</A>192(5307)-192(5318):RETURN:return true;
+<A NAME="token246">246:</A>193(5326)-193(5326):BLOCK_END:}
+<A NAME="token247">247:</A>193(5326)-193(5326):IF_END:}
+<A NAME="token248">248:</A>193(5328)-193(5331):ELSE:else
+<A NAME="token249">249:</A>193(5333)-193(5333):BLOCK:{
+<A NAME="token250">250:</A>194(5343)-194(5355):RETURN:return false;
+<A NAME="token251">251:</A>195(5363)-195(5363):BLOCK_END:}
+<A NAME="token252">252:</A>195(5363)-195(5363):ELSE_END:}
+<A NAME="token253">253:</A>196(5369)-196(5369):BLOCK_END:}
+<A NAME="token254">254:</A>196(5369)-196(5369):IF_END:}
+<A NAME="token255">255:</A>199(5437)-199(5449):ASSIGNMENT:winner = turn
+<A NAME="token256">256:</A>201(5461)-201(5471):RETURN:return win;
+<A NAME="token257">257:</A>202(5475)-202(5475):METHOD_DECLARATION_END:}
+<A NAME="token258">258:</A>205(5521)-205(5529):METHOD_DECLARATION:getP1() {
+<A NAME="token259">259:</A>206(5535)-206(5544):RETURN:return p1;
+<A NAME="token260">260:</A>207(5548)-207(5548):METHOD_DECLARATION_END:}
+<A NAME="token261">261:</A>209(5565)-209(5582):METHOD_DECLARATION:setP1(Player p1) {
+<A NAME="token262">262:</A>210(5588)-210(5599):ASSIGNMENT:this.p1 = p1
+<A NAME="token263">263:</A>211(5604)-211(5604):METHOD_DECLARATION_END:}
+<A NAME="token264">264:</A>213(5623)-213(5631):METHOD_DECLARATION:getP2() {
+<A NAME="token265">265:</A>214(5637)-214(5646):RETURN:return p2;
+<A NAME="token266">266:</A>215(5650)-215(5650):METHOD_DECLARATION_END:}
+<A NAME="token267">267:</A>219(5757)-219(5765):METHOD_DECLARATION:setP2() {
+<A NAME="token268">268:</A>220(5778)-220(5800):VARIABLE_DECLARATION:p2 = new Player(' ', 2)
+<A NAME="token269">269:</A>220(5783)-220(5800):NEW:new Player(' ', 2)
+<A NAME="token270">270:</A>222(5851)-222(5890):IF:if (p1.getType() == this.chessPieces[0])
+<A NAME="token271">271:</A>222(5855)-222(5866):METHOD_INVOCATION:p1.getType()
+<A NAME="token272">272:</A>222(5892)-222(5892):BLOCK:{
+<A NAME="token273">273:</A>223(5900)-223(5930):METHOD_INVOCATION:p2.setType(this.chessPieces[1])
+<A NAME="token274">274:</A>224(5937)-224(5937):BLOCK_END:}
+<A NAME="token275">275:</A>224(5937)-224(5937):IF_END:}
+<A NAME="token276">276:</A>224(5939)-224(5942):ELSE:else
+<A NAME="token277">277:</A>224(5944)-224(5944):BLOCK:{
+<A NAME="token278">278:</A>225(5952)-225(5982):METHOD_INVOCATION:p2.setType(this.chessPieces[0])
+<A NAME="token279">279:</A>226(5989)-226(5989):BLOCK_END:}
+<A NAME="token280">280:</A>226(5989)-226(5989):ELSE_END:}
+<A NAME="token281">281:</A>227(5995)-227(6006):ASSIGNMENT:this.p2 = p2
+<A NAME="token282">282:</A>229(6061)-229(6099):IF:if (this.p1 != null &amp;&amp; this.p2 != null)
+<A NAME="token283">283:</A>229(6101)-229(6101):BLOCK:{
+<A NAME="token284">284:</A>230(6109)-230(6131):ASSIGNMENT:this.gameStarted = true
+<A NAME="token285">285:</A>231(6138)-231(6138):BLOCK_END:}
+<A NAME="token286">286:</A>231(6138)-231(6138):IF_END:}
+<A NAME="token287">287:</A>232(6142)-232(6142):METHOD_DECLARATION_END:}
+<A NAME="token288">288:</A>234(6161)-234(6178):METHOD_DECLARATION:setP2(Player p2) {
+<A NAME="token289">289:</A>235(6184)-235(6195):ASSIGNMENT:this.p2 = p2
+<A NAME="token290">290:</A>236(6200)-236(6200):METHOD_DECLARATION_END:}
+<A NAME="token291">291:</A>238(6220)-238(6236):METHOD_DECLARATION:isGameStarted() {
+<A NAME="token292">292:</A>239(6242)-239(6260):RETURN:return gameStarted;
+<A NAME="token293">293:</A>240(6264)-240(6264):METHOD_DECLARATION_END:}
+<A NAME="token294">294:</A>242(6281)-242(6317):METHOD_DECLARATION:setGameStarted(boolean gameStarted) {
+<A NAME="token295">295:</A>243(6323)-243(6352):ASSIGNMENT:this.gameStarted = gameStarted
+<A NAME="token296">296:</A>244(6357)-244(6357):METHOD_DECLARATION_END:}
+<A NAME="token297">297:</A>246(6373)-246(6383):METHOD_DECLARATION:getTurn() {
+<A NAME="token298">298:</A>247(6389)-247(6400):RETURN:return turn;
+<A NAME="token299">299:</A>248(6404)-248(6404):METHOD_DECLARATION_END:}
+<A NAME="token300">300:</A>250(6421)-250(6439):METHOD_DECLARATION:setTurn(int turn) {
+<A NAME="token301">301:</A>251(6445)-251(6460):ASSIGNMENT:this.turn = turn
+<A NAME="token302">302:</A>252(6465)-252(6465):METHOD_DECLARATION_END:}
+<A NAME="token303">303:</A>254(6486)-254(6502):METHOD_DECLARATION:getBoardState() {
+<A NAME="token304">304:</A>255(6508)-255(6525):RETURN:return boardState;
+<A NAME="token305">305:</A>256(6529)-256(6529):METHOD_DECLARATION_END:}
+<A NAME="token306">306:</A>258(6546)-258(6581):METHOD_DECLARATION:setBoardState(char[][] boardState) {
+<A NAME="token307">307:</A>259(6587)-259(6614):ASSIGNMENT:this.boardState = boardState
+<A NAME="token308">308:</A>260(6619)-260(6619):METHOD_DECLARATION_END:}
+<A NAME="token309">309:</A>262(6635)-262(6647):METHOD_DECLARATION:getWinner() {
+<A NAME="token310">310:</A>263(6653)-263(6666):RETURN:return winner;
+<A NAME="token311">311:</A>264(6670)-264(6670):METHOD_DECLARATION_END:}
+<A NAME="token312">312:</A>266(6687)-266(6709):METHOD_DECLARATION:setWinner(int winner) {
+<A NAME="token313">313:</A>267(6715)-267(6734):ASSIGNMENT:this.winner = winner
+<A NAME="token314">314:</A>268(6739)-268(6739):METHOD_DECLARATION_END:}
+<A NAME="token315">315:</A>270(6759)-270(6768):METHOD_DECLARATION:isDraw() {
+<A NAME="token316">316:</A>271(6774)-271(6787):RETURN:return isDraw;
+<A NAME="token317">317:</A>272(6791)-272(6791):METHOD_DECLARATION_END:}
+<A NAME="token318">318:</A>274(6808)-274(6832):METHOD_DECLARATION:setDraw(boolean isDraw) {
+<A NAME="token319">319:</A>275(6838)-275(6857):ASSIGNMENT:this.isDraw = isDraw
+<A NAME="token320">320:</A>276(6862)-276(6862):METHOD_DECLARATION_END:}
+<A NAME="token321">321:</A>278(6865)-278(6865):CLASS_DECLARATION_END:}
 </PRE></CODE>
 </BODY>
 </HTML>

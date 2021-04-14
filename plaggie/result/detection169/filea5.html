@@ -1,61 +1,69 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/29/Message.java</TITLE>
+<TITLE>plaggie_data/25/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/29/Message.java</H1>
+<H1>plaggie_data/25/Move.java</H1>
 <CODE><PRE>
 package models;
 
-public class Message {
+public class Move {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
-   */
+<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  private Player player;
+0:
+0:  private int moveX;
+0:
+0:  private int moveY;
+0:
+0:  /**
+0:   * Getter for player.
+0:   * @return the player
+0:   */
+0:  public Player getPlayer() {
+0:    return player;
+0:  }
+0:
+0:  /**
+0:   * Setter for player.
+0:   * @param player the player to set
+0:   */
+0:  public void setPlayer(Player player) {
+0:    this.player = player;
+0:  }
+0:
+0:  /**
+0:   * Getter for moveX.
+0:   * @return the moveX
+0:   */
+0:  public int getMoveX() {
+0:    return moveX;
+0:  }
+0:
+0:  /**
+0:   * Setter for moveX.
+0:   * @param moveX the moveX to set
+0:   */
+0:  public void setMoveX(int moveX) {
+0:    this.moveX = moveX;
+0:  }
+0:
+0:  /**
+0:   * Getter for moveY.
+0:   * @return the moveY
+0:   */
+0:  public int getMoveY() {
+0:    return moveY;
+0:  }
+0:
+0:  /**
+0:   * Setter for moveY.
+0:   * @param moveY the moveY to set
+0:   */
+0:  public void setMoveY(int moveY) {
+0:    this.moveY = moveY;
+0:  }
 
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
-  }
-
-<A NAME="match0"></A><A HREF="fileb5.html#match0" TARGET="right">0</A>:  public boolean isMoveValidity() {
-0:    return moveValidity;
-0:  }
-0:
-0:  public void setMoveValidity(boolean moveValidity) {
-0:    this.moveValidity = moveValidity;
-0:  }
-0:
-0:  public int getCode() {
-0:    return code;
-0:  }
-0:
-0:  public void setCode(int code) {
-0:    this.code = code;
-0:  }
-0:
-0:  public String getMessage() {
-0:    return message;
-0:  }
-0:
-0:  public void setMessage(String message) {
-0:    this.message = message;
-0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
-0:
-0:  private String message;
-0:
-0:}
+}
 </PRE></CODE>
 </BODY>
 </HTML>

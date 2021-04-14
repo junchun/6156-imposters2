@@ -2,50 +2,40 @@ package models;
 
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
-   */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
-  }
-
-  public boolean isMoveValidity() {
-    return moveValidity;
-  }
-
-  public void setMoveValidity(boolean moveValidity) {
-    this.moveValidity = moveValidity;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public void setCode(int code) {
-    this.code = code;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
   private boolean moveValidity;
 
   private int code;
 
   private String message;
+
+  //getter of the move validity message
+  public boolean isMoveValidity() {
+	return moveValidity;
+  }
+
+  //setter of the move validity message
+  public void setMoveValidity(boolean moveValidity) {
+	this.moveValidity = moveValidity;
+  }
+
+  //getter of the code
+  public int getCode() {
+	return code;
+  }
+
+  //setter of the code
+  public void setCode(int code) {
+	this.code = code;
+  }
+
+  //getter of the message
+  public String getMessage() {
+	return message;
+  }
+
+  //setter of the message
+  public void setMessage(String message) {
+	this.message = message;
+  }
 
 }

@@ -1,31 +1,32 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/21/Message.java</TITLE>
+<TITLE>plaggie_data/15/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/21/Message.java</H1>
+<H1>plaggie_data/15/Message.java</H1>
 <CODE><PRE>
 package models;
 
 public class Message {
 
-  /**
-   * A Message is sent as feedback for every movement.
-   * 
-   * @param moveValidity To validate move
-   * @param code Type of message
-   * @param message Text to display as feedback
+  private boolean moveValidity;
+
+  private int code;
+
+  private String message;
+  
+  /** Complete constructor.
+   * @param valid whether move is valid or not
+   * @param code return code
+   * @param msg message to show up on the UI
    */
-
-
-  public Message(boolean moveValidity, int code, String message) {
-    super();
-    this.moveValidity = moveValidity;
-    this.code = code;
-    this.message = message;
-  }
-
-<A NAME="match0"></A><A HREF="filea5.html#match0" TARGET="left">0</A>:  public boolean isMoveValidity() {
+  public Message(boolean valid, int code, String msg) {
+<A NAME="match0"></A><A HREF="filea5.html#match0" TARGET="left">0</A>:    this.moveValidity = valid;
+0:    this.code = code;
+0:    this.message = msg;
+0:  }
+0:
+0:  public boolean isMoveValidity() {
 0:    return moveValidity;
 0:  }
 0:
@@ -48,14 +49,8 @@ public class Message {
 0:  public void setMessage(String message) {
 0:    this.message = message;
 0:  }
-0:
-0:  private boolean moveValidity;
-0:
-0:  private int code;
-0:
-0:  private String message;
-0:
-0:}
+
+}
 </PRE></CODE>
 </BODY>
 </HTML>

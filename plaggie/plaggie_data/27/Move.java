@@ -2,34 +2,49 @@ package models;
 
 public class Move {
 
-  public Player getPlayer() {
-    return player;
-  }
+  private Player player;
+  private int moveX;
+  private int moveY;
 
-  public void setPlayer(Player player) {
+  /**
+   * Constructor for Move.
+   * Throws if either moveX or moveY are not 0, 1, or 2.
+   * @param player Player associated with this move
+   * @param moveX int Indicates the 0 to 2 X coordinate of the move
+   * @param moveY int Indicates the 0 to 2 Y coordinate of the move
+   */
+  public Move(Player player, int moveX, int moveY) {
+    if (moveX < 0 || moveX > 2 || moveY < 0 || moveY > 2) {
+      throw new RuntimeException("Attempting to create invalid move");
+    }
+    
     this.player = player;
-  }
-
-  public int getMoveX() {
-    return moveX;
-  }
-
-  public void setMoveX(int moveX) {
     this.moveX = moveX;
-  }
-
-  public int getMoveY() {
-    return moveY;
-  }
-
-  public void setMoveY(int moveY) {
     this.moveY = moveY;
   }
 
-  private Player player;
-
-  private int moveX;
-
-  private int moveY;
+  /**
+   * Get the player associated with this move.
+   * @return Player associated with this move
+   */
+  public Player getPlayer() {
+    return this.player;
+  }
+  
+  /**
+   * Get the X-coordinate of the move.
+   * @return int X-coordinate of the move, either 0, 1, or 2
+   */
+  public int getMoveX() {
+    return this.moveX;
+  }
+  
+  /**
+   * Get the Y-coordinate of the move.
+   * @return int Y-coordinate of the move, either 0, 1, or 2
+   */
+  public int getMoveY() {
+    return this.moveY;
+  }
 
 }
