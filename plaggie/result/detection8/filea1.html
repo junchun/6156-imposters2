@@ -1,128 +1,112 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/16/PlayGame.java</TITLE>
+<TITLE>plaggie_data/11/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/16/PlayGame.java</H1>
+<H1>plaggie_data/11/GameBoard.java</H1>
 <CODE><PRE>
-package controllers;
-
-import com.google.gson.Gson;
-import io.javalin.Javalin;
-import java.io.IOException;
-import java.util.Queue;
-import models.GameBoard;
-import models.Message;
-import models.Move;
-import models.Player;
-import org.eclipse.jetty.websocket.api.Session;
-
-class PlayGame {
-
-  private static final int PORT_NUMBER = 8080;
-
-  private static Javalin app;
-  
-  private static Gson gson = new Gson(); 
-  
-  private static GameBoard gameBoard; 
-  
-<A NAME="match1"></A><A HREF="fileb1.html#match1" TARGET="right">1</A>:  private static Player player1;
-1:  
-1:  private static Player player2; 
-1:  
-1:  private static int gameSessionTurn; 
-1:
-1:  /** Main method of the application.
-1:   * @param args Command line arguments
-1:   */
-1:  public static void main(final String[] args) {
-1:
-1:
-1:    // Test Echo Server
-1:    if (app=="/echo") {
-1:      ctx.result(ctx.body());
-1:    }
-1:    
-1:    // Redirects the user to a new game
-1:    if (app=="/newgame") {
-1:      ctx.redirect("/tictactoe.html");
-1:    } 
-1:    
-1:    // Adds player 1 to the game and sends a link for player to join
-1:    if (app=="/startgame") {
-      char player1Symbol = ctx.body().charAt(ctx.body().length() - 1); 
-      player1 = new Player(player1Symbol, 1); 
-      gameBoard = new GameBoard(); 
-      gameBoard.setP1(player1);
-      ctx.result(gson.toJson(gameBoard)); 
-    }
-    
-    // Adds player 2 to the game and starts the game
-    if (app=="/joingame") {
-      char player2Symbol = player1.getType() == 'X' ? 'O' : 'X';
-      player2 = new Player(player2Symbol, 2); 
-      gameBoard.setP2(player2);
-      gameBoard.setGameStarted(true); 
-      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
-      ctx.redirect("/tictactoe.html?p=2");
-    }
-    
-    //Adds moves to the board and ends the game when necessary
-    if (app=="/move/:playerId") {
-      int playersTurn = Integer.parseInt(ctx.pathParam("playerId")); 
-      int moveX = Character.getNumericValue(ctx.body().charAt(2)); 
-      int moveY = Character.getNumericValue(ctx.body().charAt(ctx.body().length() - 1));
-      Move currentMove; 
-      if (playersTurn == 1) {
-        currentMove = new Move(gameBoard.getP1(), moveX, moveY);
-      } else {
-        currentMove = new Move(gameBoard.getP2(), moveX, moveY);
-      }
-      Message moveMessage; 
-      if (gameBoard.isValidMove(currentMove)) {
-        gameBoard.addMoveToBoardAndSwitchesTurns(currentMove); 
-        if (gameBoard.playerWonGame(player1)) {
-          gameBoard.endsGameAndSetsWinner(player1);
-        }  
-        if (gameBoard.playerWonGame(player2)) {
-          gameBoard.endsGameAndSetsWinner(player2);
-        }
-        moveMessage = gameBoard.generateValidMoveMessage();
-        sendGameBoardToAllPlayers(gson.toJson(gameBoard));
-        
-      } else if (gameBoard.isGameDraw()) {
-        gameBoard.setGameDraw();
-        moveMessage = gameBoard.generateDrawMessage();
-        
-      } else {
-        moveMessage = gameBoard.generateInvalidMoveMessage();
-      }
-<A NAME="match0"></A><A HREF="fileb1.html#match0" TARGET="right">0</A>:      ctx.result(gson.toJson(moveMessage));
-0:    } 
+<A NAME="match0"></A><A HREF="fileb1.html#match0" TARGET="right">0</A>:package models;
 0:
-0:    // Web sockets - DO NOT DELETE or CHANGE
-0:    app.ws("/gameboard", new UiWebSocket());
-0:  }
 0:
-0:  /** Send message to all players.
-0:   * @param gameBoardJson Gameboard JSON
-0:   * @throws IOException Websocket message send IO Exception
+0:public class GameBoard {
+0:  /**
+0:   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
+0:   * have joined turn Which player's turn it is boardState The board representation winner Whether
+0:   * there is a winner isDraw Whether there is a draw
 0:   */
-0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
-0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
-0:    for (Session sessionPlayer : sessions) {
-0:      try {
-0:        sessionPlayer.getRemote().sendString(gameBoardJson);
-0:      } catch (IOException e) {
-0:        // Add logger here
-0:      }
-0:    }
+0:  public GameBoard() {
+0:    super();
+0:    this.gameStarted = false;
+0:    this.turn = 1;
+0:    this.boardState = new char[3][3];
+0:    this.winner = 0;
+0:    this.isDraw = false;
 0:  }
 0:
-0:  public static void stop() {
-0:    app.stop();
+0:  // public GameBoard() {
+0:  // gameStarted = false;
+0:  // turn = 1;
+0:  // boardState = new char[3][3];
+0:  // winner = 0;
+0:  // isDraw = false;
+0:  // }
+0:
+0:
+0:  private Player p1;
+0:
+0:
+0:
+0:  private Player p2;
+0:
+0:  private boolean gameStarted;
+0:
+0:  private int turn;
+0:
+0:  private char[][] boardState;
+0:
+0:  private int winner;
+0:
+0:  private boolean isDraw;
+0:
+0:
+0:
+0:  public Player getP1() {
+0:    return p1;
 0:  }
+0:
+0:  public void setP1(Player p1) {
+0:    this.p1 = p1;
+0:  }
+0:
+0:  public Player getP2() {
+0:    return p2;
+0:  }
+0:
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
+0:  }
+0:
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
+0:  }
+0:
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
+0:  }
+0:
+0:  public int getTurn() {
+0:    return turn;
+0:  }
+0:
+0:  public void setTurn(int turn) {
+0:    this.turn = turn;
+0:  }
+0:
+0:  public char[][] getBoardState() {
+0:    return boardState;
+0:  }
+0:
+0:  public void setBoardState(char[][] boardState) {
+0:    this.boardState = boardState;
+0:  }
+0:
+0:  public int getWinner() {
+0:    return winner;
+0:  }
+0:
+0:  public void setWinner(int winner) {
+0:    this.winner = winner;
+0:  }
+0:
+0:  public boolean isDraw() {
+0:    return isDraw;
+0:  }
+0:
+0:  public void setDraw(boolean isDraw) {
+0:    this.isDraw = isDraw;
+0:  }
+0:
+0:
 0:}
 </PRE></CODE>
 </BODY>

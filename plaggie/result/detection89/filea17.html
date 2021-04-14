@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/37/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/37/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+<A NAME="match1"></A><A HREF="fileb17.html#match1" TARGET="right">1</A>:import io.javalin.Javalin;
+1:import java.io.IOException;
+1:import java.util.HashMap;
+1:import java.util.Queue;
+1:import models.Message;
+1:import models.Move;
+1:import models.Player;
+1:import org.eclipse.jetty.websocket.api.Session;
+1:import org.slf4j.Logger;
+1:import org.slf4j.LoggerFactory;
+1:
+1:class PlayGame {
+1:
+1:  private static final int PORT_NUMBER = 8080;
+1:
+1:  private static Javalin app;
+1:  
+1:
+1:  /** Main method of the application.
+1:   * @param args Command line arguments
+1:   */
+1:  public static void main(final String[] args) {
+1:
+1:    
+1:    BoardController boardController = new BoardController();
+    // Test Echo Server
+    if (app=="/echo") {
+      ctx.result(ctx.body());
+    }
+    
+    if (app=="/newgame") {
+      ctx.redirect("/tictactoe.html");
+    }
+    
+    // Player 1: start game
+    if (app=="/startgame") {
+      boardController.resetBoard();
+      String paras = ctx.body();
+      // Get the type chosen by player 1
+      char type1 = paras.charAt(paras.length() - 1);
+      char type2 = (type1 == 'X') ? 'O' : 'X';
+      Player p1 = new Player(type1, 1);
+      Player p2 = new Player(type2, 2);
+      boardController.getBoard().setP1(p1);
+      boardController.getBoard().setP2(p2);
+      String boardJson = boardController.getBoardJsonString();
+      ctx.result(boardJson);
+    }
+    
+    // Player 2: join game
+    if (app=="/joingame") {
+      boardController.getBoard().setGameStarted(true);
+<A NAME="match0"></A><A HREF="fileb17.html#match0" TARGET="right">0</A>:      String boardJson = boardController.getBoardJsonString();
+0:      sendGameBoardToAllPlayers(boardJson);
+0:      ctx.redirect("/tictactoe.html?p=2");
+0:    }
+0:    
+0:    // Make move
+0:    if (app=="/move/:playerId") {
+0:      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+0:      Player curPlayer = boardController.getBoard().getPlayer(playerId);
+0:      HashMap&lt;String, String&gt; paraMap = getParametersMap(ctx.body());
+0:      int x = Integer.parseInt(paraMap.get("x"));
+      int y = Integer.parseInt(paraMap.get("y"));
+      Move newMove =  new Move(curPlayer, x, y);
+      Message message = boardController.validMove(newMove);
+     
+      // update UI when valid
+      if (message.getMoveValidity()) {
+        boardController.makeMove(newMove);
+        String boardJson = boardController.getBoardJsonString();
+        sendGameBoardToAllPlayers(boardJson);
+      }
+      
+      ctx.result(new Gson().toJson(message));
+    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /**
+   * A general way to parse body as Json string.
+   * @param paraJson parameters in Json string format, not null
+   * @return
+   */
+  private static HashMap&lt;String, String&gt; getParametersMap(String paraJson) {
+    String[] paras = paraJson.split("&amp;");
+    HashMap&lt;String, String&gt; paraMap = new HashMap&lt;String, String&gt;();
+    for (int i = 0; i &lt; paras.length; i++) {
+      String[] attrs = paras[i].split("=");
+      paraMap.put(attrs[0], attrs[1]);
+    }
+    return paraMap;
+  }
+  
+  /** Send message to all players.
+   * @param gameBoardJson GameBoard JSON
+   * @throws IOException WebSocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    final Logger logger = LoggerFactory.getLogger(PlayGame.class);
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+        logger.error(e.toString());
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

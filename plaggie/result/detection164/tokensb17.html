@@ -1,0 +1,176 @@
+<HTML>
+<HEAD></HEAD>
+<BODY>
+<CODE><PRE>
+<A NAME="token0">0:</A>1(0)-1(19):PACKAGE_DECLARATION:package controllers;
+<A NAME="token1">1:</A>3(22)-3(49):IMPORT_DECLARATION:import com.google.gson.Gson;
+<A NAME="token2">2:</A>4(51)-4(76):IMPORT_DECLARATION:import io.javalin.Javalin;
+<A NAME="token3">3:</A>5(78)-5(104):IMPORT_DECLARATION:import java.io.IOException;
+<A NAME="token4">4:</A>6(106)-6(128):IMPORT_DECLARATION:import java.util.Queue;
+<A NAME="token5">5:</A>7(130)-7(153):IMPORT_DECLARATION:import models.GameBoard;
+<A NAME="token6">6:</A>8(155)-8(176):IMPORT_DECLARATION:import models.Message;
+<A NAME="token7">7:</A>9(178)-9(224):IMPORT_DECLARATION:import org.eclipse.jetty.websocket.api.Session;
+<A NAME="token8">8:</A>11(227)-11(249):CLASS_DECLARATION:public class PlayGame {
+<A NAME="token9">9:</A>13(279)-13(296):VARIABLE_DECLARATION:PORT_NUMBER = 8080
+<A NAME="token10">10:</A>15(325)-15(327):VARIABLE_DECLARATION:app
+<A NAME="token11">11:</A>17(356)-17(378):VARIABLE_DECLARATION:board = new GameBoard()
+<A NAME="token12">12:</A>17(364)-17(378):NEW:new GameBoard()
+<A NAME="token13">13:</A>22(487)-22(513):METHOD_DECLARATION:main(final String[] args) {
+<A NAME="token14">14:</A>27(546)-27(562):IF:if (app=="/echo")
+<A NAME="token15">15:</A>27(564)-27(564):BLOCK:{
+<A NAME="token16">16:</A>28(572)-28(593):METHOD_INVOCATION:ctx.result(ctx.body())
+<A NAME="token17">17:</A>28(583)-28(592):METHOD_INVOCATION:ctx.body()
+<A NAME="token18">18:</A>29(600)-29(600):BLOCK_END:}
+<A NAME="token19">19:</A>29(600)-29(600):IF_END:}
+<A NAME="token20">20:</A>32(677)-32(697):IF:if (app=="/getboard")
+<A NAME="token21">21:</A>32(699)-32(699):BLOCK:{
+<A NAME="token22">22:</A>33(712)-33(728):VARIABLE_DECLARATION:gson = new Gson()
+<A NAME="token23">23:</A>33(719)-33(728):NEW:new Gson()
+<A NAME="token24">24:</A>34(744)-34(768):VARIABLE_DECLARATION:json = gson.toJson(board)
+<A NAME="token25">25:</A>34(751)-34(768):METHOD_INVOCATION:gson.toJson(board)
+<A NAME="token26">26:</A>35(778)-35(793):METHOD_INVOCATION:ctx.result(json)
+<A NAME="token27">27:</A>36(800)-36(800):BLOCK_END:}
+<A NAME="token28">28:</A>36(800)-36(800):IF_END:}
+<A NAME="token29">29:</A>38(811)-38(830):IF:if (app=="/newgame")
+<A NAME="token30">30:</A>38(832)-38(832):BLOCK:{
+<A NAME="token31">31:</A>39(840)-39(870):METHOD_INVOCATION:ctx.redirect("/tictactoe.html")
+<A NAME="token32">32:</A>40(877)-40(877):BLOCK_END:}
+<A NAME="token33">33:</A>40(877)-40(877):IF_END:}
+<A NAME="token34">34:</A>42(888)-42(909):IF:if (app=="/startgame")
+<A NAME="token35">35:</A>42(911)-42(911):BLOCK:{
+<A NAME="token36">36:</A>43(926)-43(942):VARIABLE_DECLARATION:body = ctx.body()
+<A NAME="token37">37:</A>43(933)-43(942):METHOD_INVOCATION:ctx.body()
+<A NAME="token38">38:</A>44(956)-44(965):VARIABLE_DECLARATION:type = ' '
+<A NAME="token39">39:</A>45(974)-45(1012):FOR:for (int i = 0; i &lt; body.length(); i++)
+<A NAME="token40">40:</A>45(983)-45(987):VARIABLE_DECLARATION:i = 0
+<A NAME="token41">41:</A>45(994)-45(1006):METHOD_INVOCATION:body.length()
+<A NAME="token42">42:</A>45(1009)-45(1011):ASSIGNMENT:i++
+<A NAME="token43">43:</A>45(1014)-45(1014):BLOCK:{
+<A NAME="token44">44:</A>46(1024)-46(1049):IF:if (body.charAt(i) == 'X')
+<A NAME="token45">45:</A>46(1028)-46(1041):METHOD_INVOCATION:body.charAt(i)
+<A NAME="token46">46:</A>46(1051)-46(1051):BLOCK:{
+<A NAME="token47">47:</A>47(1063)-47(1072):ASSIGNMENT:type = 'X'
+<A NAME="token48">48:</A>48(1083)-48(1083):BLOCK_END:}
+<A NAME="token49">49:</A>48(1083)-48(1083):IF_END:}
+<A NAME="token50">50:</A>49(1093)-49(1118):IF:if (body.charAt(i) == 'O')
+<A NAME="token51">51:</A>49(1097)-49(1110):METHOD_INVOCATION:body.charAt(i)
+<A NAME="token52">52:</A>49(1120)-49(1120):BLOCK:{
+<A NAME="token53">53:</A>50(1132)-50(1141):ASSIGNMENT:type = 'O'
+<A NAME="token54">54:</A>51(1152)-51(1152):BLOCK_END:}
+<A NAME="token55">55:</A>51(1152)-51(1152):IF_END:}
+<A NAME="token56">56:</A>52(1160)-52(1160):BLOCK_END:}
+<A NAME="token57">57:</A>52(1160)-52(1160):FOR_END:}
+<A NAME="token58">58:</A>53(1168)-53(1188):METHOD_INVOCATION:board.startgame(type)
+<A NAME="token59">59:</A>55(1209)-55(1225):VARIABLE_DECLARATION:gson = new Gson()
+<A NAME="token60">60:</A>55(1216)-55(1225):NEW:new Gson()
+<A NAME="token61">61:</A>56(1241)-56(1265):VARIABLE_DECLARATION:json = gson.toJson(board)
+<A NAME="token62">62:</A>56(1248)-56(1265):METHOD_INVOCATION:gson.toJson(board)
+<A NAME="token63">63:</A>57(1275)-57(1290):METHOD_INVOCATION:ctx.result(json)
+<A NAME="token64">64:</A>58(1297)-58(1297):BLOCK_END:}
+<A NAME="token65">65:</A>58(1297)-58(1297):IF_END:}
+<A NAME="token66">66:</A>60(1308)-60(1328):IF:if (app=="/joingame")
+<A NAME="token67">67:</A>60(1330)-60(1330):BLOCK:{
+<A NAME="token68">68:</A>61(1338)-61(1353):METHOD_INVOCATION:board.joingame()
+<A NAME="token69">69:</A>62(1362)-62(1396):METHOD_INVOCATION:ctx.redirect("/tictactoe.html?p=2")
+<A NAME="token70">70:</A>64(1417)-64(1433):VARIABLE_DECLARATION:gson = new Gson()
+<A NAME="token71">71:</A>64(1424)-64(1433):NEW:new Gson()
+<A NAME="token72">72:</A>65(1449)-65(1473):VARIABLE_DECLARATION:json = gson.toJson(board)
+<A NAME="token73">73:</A>65(1456)-65(1473):METHOD_INVOCATION:gson.toJson(board)
+<A NAME="token74">74:</A>66(1483)-66(1498):METHOD_INVOCATION:ctx.result(json)
+<A NAME="token75">75:</A>68(1514)-68(1544):METHOD_INVOCATION:sendGameBoardToAllPlayers(json)
+<A NAME="token76">76:</A>69(1551)-69(1551):BLOCK_END:}
+<A NAME="token77">77:</A>69(1551)-69(1551):IF_END:}
+<A NAME="token78">78:</A>71(1562)-71(1588):IF:if (app=="/move/:playerid")
+<A NAME="token79">79:</A>71(1590)-71(1590):BLOCK:{
+<A NAME="token80">80:</A>73(1650)-73(1679):VARIABLE_DECLARATION:id = ctx.pathParam("playerid")
+<A NAME="token81">81:</A>73(1655)-73(1679):METHOD_INVOCATION:ctx.pathParam("playerid")
+<A NAME="token82">82:</A>74(1692)-74(1722):VARIABLE_DECLARATION:playerid = Integer.parseInt(id)
+<A NAME="token83">83:</A>74(1703)-74(1722):METHOD_INVOCATION:Integer.parseInt(id)
+<A NAME="token84">84:</A>76(1745)-76(1761):VARIABLE_DECLARATION:body = ctx.body()
+<A NAME="token85">85:</A>76(1752)-76(1761):METHOD_INVOCATION:ctx.body()
+<A NAME="token86">86:</A>77(1774)-77(1781):VARIABLE_DECLARATION:row = -1
+<A NAME="token87">87:</A>78(1794)-78(1801):VARIABLE_DECLARATION:col = -1
+<A NAME="token88">88:</A>79(1818)-79(1826):VARIABLE_DECLARATION:x = false
+<A NAME="token89">89:</A>80(1843)-80(1851):VARIABLE_DECLARATION:y = false
+<A NAME="token90">90:</A>81(1860)-81(1898):FOR:for (int i = 0; i &lt; body.length(); i++)
+<A NAME="token91">91:</A>81(1869)-81(1873):VARIABLE_DECLARATION:i = 0
+<A NAME="token92">92:</A>81(1880)-81(1892):METHOD_INVOCATION:body.length()
+<A NAME="token93">93:</A>81(1895)-81(1897):ASSIGNMENT:i++
+<A NAME="token94">94:</A>81(1900)-81(1900):BLOCK:{
+<A NAME="token95">95:</A>82(1915)-82(1934):VARIABLE_DECLARATION:cur = body.charAt(i)
+<A NAME="token96">96:</A>82(1921)-82(1934):METHOD_INVOCATION:body.charAt(i)
+<A NAME="token97">97:</A>83(1945)-83(1959):IF:if (cur == 'x')
+<A NAME="token98">98:</A>83(1961)-83(1961):BLOCK:{
+<A NAME="token99">99:</A>84(1973)-84(1980):ASSIGNMENT:x = true
+<A NAME="token100">100:</A>85(1991)-85(1991):BLOCK_END:}
+<A NAME="token101">101:</A>85(1991)-85(1991):IF_END:}
+<A NAME="token102">102:</A>86(2001)-86(2015):IF:if (cur == 'y')
+<A NAME="token103">103:</A>86(2017)-86(2017):BLOCK:{
+<A NAME="token104">104:</A>87(2029)-87(2036):ASSIGNMENT:y = true
+<A NAME="token105">105:</A>88(2047)-88(2047):BLOCK_END:}
+<A NAME="token106">106:</A>88(2047)-88(2047):IF_END:}
+<A NAME="token107">107:</A>89(2057)-89(2110):IF:if (Character.isDigit(cur) &amp;&amp; x == true &amp;&amp; y == false)
+<A NAME="token108">108:</A>89(2061)-89(2082):METHOD_INVOCATION:Character.isDigit(cur)
+<A NAME="token109">109:</A>89(2112)-89(2112):BLOCK:{
+<A NAME="token110">110:</A>90(2124)-90(2159):ASSIGNMENT:row = Character.getNumericValue(cur)
+<A NAME="token111">111:</A>90(2130)-90(2159):METHOD_INVOCATION:Character.getNumericValue(cur)
+<A NAME="token112">112:</A>91(2170)-91(2170):BLOCK_END:}
+<A NAME="token113">113:</A>91(2170)-91(2170):IF_END:}
+<A NAME="token114">114:</A>92(2180)-92(2232):IF:if (Character.isDigit(cur) &amp;&amp; x == true &amp;&amp; y == true)
+<A NAME="token115">115:</A>92(2184)-92(2205):METHOD_INVOCATION:Character.isDigit(cur)
+<A NAME="token116">116:</A>92(2234)-92(2234):BLOCK:{
+<A NAME="token117">117:</A>93(2246)-93(2281):ASSIGNMENT:col = Character.getNumericValue(cur)
+<A NAME="token118">118:</A>93(2252)-93(2281):METHOD_INVOCATION:Character.getNumericValue(cur)
+<A NAME="token119">119:</A>94(2292)-94(2292):BLOCK_END:}
+<A NAME="token120">120:</A>94(2292)-94(2292):IF_END:}
+<A NAME="token121">121:</A>95(2300)-95(2300):BLOCK_END:}
+<A NAME="token122">122:</A>95(2300)-95(2300):FOR_END:}
+<A NAME="token123">123:</A>99(2427)-99(2445):VARIABLE_DECLARATION:msg = new Message()
+<A NAME="token124">124:</A>99(2433)-99(2445):NEW:new Message()
+<A NAME="token125">125:</A>100(2454)-100(2498):IF:if (board.setter(playerid, row, col) == true)
+<A NAME="token126">126:</A>100(2458)-100(2489):METHOD_INVOCATION:board.setter(playerid, row, col)
+<A NAME="token127">127:</A>100(2500)-100(2500):BLOCK:{
+<A NAME="token128">128:</A>101(2510)-101(2526):METHOD_INVOCATION:msg.validSetter()
+<A NAME="token129">129:</A>102(2535)-102(2535):BLOCK_END:}
+<A NAME="token130">130:</A>102(2535)-102(2535):IF_END:}
+<A NAME="token131">131:</A>102(2537)-102(2540):ELSE:else
+<A NAME="token132">132:</A>102(2542)-102(2542):BLOCK:{
+<A NAME="token133">133:</A>103(2552)-103(2570):METHOD_INVOCATION:msg.invalidSetter()
+<A NAME="token134">134:</A>104(2579)-104(2579):BLOCK_END:}
+<A NAME="token135">135:</A>104(2579)-104(2579):ELSE_END:}
+<A NAME="token136">136:</A>105(2592)-105(2611):VARIABLE_DECLARATION:gsonmsg = new Gson()
+<A NAME="token137">137:</A>105(2602)-105(2611):NEW:new Gson()
+<A NAME="token138">138:</A>106(2627)-106(2654):VARIABLE_DECLARATION:strmsg = gsonmsg.toJson(msg)
+<A NAME="token139">139:</A>106(2636)-106(2654):METHOD_INVOCATION:gsonmsg.toJson(msg)
+<A NAME="token140">140:</A>107(2664)-107(2681):METHOD_INVOCATION:ctx.result(strmsg)
+<A NAME="token141">141:</A>109(2702)-109(2718):VARIABLE_DECLARATION:gson = new Gson()
+<A NAME="token142">142:</A>109(2709)-109(2718):NEW:new Gson()
+<A NAME="token143">143:</A>110(2734)-110(2758):VARIABLE_DECLARATION:json = gson.toJson(board)
+<A NAME="token144">144:</A>110(2741)-110(2758):METHOD_INVOCATION:gson.toJson(board)
+<A NAME="token145">145:</A>111(2767)-111(2797):METHOD_INVOCATION:sendGameBoardToAllPlayers(json)
+<A NAME="token146">146:</A>112(2808)-112(2808):BLOCK_END:}
+<A NAME="token147">147:</A>112(2808)-112(2808):IF_END:}
+<A NAME="token148">148:</A>116(2869)-116(2907):METHOD_INVOCATION:app.ws("/gameboard", new UiWebSocket())
+<A NAME="token149">149:</A>116(2890)-116(2906):NEW:new UiWebSocket()
+<A NAME="token150">150:</A>117(2912)-117(2912):METHOD_DECLARATION_END:}
+<A NAME="token151">151:</A>123(3080)-123(3134):METHOD_DECLARATION:sendGameBoardToAllPlayers(final String gameBoardJson) {
+<A NAME="token152">152:</A>124(3155)-124(3190):VARIABLE_DECLARATION:sessions = UiWebSocket.getSessions()
+<A NAME="token153">153:</A>124(3166)-124(3190):METHOD_INVOCATION:UiWebSocket.getSessions()
+<A NAME="token154">154:</A>125(3197)-125(3234):FOR:for (Session sessionPlayer : sessions)
+<A NAME="token155">155:</A>125(3236)-125(3236):BLOCK:{
+<A NAME="token156">156:</A>126(3244)-126(3248):TRY:try {
+<A NAME="token157">157:</A>127(3258)-127(3282):METHOD_INVOCATION:sessionPlayer.getRemote()
+<A NAME="token158">158:</A>127(3258)-127(3308):METHOD_INVOCATION:sessionPlayer.getRemote().sendString(gameBoardJson)
+<A NAME="token159">159:</A>128(3317)-128(3317):TRY_END:}
+<A NAME="token160">160:</A>128(3319)-128(3341):CATCH:catch (IOException e) {
+<A NAME="token161">161:</A>130(3376)-130(3376):CATCH_END:}
+<A NAME="token162">162:</A>131(3382)-131(3382):BLOCK_END:}
+<A NAME="token163">163:</A>131(3382)-131(3382):FOR_END:}
+<A NAME="token164">164:</A>132(3386)-132(3386):METHOD_DECLARATION_END:}
+<A NAME="token165">165:</A>134(3410)-134(3417):METHOD_DECLARATION:stop() {
+<A NAME="token166">166:</A>135(3423)-135(3432):METHOD_INVOCATION:app.stop()
+<A NAME="token167">167:</A>136(3437)-136(3437):METHOD_DECLARATION_END:}
+<A NAME="token168">168:</A>137(3439)-137(3439):CLASS_DECLARATION_END:}
+</PRE></CODE>
+</BODY>
+</HTML>
