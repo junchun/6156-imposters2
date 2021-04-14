@@ -34,9 +34,9 @@ f = open(filename, "r")
 #         count += 1
 
 average = total_weight/float(count)
-print("Total weight:", total_weight)
-print("Cheating pairs found:", count)
-print("Average:", average)
+# print("Total weight:", total_weight)
+# print("Cheating pairs found:", count)
+print("Cheat code average similarity score:", average)
 
 f.seek(0)
 for line in f.readlines():
@@ -46,8 +46,8 @@ for line in f.readlines():
     percentage = int(subparts[1].split('%')[0])
 
     # 47% sim between junchun and yumeng's submissions
-    threshold = 11 + 47
-    # threshold = average
+    # threshold = 11 + 47
+    threshold = average
 
     if percentage > threshold:
         print("Plagiarism suspect found (above", threshold, "percent) --> percentage: ", percentage, ", id1: ", primary, ", id2: ", secondary)
