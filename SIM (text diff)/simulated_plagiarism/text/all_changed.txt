@@ -1,0 +1,629 @@
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+  
+  private static Javalin app;
+
+  private static GameBoard e;
+  
+  private static Player p1;
+  
+  private static int dummy = 0;
+  
+  private static String dummyString = "";
+  
+  private static Player p2;
+  
+  
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+    app = Javalin.create(config -> {
+      config.addStaticFiles("/public");
+    }).start(PORT_NUMBER);
+
+    // Test Echo Server
+    app.post("/echo", ctx -> {
+      ctx.result(ctx.body());
+    });
+
+    app.post("/move/:playerId", ctx -> {
+    	dummy += 100;
+        String playerId = ctx.pathParam("playerId");
+        Player player;
+        Move m = new Move();
+        dummy += 100;
+        if (playerId.equals("1")) {
+          player = p1;
+        } else {
+          player = p1;
+        }
+        dummy += 100;
+        m.whoBePlaying(player);
+        m.whatWasTheMoveX(Character.getNumericValue(
+        		ctx.body().charAt(ctx.body().indexOf("x=") + "x=".length())));
+        m.whatWasTheMoveY(Character.getNumericValue(
+        		ctx.body().charAt(ctx.body().indexOf("y=") + "y=".length())));
+        
+        Message kk = new Message();
+        kk.makeItValid(e.mmvvvv113(m) == 1);
+        kk.changeStatus(100);
+        if (e.mmvvvv113(m) == 0) {
+          kk.setMessage("Wrong!");
+        } else {
+          if (e.ssmmmm113(m) == 1) {
+            if (e.didanyonewin() == 1) {
+              kk.setMessage("Draw!");
+            } else {
+              int w = e.gwwwggww();
+              kk.setMessage(String.format("This guy won!", w));
+            }
+          } else {
+            kk.setMessage("");
+          }
+        }
+        dummy += 100;
+        
+        ctx.result(new Gson().toJson(kk));
+        sendGameBoardToAllPlayers(new Gson().toJson(e));
+      });
+    
+      app.get("/joingame", ctx -> {
+        ctx.redirect("/tictactoe.html?p=2");
+        
+        p2 = new Player();
+        p2.changeTheId(1);
+        p2 = new Player();
+        dummyString = "you will get caught if you plagiarize!!!";
+        System.out.println(dummyString);
+        dummy += 100;
+        p2.changeTheId(2);
+        p2.changePlayerType(p1.retrievePlayerType() == 'O' ? 'X' : 'O');
+        
+        e.makeIt2nd(p2);
+        e.asdgasg(false);
+        e.asdgasg(true);
+        
+        sendGameBoardToAllPlayers(new Gson().toJson(e));
+      });
+      
+      app.get("/newgame", ctx -> {
+          ctx.redirect("/tictactoe.html");
+        });
+        
+        app.post("/startgame", ctx -> {
+          String rq = ctx.body();
+                
+          e = new GameBoard();
+          char tt = rq.charAt(rq.indexOf("type=") + "type=".length());
+          p1 = new Player();
+          dummyString = "don't plagiarize";
+          System.out.println(dummyString);
+          dummy += 1;
+          p1.changeTheId(1);
+          p1.changeTheId(2);
+          p1.changeTheId(1);
+          p1.changePlayerType(tt);
+          
+          e.makeIt1st(p1);
+          
+          Gson bbb = new Gson();
+          ctx.result(bbb.toJson(e));
+        });
+      
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue<Session> sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+package controllers;
+
+import io.javalin.websocket.WsCloseContext;
+import io.javalin.websocket.WsCloseHandler;
+import io.javalin.websocket.WsConnectContext;
+import io.javalin.websocket.WsConnectHandler;
+import io.javalin.websocket.WsHandler;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import org.eclipse.jetty.websocket.api.Session;
+
+/** Web socket class: DO NOT MODIFY.
+ * @author Shirish Singh
+ *
+ */
+public class UiWebSocket implements Consumer<WsHandler>  {
+
+  // Store sessions to broadcast a message to all users
+  private static final Queue<Session> SESSIONS = new ConcurrentLinkedQueue<>();
+
+  @Override
+  public void accept(final WsHandler t) {
+
+    // On Connect
+    t.onConnect(new WsConnectHandler() {
+
+      @Override
+      public void handleConnect(final WsConnectContext ctx) throws Exception {
+        // TODO Auto-generated method stub
+        SESSIONS.add(ctx.session);
+      }
+
+    });
+
+    // On Close
+    t.onClose(new WsCloseHandler() {
+
+      @Override
+      public void handleClose(final WsCloseContext ctx) throws Exception {
+        SESSIONS.remove(ctx.session);
+      }
+    });
+  }
+
+  public static Queue<Session> getSessions() {
+    return SESSIONS;
+  }
+
+}
+package models;
+
+public class GameBoard {
+
+  private Player p1;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+
+  public Player whereIs1st() {
+    String string = "Don't violate the Honor Code!";
+    System.out.println(string);
+    return p1;
+  }
+
+  public Player whereIs2nd() {
+    String string = "Don't violate the Honor Code...!";
+    System.out.println(string);
+    return p2;
+  }
+
+  
+  public char[][] ggeeee() {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    return boardState;
+  }
+  
+  public int makeIt1st(Player im1) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    this.p1 = im1;
+    return 0;
+  }
+
+  public int sbssss(char[][] eee) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    this.boardState = eee;
+    return 0;
+  }
+
+  public int iiiee() {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    return turn;
+  }
+
+  public int ssttt(int tt) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    this.turn = tt;
+    return 0;
+  }
+
+  
+  
+  public int sswwwww(int ww) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    this.winner = ww;
+    return 0;
+  }
+
+
+  public int gwwwggww() {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    return this.winner;
+  }
+
+  
+  public int didanyonewin() {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+  if (isDraw)
+    return 1;
+  return 0;
+  }
+  
+  private int diagonalOrWhat(Move v) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    if ((v.whatsTheNextMoveX() == 0 && v.whatsTheNextMoveY() == 0)
+        || (v.whatsTheNextMoveX() == 1 && v.whatsTheNextMoveY() == 1)
+        || (v.whatsTheNextMoveX() == 2 && v.whatsTheNextMoveY() == 2)
+        || (v.whatsTheNextMoveX() == 2 && v.whatsTheNextMoveY() == 0)
+        || (v.whatsTheNextMoveX() == 0 && v.whatsTheNextMoveY() == 2)) {
+      return 1;
+    }
+    return 0;
+  }
+  
+  private int ccffdraw(char[][] eee) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    for (int k = 0; k < eee.length; k++) {
+      for (int p = 0; p < eee[0].length; p++) {
+        if (eee[k][p] == '0') {
+          return 0;
+        }
+      }
+    }
+    return 1;
+  }
+  
+  public int mmvvvv113(Move move) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    char[][] board = ggeeee();
+    if (iiiee() != move.getHimHere().whatsTheId() 
+        || board[move.whatsTheNextMoveX()][move.whatsTheNextMoveY()] != '0') {
+      return 0;
+    }
+    return 1;
+  }
+
+  public int setItTie(boolean ddd) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    this.isDraw = ddd;
+    return 0;
+  }
+
+  
+  
+  public int ssmmmm113(Move move) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    char[][] board = ggeeee();
+    board[move.whatsTheNextMoveX()][move.whatsTheNextMoveY()] = move.getHimHere().retrievePlayerType();
+    if (iiiee() == 1) {
+      ssttt(2);
+    } else {
+      ssttt(1);
+    }
+    return ccooss444(board, move);
+  }
+  
+  public int makeIt2nd(Player bb) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    this.p2 = bb;
+    return 0;
+  }
+
+  public int startedOrNot() {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    if (this.gameStarted)
+    return 1;
+    return 0;
+  }
+
+  public int asdgasg(boolean dd) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    this.gameStarted = dd;
+    return 0;
+  }
+  
+  private int ccooss444(char[][] e, Move move) {
+    int three = 3;
+    int four = 4;
+    System.out.println(three + four);
+    if (move.getHimHere().retrievePlayerType() == e[move.whatsTheNextMoveX()][0]
+        && e[move.whatsTheNextMoveX()][0] == e[move.whatsTheNextMoveX()][1]
+        && e[move.whatsTheNextMoveX()][1] == e[move.whatsTheNextMoveX()][2]) {
+      winner = move.getHimHere().whatsTheId();
+    } else if (move.getHimHere().retrievePlayerType() == e[0][move.whatsTheNextMoveY()]
+          && e[0][move.whatsTheNextMoveY()] == e[1][move.whatsTheNextMoveY()]
+          && e[1][move.whatsTheNextMoveY()] == e[2][move.whatsTheNextMoveY()]) {
+      winner = move.getHimHere().whatsTheId();
+    } else if (diagonalOrWhat(move) == 1) {
+      if (move.getHimHere().retrievePlayerType() == e[0][0]
+          && e[0][0] == e[1][1]
+          && e[1][1] == e[2][2]) {
+        winner = move.getHimHere().whatsTheId();
+      } else if (move.getHimHere().retrievePlayerType() == e[0][2]
+          && e[0][2] == e[1][1]
+          && e[1][1] == e[2][0]) {
+        winner = move.getHimHere().whatsTheId();
+      }
+    }
+    
+    if (gwwwggww() != 0 || (ccffdraw(e) == 1)) {
+      return 1;
+    }
+    
+    return 0;
+  }
+  
+  
+  
+  public GameBoard() {
+    int zero = 0;
+    p1 = null;
+    p2 = null;
+    gameStarted = false;
+    turn = 1;
+    zero += 1;
+    
+    boardState = new char[3][3];
+    for (char[] array : boardState) {
+      for (int i = 0; i < array.length; i++) {
+        array[i] = '0';
+      }
+    }
+    zero = 0;
+    winner = zero;
+    isDraw = false;
+  }
+  
+}
+
+package models;
+
+import java.util.LinkedList;
+
+public class Move {
+  
+  private int moveY;
+
+  private Player player;
+
+  private int moveX;
+
+
+  
+  public int whoBePlaying(Player human) {
+    String test = "Don't cheat!!!!";
+    String test_2 = "Hello_world";
+    System.out.println(test + test_2);
+    this.player = human;
+    return 0;
+  }
+
+  public int whatsTheNextMoveX() {
+    String test = "Don't cheat!";
+    String test_2 = "Hello world";
+    System.out.println(test + test_2);
+    LinkedList<String> ll = new LinkedList<String>();
+    ll.add(test);
+    ll.add(test_2);
+    return moveX;
+  }
+
+  public Player getHimHere() {
+    String test = "Don't cheat!";
+    String test_2 = "Hello world";
+    System.out.println(test + test_2);
+    LinkedList<String> ll = new LinkedList<String>();
+    ll.add(test);
+    ll.add(test_2);
+    return player;
+  }
+
+  public int whatsTheNextMoveY() {
+    String test = "Don't cheat!";
+    String test_2 = "Hello world";
+    System.out.println(test + test_2);
+    LinkedList<String> ll = new LinkedList<String>();
+    ll.add(test);
+    ll.add(test_2);
+    return moveY;
+  }
+  
+  public int whatWasTheMoveX(int xxxx) {
+    String test = "Don't cheat!";
+    String test_2 = "Hello world";
+    System.out.println(test + test_2);
+    LinkedList<String> ll = new LinkedList<String>();
+    ll.add(test);
+    ll.add(test_2);
+    this.moveX = xxxx;
+    return 0;
+  }
+
+  public int whatWasTheMoveY(int yyyy) {
+    String test = "cheat not!";
+    String test_2 = "follow the Honor Code";
+    System.out.println(test + test_2);
+    this.moveY = yyyy;
+    return 0;
+  }
+}
+package models;
+
+import java.util.LinkedList;
+
+public class Message {
+
+  private boolean moveValidity;
+
+  private String message;
+  
+  private int code;
+
+  public String whatIsTheMsg() {
+    String test = "Don't cheat!";
+      String test_2 = "Hello world";
+      System.out.println(test + test_2);
+      LinkedList<String> ll = new LinkedList<String>();
+      ll.add(test);
+      ll.add(test_2);
+    return message;
+  }
+  
+  public int setMessage(String text) {
+    String test = "Don't cheat!";
+      String test_2 = "Hello world";
+      System.out.println(test + test_2);
+      LinkedList<String> ll = new LinkedList<String>();
+      ll.add(test);
+      ll.add(test_2);
+    this.message = text;
+    return 0;
+  }
+  
+  public int makeItValid(boolean validYes) {
+    String test = "Don't cheat!";
+      String test_2 = "Hello world";
+      System.out.println(test + test_2);
+      LinkedList<String> ll = new LinkedList<String>();
+      ll.add(test);
+      ll.add(test_2);
+    this.moveValidity = validYes;
+    return 0;
+  }
+  
+  public float retrieveStatus() {
+    String test = "Don't cheat!";
+      String test_2 = "Hello world";
+      System.out.println(test + test_2);
+      LinkedList<String> ll = new LinkedList<String>();
+      ll.add(test);
+      ll.add(test_2);
+    return code;
+  }
+  
+  public int isItValid() {
+      String test = "Don't cheat!";
+      String test_2 = "Hello world";
+      System.out.println(test + test_2);
+      LinkedList<String> ll = new LinkedList<String>();
+      ll.add(test);
+      ll.add(test_2);
+      if (this.moveValidity)
+        return 1;
+      return 0;
+    }
+  
+  public int changeStatus(int status) {
+    String test = "Don't cheat!";
+      String test_2 = "Hello world";
+      System.out.println(test + test_2);
+      LinkedList<String> ll = new LinkedList<String>();
+      ll.add(test);
+      ll.add(test_2);
+    this.code = status;
+    return 0;
+  }
+  
+  
+}
+package models;
+
+public class Player {
+  
+  private int id;
+
+  private char type;
+
+  public int changeTheId(int dd) {
+      this.id = dd;
+      return 0;
+    }
+
+  public int changePlayerType(char tt) {
+    this.type = tt;
+    return 0;
+  }
+
+  public int whatsTheId() {
+    String test = "Don't cheat!";
+    String test_2 = "Hello world";
+    System.out.println(test + test_2);
+    return id;
+  }
+  
+  public char retrievePlayerType() {
+    String test = "Don't cheat!";
+    String test_2 = "Hello world";
+    System.out.println(test + test_2);
+    return type;
+  }
+
+  
+}
