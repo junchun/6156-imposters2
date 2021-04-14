@@ -1,18 +1,7 @@
-Found a cheating pair: 15, 31
-Found a cheating pair: 15, 6
-Found a cheating pair: 15, 5
-Found a cheating pair: 19, 33
-Found a cheating pair: 19, 29
-Found a cheating pair: 19, 5
-Found a cheating pair: 2, 4
-Found a cheating pair: 16, 5
-Found a cheating pair: 21, 7
-Total weight: 263
-Cheating pairs found: 9
-Average: 29.22222222222222
-Plagiarism suspect found (above 58 percent) --> percentage:  78 , id1:  1 , id2:  19
-Plagiarism suspect found (above 58 percent) --> percentage:  63 , id1:  36 , id2:  8
+Cheat code average similarity score: 59.8
+Plagiarism suspect found (above 59.8 percent) --> percentage:  78 , id1:  2 , id2:  19
+Plagiarism suspect found (above 59.8 percent) --> percentage:  63 , id1:  36 , id2:  8
 
 
 List of suspicious pairs found (id1, id2, %):
-[('1', '19', '78%'), ('36', '8', '63%')]
+[('2', '19', '78%'), ('36', '8', '63%')]
