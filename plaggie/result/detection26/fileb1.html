@@ -1,227 +1,113 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/26/PlayGame.java</TITLE>
+<TITLE>plaggie_data/18/GameBoard.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/26/PlayGame.java</H1>
+<H1>plaggie_data/18/GameBoard.java</H1>
 <CODE><PRE>
-package controllers;
-
-import com.google.gson.Gson;
-import io.javalin.Javalin;
-import java.io.IOException;
-import java.util.Queue;
-import models.GameBoard;
-import models.GameState;
-import models.Message;
-import models.Move;
-import models.Player;
-import org.eclipse.jetty.websocket.api.Session;
-
-class PlayGame {
-
-  private static final int PORT_NUMBER = 8080;
-
-  private static Javalin app;
-
-  private static GameBoard gameBoard;
-
-  private static final Gson gson = new Gson();
-
-  /** Main method of the application.
-   *
-   * @param args Command line arguments
-   */
-<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:  public static void main(final String[] args) {
-2:
-2:
-2:    // Test Echo Server
-2:    if (app=="/echo") {
-2:      ctx.result(ctx.body());
-2:    }
-2:
-2:    // Hello test
-2:    if (app=="/hello") {
-2:      ctx.result("Hello ASE class Fall 2020.");
-2:    }
-
-    // Get a new game
-    if (app=="/newgame") {
-      ctx.redirect("tictactoe.html");
-    }
-
-    // Start a new game
-    if (app=="/startgame") {
-      //No need for check the option since frontend had already checked
-      // Initialize Player 1
-      char p1Type = ctx.formParam("type").charAt(0);
-      int p1Id = 1;
-      Player p1 = new Player(p1Type, p1Id);
-      // Set a new Game board
-      gameBoard = new GameBoard(p1);
-      // gameBoard.setGameStarted(true);
-      // Return the game board in JSON
-      String gameBoardJson = gson.toJson(gameBoard);
-      ctx.result(gameBoardJson);
-    }
-
-    // Join a game
-    if (app=="/joingame") {
-      // Check if there is a existing game
-      try {
-        Player p1 = gameBoard.getP1();
-        char p1Type = p1.getType();
-        // Initialize Player 2
-        char p2Type = p1Type == 'X' ? 'O' : 'X';
-        int p2Id = p1.getId() + 1; // =2
-        Player p2 = new Player(p2Type, p2Id);
-        gameBoard.setP2(p2);
-        // Set game start
-        gameBoard.setGameStarted(true);
-        ctx.redirect("/tictactoe.html?p=2");
-      } catch (NullPointerException e) {
-        ctx.result("Please start a game first!");
-      }
-      // Send the game board JSON to all players
-<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
-1:    }
-1:
-1:    // Take a move
-1:    if (app=="/move/:playerId") {
-1:      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
-1:      int x = Integer.parseInt(ctx.formParam("x"));
-1:      int y = Integer.parseInt(ctx.formParam("y"));
-      // Validate the move
-      Move move = null;
-      if (playerId % 2 == 1) {
-        move = new Move(gameBoard.getP1(), x, y);
-      } else {
-        move = new Move(gameBoard.getP2(), x, y);
-      }
-      Message msg = new Message();
-      if (!isValid(move, msg)) {
-        ctx.result(gson.toJson(msg));
-        return;
-      }
-      // If is valid, update the game board
-      char state = playerId % 2 == 1 ? gameBoard.getP1().getType() : gameBoard.getP2().getType();
-      gameBoard.setBoardState(x, y, state);
-      // Check and set game result
-      GameState gameState = checkGameResult(gameBoard.getBoardState());
-      if (gameState == GameState.CONTINUE) {
-        gameBoard.setTurn(gameBoard.getTurn() == 1 ? 2 : 1);
-      } else if (gameState == GameState.PLAYER1WIN) {
-        gameBoard.setWinner(1);
-        gameBoard.setGameStarted(false);
-      } else if (gameState == GameState.PLAYER2WIN) {
-        gameBoard.setWinner(2);
-        gameBoard.setGameStarted(false);
-      } else {
-        gameBoard.setDraw(true);
-        gameBoard.setGameStarted(false);
-      }
-      // Return msg and update game board view
-      ctx.result(gson.toJson(msg));
-      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
-    }
-
-    // Web sockets - DO NOT DELETE or CHANGE
-    app.ws("/gameboard", new UiWebSocket());
-  }
-
-  private static GameState checkGameResult(char[][] boardState) {
-    // Check all rows
-    for (int row = 0; row &lt; boardState.length; row++) {
-      if (boardState[row][0] == boardState[row][1] &amp;&amp; boardState[row][1] == boardState[row][2]) {
-        if (boardState[row][0] != '\u0000') {
-          return getWinner(boardState[row][0]);
-        }
-      }
-    }
-    // Check all columns
-    for (int col = 0; col &lt; boardState[0].length; col++) {
-      if (boardState[0][col] == boardState[1][col] &amp;&amp; boardState[1][col] == boardState[2][col]) {
-        if (boardState[0][col] != '\u0000') {
-          return getWinner(boardState[0][col]);
-        }
-      }
-    }
-    // Check all diagonals
-    if (boardState[0][0] == boardState[1][1] &amp;&amp; boardState[1][1] == boardState[2][2]) {
-      if (boardState[0][0] != '\u0000') {
-        return getWinner(boardState[0][0]);
-      }
-    }
-    if (boardState[0][2] == boardState[1][1] &amp;&amp; boardState[1][1] == boardState[2][0]) {
-      if (boardState[0][2] != '\u0000') {
-        return getWinner(boardState[0][2]);
-      }
-    }
-    // Check isDraw
-    for (int i = 0; i &lt; boardState.length; i++) {
-      for (int j = 0; j &lt; boardState[0].length; j++) {
-        if (boardState[i][j] == '\u0000') {
-          return GameState.CONTINUE;
-        }
-      }
-    }
-    return GameState.DRAW;
-  }
-
-  private static GameState getWinner(char type) {
-    if (type == gameBoard.getP1().getType()) {
-      return GameState.PLAYER1WIN;
-    } else {
-      return GameState.PLAYER2WIN;
-    }
-  }
-
-  // Check move's validity and set message
-  private static boolean isValid(Move move, Message msg) {
-    // case 1: game not started yet or already ended
-    if (!gameBoard.isGameStarted()) {
-      if (gameBoard.getWinner() != 0 || gameBoard.isDraw()) {
-        msg.setFullMessage(false, 400, "Bad Request: The game has already ended!");
-        return false;
-      }
-      msg.setFullMessage(false, 400, "Bad Request: The game hasn't started yet!");
-      return false;
-    }
-    // case 2: not your turn
-    if (move.getPlayer().getId() % 2 != gameBoard.getTurn() % 2) {
-      msg.setFullMessage(false, 400, "Bad Request: It's not your turn now!");
-      return false;
-    }
-    // case 3: position is already token
-    char state = gameBoard.getBoardState()[move.getMoveX()][move.getMoveY()];
-    if (state == 'X' || state == 'Y') {
-      msg.setFullMessage(false, 400, "Bad Request: This position had been token already!");
-      return false;
-    }
-<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:    msg.setFullMessage(true, 200, "");
-0:    return true;
-0:  }
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:package models;
 0:
-0:  /** Send message to all players.
-0:   *
-0:   * @param gameBoardJson Gameboard JSON
-0:   * @throws IOException Websocket message send IO Exception
+0:
+0:public class GameBoard {
+0:  /**
+0:   * Represent game state. p1 The first player p2 The second player gameStarted Whether both players
+0:   * have joined turn Which player's turn it is boardState The board representation winner Whether
+0:   * there is a winner isDraw Whether there is a draw
 0:   */
-0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
-0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
-0:    for (Session sessionPlayer : sessions) {
-0:      try {
-0:        sessionPlayer.getRemote().sendString(gameBoardJson);
-0:      } catch (IOException e) {
-0:        // Add logger here
-0:      }
-0:    }
+0:  public GameBoard() {
+0:    super();
+0:    this.gameStarted = false;
+0:    this.turn = 1;
+0:    this.boardState = new char[3][3];
+0:    this.winner = 0;
+0:    this.isDraw = false;
 0:  }
 0:
-0:  public static void stop() {
-    app.stop();
-  }
-}
+0:  // public GameBoard() {
+0:  // gameStarted = false;
+0:  // turn = 1;
+0:  // boardState = new char[3][3];
+0:  // winner = 0;
+0:  // isDraw = false;
+0:  // }
+0:
+0:
+0:  private Player p1;
+0:
+0:
+0:
+0:  private Player p2;
+0:
+0:  private boolean gameStarted;
+0:
+0:  private int turn;
+0:
+0:  private char[][] boardState;
+0:
+0:  private int winner;
+0:
+0:  private boolean isDraw;
+0:
+0:
+0:
+0:  public Player getP1() {
+0:    return p1;
+0:  }
+0:
+0:  public void setP1(Player p1) {
+0:    this.p1 = p1;
+0:  }
+0:
+0:  public Player getP2() {
+0:    return p2;
+0:  }
+0:
+0:  public void setP2(Player p2) {
+0:    this.p2 = p2;
+0:  }
+0:
+0:  public boolean isGameStarted() {
+0:    return gameStarted;
+0:  }
+0:
+0:  public void setGameStarted(boolean gameStarted) {
+0:    this.gameStarted = gameStarted;
+0:  }
+0:
+0:  public int getTurn() {
+0:    return turn;
+0:  }
+0:
+0:  public void setTurn(int turn) {
+0:    this.turn = turn;
+0:  }
+0:
+0:  public char[][] getBoardState() {
+0:    return boardState;
+0:  }
+0:
+0:  public void setBoardState(char[][] boardState) {
+0:    this.boardState = boardState;
+0:  }
+0:
+0:  public int getWinner() {
+0:    return winner;
+0:  }
+0:
+0:  public void setWinner(int winner) {
+0:    this.winner = winner;
+0:  }
+0:
+0:  public boolean isDraw() {
+0:    return isDraw;
+0:  }
+0:
+0:  public void setDraw(boolean isDraw) {
+0:    this.isDraw = isDraw;
+0:  }
+0:
+0:
+0:}
 </PRE></CODE>
 </BODY>
 </HTML>

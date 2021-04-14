@@ -1,0 +1,61 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/32/Message.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/32/Message.java</H1>
+<CODE><PRE>
+package models;
+
+public class Message {
+
+  /**
+   * A Message is sent as feedback for every movement.
+   * 
+   * @param moveValidity To validate move
+   * @param code Type of message
+   * @param message Text to display as feedback
+   */
+
+
+  public Message(boolean moveValidity, int code, String message) {
+    super();
+    this.moveValidity = moveValidity;
+    this.code = code;
+    this.message = message;
+  }
+
+<A NAME="match0"></A><A HREF="filea6.html#match0" TARGET="left">0</A>:  public boolean isMoveValidity() {
+0:    return moveValidity;
+0:  }
+0:
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
+0:  }
+0:
+0:  public int getCode() {
+0:    return code;
+0:  }
+0:
+0:  public void setCode(int code) {
+0:    this.code = code;
+0:  }
+0:
+0:  public String getMessage() {
+0:    return message;
+0:  }
+0:
+0:  public void setMessage(String message) {
+0:    this.message = message;
+0:  }
+0:
+0:  private boolean moveValidity;
+0:
+0:  private int code;
+0:
+0:  private String message;
+0:
+0:}
+</PRE></CODE>
+</BODY>
+</HTML>

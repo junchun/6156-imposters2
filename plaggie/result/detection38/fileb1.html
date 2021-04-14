@@ -1,115 +1,60 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/29/PlayGame.java</TITLE>
+<TITLE>plaggie_data/20/Message.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/29/PlayGame.java</H1>
+<H1>plaggie_data/20/Message.java</H1>
 <CODE><PRE>
-package controllers;
-
-import io.javalin.Javalin;
-<A NAME="match3"></A><A HREF="filea1.html#match3" TARGET="left">3</A>:import java.io.IOException;
-3:import java.util.Queue;
-3:import models.GameBoard;
-3:import models.Message;
-3:import models.Move;
-3:import models.Player;
-3:import org.eclipse.jetty.websocket.api.Session;
-3:
-3:class PlayGame {
-3:
-3:  private static final int PORT_NUMBER = 8080;
-3:  private static Javalin app;
-3:  private static GameBoard game;
-  
-  /** Main method of the application.
-   * @param args Command line arguments
-   */
-  public static void main(final String[] args) {
-
-    //Create app
-
-
-    // Test Echo Server
-<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:    if (app=="/echo") {
-2:      ctx.result(ctx.body());
-2:    }
-2:
-2:    // Redirect to tic tac toe board.
-2:    if (app=="/newgame") {
-2:      ctx.redirect("/tictactoe.html");
-2:    }
-2:    
-2:    // Start game, creating player 1 and game board.
-2:    if (app=="/startgame") {
-2:      char type1 = ctx.req.getParameter("type").charAt(0);
-      Player p1 = new Player(type1, 1);
-      game = new GameBoard(p1);
-      ctx.result(game.getBoard());
-    }
-
-    // Player 2 joins game and game begins.
-    if (app=="/joingame") {
-      char type2;
-      if (game.getP1Type() == 'X') {
-        type2 = 'O';
-      } else {
-        type2 = 'X';
-      }
-      Player p2 = new Player(type2, 2);
-      game.addP2(p2);
-      ctx.redirect("/tictactoe.html?p=2");
-      game.startGame();
-      sendGameBoardToAllPlayers(game.getBoard());
-    }
-    
-    
-    // Player 1 moves.
-    if (app=="/move/1") {
-      int x = Integer.parseInt(ctx.req.getParameter("x"));
-      int y = Integer.parseInt(ctx.req.getParameter("y"));
-      Move move = new Move(game.getP1(), x, y);
-<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:      Message message = game.move(move);
-1:      ctx.result(message.getMessage());
-1:      sendGameBoardToAllPlayers(game.getBoard());
-1:      System.out.println("Sent board to all players");
-1:    }
-1:    
-1:    // Player 2 moves.
-1:    if (app=="/move/2") {
-1:      int x = Integer.parseInt(ctx.req.getParameter("x"));
-1:      int y = Integer.parseInt(ctx.req.getParameter("y"));
-1:      Move move = new Move(game.getP2(), x, y);
-<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:      Message message = game.move(move);
-0:      ctx.result(message.getMessage());
-0:      sendGameBoardToAllPlayers(game.getBoard());
-0:      System.out.println("Sent board to all players");
-0:    }
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:package models;
 0:
-0:    // Web sockets - DO NOT DELETE or CHANGE
-0:    app.ws("/gameboard", new UiWebSocket());
-0:  }
-0:  
+0:public class Message {
+0:
 0:  /**
-0:   * Send message to all players.
+0:   * A Message is sent as feedback for every movement.
 0:   * 
-0:   * @param gameBoardJson Gameboard JSON
-0:   * @throws IOException Websocket message send IO Exception
+0:   * @param moveValidity To validate move
+0:   * @param code Type of message
+0:   * @param message Text to display as feedback
 0:   */
-0:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
-0:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
-0:    for (Session sessionPlayer : sessions) {
-0:      try {
-0:        sessionPlayer.getRemote().sendString(gameBoardJson);
-0:      } catch (IOException e) {
-0:        System.out.println("Failed to send game board to all players.");
-0:      }
-0:    }
+0:
+0:
+0:  public Message(boolean moveValidity, int code, String message) {
+0:    super();
+0:    this.moveValidity = moveValidity;
+0:    this.code = code;
+0:    this.message = message;
 0:  }
 0:
-0:  public static void stop() {
-0:    app.stop();
+0:  public boolean isMoveValidity() {
+0:    return moveValidity;
 0:  }
+0:
+0:  public void setMoveValidity(boolean moveValidity) {
+0:    this.moveValidity = moveValidity;
+0:  }
+0:
+0:  public int getCode() {
+0:    return code;
+0:  }
+0:
+0:  public void setCode(int code) {
+0:    this.code = code;
+0:  }
+0:
+0:  public String getMessage() {
+0:    return message;
+0:  }
+0:
+0:  public void setMessage(String message) {
+0:    this.message = message;
+0:  }
+0:
+0:  private boolean moveValidity;
+0:
+0:  private int code;
+0:
+0:  private String message;
+0:
 0:}
 </PRE></CODE>
 </BODY>

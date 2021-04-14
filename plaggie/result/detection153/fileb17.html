@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/34/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/34/PlayGame.java</H1>
+<CODE><PRE>
+<A NAME="match1"></A><A HREF="filea17.html#match1" TARGET="left">1</A>:package controllers;
+1:
+1:import com.google.gson.Gson;
+1:import io.javalin.Javalin;
+1:import java.io.IOException;
+1:import java.util.Queue;
+1:import models.GameBoard;
+1:import models.Message;
+1:import models.Move;
+1:import models.Player;
+1:import org.eclipse.jetty.websocket.api.Session;
+1:
+1:class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+
+
+
+    // Test Echo Server
+    if (app=="/echo") {
+      ctx.result(ctx.body());
+    }
+
+    GameBoard gameBoard = new GameBoard();
+    
+    if (app=="/newgame") {
+      gameBoard.startOver();
+      ctx.redirect("/tictactoe.html");
+    }
+    
+    if (app=="/startgame") {
+      String type = ctx.formParam("type");
+      if (type.equals("X")) {
+        gameBoard.setPlayer1('X');
+      } else {
+        gameBoard.setPlayer1('O');
+      }
+      Gson gson = new Gson();
+      ctx.result(gson.toJson(gameBoard));
+    }
+    
+    if (app=="/joingame") {
+<A NAME="match0"></A><A HREF="filea17.html#match0" TARGET="left">0</A>:      if (gameBoard.getPlayer1().getType() == 'X') {
+0:        gameBoard.setPlayer2('O');
+0:      } else {
+0:        gameBoard.setPlayer2('X');
+0:      }
+0:      gameBoard.startGame();
+      Gson gson = new Gson();
+      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+      ctx.redirect("/tictactoe.html?p=2");
+    }
+    
+    if (app=="/move/:playerId") {
+      int id = Integer.parseInt(ctx.pathParam("playerId"));
+      int x = Integer.parseInt(ctx.formParam("x"));
+      int y = Integer.parseInt(ctx.formParam("y"));
+      Player player;
+      if (id == 1) {
+        player = gameBoard.getPlayer1();
+      } else {
+        player = gameBoard.getPlayer2();
+      }
+      Move move = new Move(player, x, y);
+      boolean result = gameBoard.tryMove(move);
+      Message msg;
+      if (result) {
+        msg = new Message(true, 100, "");
+      } else {
+        msg = new Message(false, 100, "Invalid move");
+      }
+      Gson gson = new Gson();
+      ctx.result(gson.toJson(msg));
+      sendGameBoardToAllPlayers(gson.toJson(gameBoard));
+    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+        System.out.println("Error with sending to players.");
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

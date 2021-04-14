@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/5/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/5/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import org.eclipse.jetty.websocket.api.Session;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+  private static GameBoard gameBoard;
+  private static Message message;
+  private static Move move;
+
+  private static Javalin app;
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+    move = new Move();
+    message = new Message();
+
+
+
+    // Test Echo Server
+<A NAME="match1"></A><A HREF="fileb17.html#match1" TARGET="right">1</A>:    if(app=="/echo") {
+1:      ctx.result(ctx.body());
+1:    }
+1:    
+1:    // Hector's code 
+1:    
+1:    // player 1 join the game 
+1:    if(app=="/newgame") {
+1:      ctx.redirect("tictactoe.html");
+1:    }
+1:    
+1:    // player 1 starts the game
+1:    if(app=="/startgame") {
+      
+      //set user info 
+      String clientType = ctx.formParam("type");
+<A NAME="match2"></A><A HREF="fileb17.html#match2" TARGET="right">2</A>:      char p1Type = clientType.charAt(0);
+2:
+2:      // start game 
+2:      gameBoard = new GameBoard();
+2:      gameBoard.setPlayer1(1, p1Type);
+2:      
+2:      // responds 
+2:      ctx.status(200);
+2:      ctx.result(gameBoard.boardJson());
+2:   
+2:    }
+2:    
+2:    // player 2 join the game 
+2:    if(app=="/joingame") {
+2:      //player info 
+2:      char p2Type = gameBoard.getPlayer1().getType() == 'X' ? 'O' : 'X';
+<A NAME="match0"></A><A HREF="fileb17.html#match0" TARGET="right">0</A>:      gameBoard.setPlayer2(2, p2Type);
+0:      
+0:      //start game 
+0:      gameBoard.setGame(true);      
+0:      
+0:      // server 
+0:      sendGameBoardToAllPlayers(gameBoard.boardJson());   
+0:      
+0:      // respond 
+0:      ctx.redirect("/tictactoe.html?p=2");
+0:    }
+0:    
+0:    if(app=="/move/:playerId") {
+0:      // set move 
+0:      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+0:      int moveX = Integer.parseInt(ctx.formParam("x"));
+      int moveY = Integer.parseInt(ctx.formParam("y")); 
+      
+      // initialize move 
+      move.setMove(gameBoard, playerId, moveX, moveY);
+
+      // load player's Move
+      gameBoard.playerMoves(move, message);
+    
+      // responds 
+      ctx.result(message.messageJson());
+      sendGameBoardToAllPlayers(gameBoard.boardJson());   
+    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+        System.out.println("send error");
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

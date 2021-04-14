@@ -1,124 +1,45 @@
 <HTML>
 <HEAD>
-<TITLE>plaggie_data/5/PlayGame.java</TITLE>
+<TITLE>plaggie_data/22/Move.java</TITLE>
 </HEAD>
 <BODY>
-<H1>plaggie_data/5/PlayGame.java</H1>
+<H1>plaggie_data/22/Move.java</H1>
 <CODE><PRE>
-package controllers;
-
-<A NAME="match2"></A><A HREF="fileb1.html#match2" TARGET="right">2</A>:import io.javalin.Javalin;
-2:import java.io.IOException;
-2:import java.util.Queue;
-2:import models.GameBoard;
-2:import models.Message;
-2:import models.Move;
-2:import org.eclipse.jetty.websocket.api.Session;
-2:
-2:class PlayGame {
-2:
-2:  private static final int PORT_NUMBER = 8080;
-2:  private static GameBoard gameBoard;
-2:  private static Message message;
-2:  private static Move move;
-
-  private static Javalin app;
-
-  /** Main method of the application.
-   * @param args Command line arguments
-   */
-  public static void main(final String[] args) {
-    move = new Move();
-    message = new Message();
-
-
-
-    // Test Echo Server
-<A NAME="match1"></A><A HREF="fileb1.html#match1" TARGET="right">1</A>:    if(app=="/echo") {
-1:      ctx.result(ctx.body());
-1:    }
-1:    
-1:    // Hector's code 
-1:    
-1:    // player 1 join the game 
-1:    if(app=="/newgame") {
-1:      ctx.redirect("tictactoe.html");
-1:    }
-1:    
-1:    // player 1 starts the game
-1:    if(app=="/startgame") {
-1:      
-1:      //set user info 
-1:      String clientType = ctx.formParam("type");
-      char p1Type = clientType.charAt(0);
-
-      // start game 
-      gameBoard = new GameBoard();
-      gameBoard.setPlayer1(1, p1Type);
-      
-      // responds 
-      ctx.status(200);
-      ctx.result(gameBoard.boardJson());
-   
-    }
-    
-    // player 2 join the game 
-    if(app=="/joingame") {
-      //player info 
-      char p2Type = gameBoard.getPlayer1().getType() == 'X' ? 'O' : 'X';
-      gameBoard.setPlayer2(2, p2Type);
-      
-      //start game 
-      gameBoard.setGame(true);      
-      
-      // server 
-<A NAME="match0"></A><A HREF="fileb1.html#match0" TARGET="right">0</A>:      sendGameBoardToAllPlayers(gameBoard.boardJson());   
-0:      
-0:      // respond 
-0:      ctx.redirect("/tictactoe.html?p=2");
-0:    }
-0:    
-0:    if(app=="/move/:playerId") {
-0:      // set move 
-0:      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
-0:      int moveX = Integer.parseInt(ctx.formParam("x"));
-0:      int moveY = Integer.parseInt(ctx.formParam("y")); 
-0:      
-0:      // initialize move 
-0:      move.setMove(gameBoard, playerId, moveX, moveY);
+<A NAME="match0"></A><A HREF="fileb1.html#match0" TARGET="right">0</A>:package models;
 0:
-0:      // load player's Move
-0:      gameBoard.playerMoves(move, message);
-    
-      // responds 
-      ctx.result(message.messageJson());
-      sendGameBoardToAllPlayers(gameBoard.boardJson());   
-    }
-
-    // Web sockets - DO NOT DELETE or CHANGE
-    app.ws("/gameboard", new UiWebSocket());
-<A NAME="match3"></A><A HREF="fileb1.html#match3" TARGET="right">3</A>:  }
-3:
-3:  /** Send message to all players.
-3:   * @param gameBoardJson Gameboard JSON
-3:   * @throws IOException Websocket message send IO Exception
-3:   */
-3:  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
-3:    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
-3:    for (Session sessionPlayer : sessions) {
-3:      try {
-3:        sessionPlayer.getRemote().sendString(gameBoardJson);
-3:      } catch (IOException e) {
-        // Add logger here
-        System.out.println("send error");
-      }
-    }
-  }
-
-  public static void stop() {
-    app.stop();
-  }
-}
+0:public class Move {
+0:
+0:  public Player getPlayer() {
+0:    return player;
+0:  }
+0:
+0:  public void setPlayer(Player player) {
+0:    this.player = player;
+0:  }
+0:
+0:  public int getMoveX() {
+0:    return moveX;
+0:  }
+0:
+0:  public void setMoveX(int moveX) {
+0:    this.moveX = moveX;
+0:  }
+0:
+0:  public int getMoveY() {
+0:    return moveY;
+0:  }
+0:
+0:  public void setMoveY(int moveY) {
+0:    this.moveY = moveY;
+0:  }
+0:
+0:  private Player player;
+0:
+0:  private int moveX;
+0:
+0:  private int moveY;
+0:
+0:}
 </PRE></CODE>
 </BODY>
 </HTML>

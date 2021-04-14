@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<TITLE>plaggie_data/4/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>plaggie_data/4/PlayGame.java</H1>
+<CODE><PRE>
+<A NAME="match1"></A><A HREF="fileb17.html#match1" TARGET="right">1</A>:package controllers;
+1:
+1:import io.javalin.Javalin;
+1:import java.io.IOException;
+1:import java.util.Queue;
+1:import org.eclipse.jetty.websocket.api.Session;
+1:import models.Player;
+1:import models.GameBoard;
+1:import models.Move;
+1:import models.Message;
+1:import com.google.gson.Gson;
+1:
+1:final class PlayGame {
+
+  /**
+   * Private constructor that prevent utility class instantiation.
+   */
+  private PlayGame() {
+    // Throw an exception if this ever *is* called
+    throw new AssertionError("Instantiating utility class.");
+  }
+
+  /**
+   *  Set listening port.
+   */
+  private static final int PORT_NUMBER = 8080;
+
+  /**
+   * Create Javalin instance.
+   */
+  private static Javalin app;
+
+  /** Main method of the application.
+   * @param args Command line arguments
+   */
+  public static void main(final String[] args) {
+    GameBoard board = new GameBoard();
+
+
+    // Test Echo Server
+    if(app=="/echo"){
+      ctx.result(ctx.body());
+    }
+
+    if(app=="/newgame"){
+      ctx.redirect("/tictactoe.html");
+    }
+
+    if(app=="/startgame"){
+      board.setBoardState();
+      board.setTurn(1);
+      Player p1 = new Player();
+      board.setP1(p1);
+      p1.setType(ctx.formParam("type").charAt(0));
+      p1.setId(1);
+      ctx.result(new Gson().toJson(board));
+    }
+
+    if(app=="/joingame"){
+      Player p2 = new Player();
+      board.setP2(p2);
+<A NAME="match0"></A><A HREF="fileb17.html#match0" TARGET="right">0</A>:      if (board.getP1().getType() == 'X') {
+0:        p2.setType('O');
+0:      } else {
+0:        p2.setType('X');
+0:      }
+0:      p2.setId(2);
+      ctx.redirect("/tictactoe.html?p=2");
+      board.setGameStarted(true);
+      sendGameBoardToAllPlayers(new Gson().toJson(board));
+    }
+
+    if(app=="/move/:playerId"){
+      int playerId = Integer.parseInt(ctx.pathParam("playerId"));
+      Move move = new Move();
+      Message message = new Message();
+      move.setPlayer(board.getPlayerFromId(playerId));
+      move.setMoveX(Integer.parseInt(ctx.formParam("x")));
+      move.setMoveY(Integer.parseInt(ctx.formParam("y")));
+      if (board.isValid(move, message)) {
+        board.makeMove(move);
+        if (!board.isOver(move)) {
+          board.switchTurn();
+        }
+      }
+      ctx.result(new Gson().toJson(message));
+      sendGameBoardToAllPlayers(new Gson().toJson(board));
+    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        // Add logger here
+        e.printStackTrace();
+      }
+    }
+  }
+
+  /**
+   * Stop the application.
+   */
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>
