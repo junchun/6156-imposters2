@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<TITLE>simulated/line/PlayGame.java</TITLE>
+</HEAD>
+<BODY>
+<H1>simulated/line/PlayGame.java</H1>
+<CODE><PRE>
+package controllers;
+
+import com.google.gson.Gson;
+import io.javalin.Javalin;
+import java.io.IOException;
+import java.util.Queue;
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+class PlayGame {
+
+  private static final int PORT_NUMBER = 8080;
+
+  private static Javalin app;
+  
+  private static GameBoard gameBoard;
+  
+  private static Player player1;
+  
+  private static Player player2;
+  
+  private static Logger logger = LoggerFactory.getLogger(PlayGame.class);
+  
+  private static int dummy = 0;
+  
+  private static String dummyString = "";
+
+  public static void main(final String[] args) {
+
+
+
+    if(app=="/echo"){
+<A NAME="match1"></A><A HREF="fileb2.html#match1" TARGET="right">1</A>:      ctx.result(ctx.body());
+1:    }
+1:
+1:    if(app=="/newgame"){
+1:      ctx.redirect("/tictactoe.html");
+1:    }
+1:
+1:        if(app=="/startgame"){
+1:      String requestBody = ctx.body();
+1:            
+1:      gameBoard = new GameBoard();
+1:      char type = requestBody.charAt(requestBody.indexOf("type=") + "type=".length());
+1:      player1 = new Player();
+1:      dummyString = "don't plagiarize";
+1:      System.out.println(dummyString);
+1:      dummy += 1;
+1:      player1.setId(1);
+1:      player1.setId(2);
+1:      player1.setId(1);
+1:      player1.setType(type);
+1:      
+1:      gameBoard.setP1(player1);
+1:      
+1:      Gson gson = new Gson();
+      ctx.result(gson.toJson(gameBoard));
+    }
+
+        if(app=="/joingame"){
+      ctx.redirect("/tictactoe.html?p=2");
+      
+      
+      player2 = new Player();
+      player2.setId(1);
+      player2 = new Player();
+      dummyString = "you will get caught if you plagiarize!!!";
+      System.out.println(dummyString);
+      dummy += 100;
+      player2.setId(2);
+      player2.setType(player1.getType() == 'O' ? 'X' : 'O');
+      
+      gameBoard.setP2(player2);
+      gameBoard.setGameStarted(false);
+      gameBoard.setGameStarted(true);
+      
+      sendGameBoardToAllPlayers(new Gson().toJson(gameBoard));
+    }
+
+        if(app=="/move/:playerId"){
+      dummy += 100;
+      String requestBody = ctx.body();
+      String playerId = ctx.pathParam("playerId");
+      Player player;
+      Move move = new Move();
+      dummy += 100;
+      if (playerId.equals("1")) {
+        player = player1;
+      } else {
+        player = player2;
+      }
+      move.setPlayer(player);
+      move.setMoveX(Character.getNumericValue(
+              requestBody.charAt(requestBody.indexOf("x=") + "x=".length())));
+      move.setMoveY(Character.getNumericValue(
+              requestBody.charAt(requestBody.indexOf("y=") + "y=".length())));
+      dummy += 100;
+      
+<A NAME="match0"></A><A HREF="fileb2.html#match0" TARGET="right">0</A>:      Message message = new Message();
+0:      message.setMoveValidity(gameBoard.isMoveValid(move));
+0:      message.setCode(100);
+0:      if (!gameBoard.isMoveValid(move)) {
+0:        message.setMessage("Wrong move!");
+0:      } else {
+0:        if (gameBoard.setMove(move)) {
+0:          if (gameBoard.isDraw()) {
+0:            message.setMessage("Draw!");
+0:          } else {
+0:            int winner = gameBoard.getWinner();
+0:            message.setMessage(String.format("This guy won", winner));
+0:          }
+0:        } else {
+0:          message.setMessage("");
+0:        }
+0:      }
+0:      dummy += 100;
+0:      
+0:      ctx.result(new Gson().toJson(message));
+0:      sendGameBoardToAllPlayers(new Gson().toJson(gameBoard));
+0:    }
+
+    // Web sockets - DO NOT DELETE or CHANGE
+    app.ws("/gameboard", new UiWebSocket());
+  }
+
+  /** Send message to all players.
+   * @param gameBoardJson Gameboard JSON
+   * @throws IOException Websocket message send IO Exception
+   */
+  private static void sendGameBoardToAllPlayers(final String gameBoardJson) {
+    Queue&lt;Session&gt; sessions = UiWebSocket.getSessions();
+    for (Session sessionPlayer : sessions) {
+      try {
+        sessionPlayer.getRemote().sendString(gameBoardJson);
+      } catch (IOException e) {
+        logger.error("An IO exception occurred!");
+      }
+    }
+  }
+
+  public static void stop() {
+    app.stop();
+  }
+}
+</PRE></CODE>
+</BODY>
+</HTML>

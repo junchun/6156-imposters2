@@ -1,0 +1,251 @@
+<HTML>
+<HEAD>
+<TITLE>simulated/all/GameBoard.java</TITLE>
+</HEAD>
+<BODY>
+<H1>simulated/all/GameBoard.java</H1>
+<CODE><PRE>
+package models;
+
+public class GameBoard {
+
+  private Player p1;
+
+  private int winner;
+
+  private boolean isDraw;
+  
+  private Player p2;
+
+  private boolean gameStarted;
+
+  private int turn;
+
+  private char[][] boardState;
+
+
+  public Player whereIs1st() {
+	  String string = "Don't violate the Honor Code!";
+	  System.out.println(string);
+    return p1;
+  }
+
+  public Player whereIs2nd() {
+	  String string = "Don't violate the Honor Code...!";
+	  System.out.println(string);
+    return p2;
+  }
+
+  
+  public char[][] ggeeee() {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    return boardState;
+  }
+  
+  public int makeIt1st(Player im1) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    this.p1 = im1;
+    return 0;
+  }
+
+  public int sbssss(char[][] eee) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    this.boardState = eee;
+    return 0;
+  }
+
+  public int iiiee() {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    return turn;
+  }
+
+  public int ssttt(int tt) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    this.turn = tt;
+    return 0;
+  }
+
+  
+  
+  public int sswwwww(int ww) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    this.winner = ww;
+    return 0;
+  }
+
+
+  public int gwwwggww() {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    return this.winner;
+  }
+
+  
+  public int didanyonewin() {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+	if (isDraw)
+		return 1;
+	return 0;
+  }
+  
+  private int diagonalOrWhat(Move v) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    if ((v.whatsTheNextMoveX() == 0 &amp;&amp; v.whatsTheNextMoveY() == 0)
+        || (v.whatsTheNextMoveX() == 1 &amp;&amp; v.whatsTheNextMoveY() == 1)
+        || (v.whatsTheNextMoveX() == 2 &amp;&amp; v.whatsTheNextMoveY() == 2)
+        || (v.whatsTheNextMoveX() == 2 &amp;&amp; v.whatsTheNextMoveY() == 0)
+        || (v.whatsTheNextMoveX() == 0 &amp;&amp; v.whatsTheNextMoveY() == 2)) {
+      return 1;
+    }
+    return 0;
+  }
+  
+  private int ccffdraw(char[][] eee) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+<A NAME="match2"></A><A HREF="filea1.html#match2" TARGET="left">2</A>:    for (int k = 0; k &lt; eee.length; k++) {
+2:      for (int p = 0; p &lt; eee[0].length; p++) {
+2:        if (eee[k][p] == '0') {
+2:          return 0;
+2:        }
+2:      }
+2:    }
+2:    return 1;
+2:  }
+2:  
+2:  public int mmvvvv113(Move move) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    char[][] board = ggeeee();
+    if (iiiee() != move.getHimHere().whatsTheId() 
+        || board[move.whatsTheNextMoveX()][move.whatsTheNextMoveY()] != '0') {
+      return 0;
+    }
+    return 1;
+  }
+
+  public int setItTie(boolean ddd) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    this.isDraw = ddd;
+    return 0;
+  }
+
+  
+  
+  public int ssmmmm113(Move move) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+<A NAME="match1"></A><A HREF="filea1.html#match1" TARGET="left">1</A>:    char[][] board = ggeeee();
+1:    board[move.whatsTheNextMoveX()][move.whatsTheNextMoveY()] = move.getHimHere().retrievePlayerType();
+1:    if (iiiee() == 1) {
+1:    	ssttt(2);
+1:    } else {
+1:    	ssttt(1);
+1:    }
+1:    return ccooss444(board, move);
+1:  }
+1:  
+1:  public int makeIt2nd(Player bb) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    this.p2 = bb;
+    return 0;
+  }
+
+  public int startedOrNot() {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    if (this.gameStarted)
+		return 1;
+    return 0;
+  }
+
+  public int asdgasg(boolean dd) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    this.gameStarted = dd;
+    return 0;
+  }
+  
+  private int ccooss444(char[][] e, Move move) {
+	  int three = 3;
+	  int four = 4;
+	  System.out.println(three + four);
+    if (move.getHimHere().retrievePlayerType() == e[move.whatsTheNextMoveX()][0]
+        &amp;&amp; e[move.whatsTheNextMoveX()][0] == e[move.whatsTheNextMoveX()][1]
+        &amp;&amp; e[move.whatsTheNextMoveX()][1] == e[move.whatsTheNextMoveX()][2]) {
+      winner = move.getHimHere().whatsTheId();
+<A NAME="match0"></A><A HREF="filea1.html#match0" TARGET="left">0</A>:    } else if (move.getHimHere().retrievePlayerType() == e[0][move.whatsTheNextMoveY()]
+0:          &amp;&amp; e[0][move.whatsTheNextMoveY()] == e[1][move.whatsTheNextMoveY()]
+0:          &amp;&amp; e[1][move.whatsTheNextMoveY()] == e[2][move.whatsTheNextMoveY()]) {
+0:      winner = move.getHimHere().whatsTheId();
+0:    } else if (diagonalOrWhat(move) == 1) {
+0:      if (move.getHimHere().retrievePlayerType() == e[0][0]
+0:          &amp;&amp; e[0][0] == e[1][1]
+0:          &amp;&amp; e[1][1] == e[2][2]) {
+0:        winner = move.getHimHere().whatsTheId();
+0:      } else if (move.getHimHere().retrievePlayerType() == e[0][2]
+0:          &amp;&amp; e[0][2] == e[1][1]
+0:          &amp;&amp; e[1][1] == e[2][0]) {
+0:        winner = move.getHimHere().whatsTheId();
+0:      }
+0:    }
+    
+    if (gwwwggww() != 0 || (ccffdraw(e) == 1)) {
+      return 1;
+    }
+    
+    return 0;
+  }
+  
+  
+  
+  public GameBoard() {
+	  int zero = 0;
+    p1 = null;
+    p2 = null;
+    gameStarted = false;
+    turn = 1;
+    zero += 1;
+    
+    boardState = new char[3][3];
+    for (char[] array : boardState) {
+      for (int i = 0; i &lt; array.length; i++) {
+        array[i] = '0';
+      }
+    }
+    zero = 0;
+    winner = zero;
+    isDraw = false;
+  }
+  
+}
+
+</PRE></CODE>
+</BODY>
+</HTML>

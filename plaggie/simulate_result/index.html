@@ -1,0 +1,280 @@
+<HTML>
+<HEAD>
+<TITLE>Plaggie - Plagiarism Detection Report</TITLE>
+</HEAD>
+<BODY>
+<H1>Plaggie - Plagiarism Detection Report</H1>
+[<A HREF="#configuration">Configuration</A>] [<A HREF="#statistics">Statistics</A>] [<A HREF="#results">Results</A>]
+<A NAME="configuration"><H2>Configuration</H2></A>
+<TABLE BORDER="1">
+<TR><TD>Minimum match length used</TD><TD>20</TD></TR>
+<TR><TD>Recurse subdirectories</TD><TD>true</TD></TR>
+<TR><TD>Html report directory</TD><TD>simulate_result</TD></TR>
+<TR><TD>Minimum submission similarity to report</TD><TD>0.01</TD></TR>
+<TR><TD>Maximum number of detection results to report</TD><TD>666</TD></TR>
+<TR><TD>Minimum file similarity to report</TD><TD>0.1</TD></TR>
+<TR><TD>Code tokenizer used</TD><TD>plag.parser.java.JavaTokenizer</TD></TR>
+<TR><TD>Filename filter used</TD><TD>plag.parser.java.JavaFilenameFilter</TD></TR>
+<TR><TD>Excluded files</TD><TD>UiWebSocket.java,Player.java</TD></TR>
+<TR><TD>Excluded subdirectories</TD><TD>webstore,webstore/server,webstore/remote,webstore/servlets</TD></TR>
+<TR><TD>Excluded code in template files</TD><TD>0/PlayGame.java,0/GameBoard.java,0/Message.java,0/Move.java,0/Player.java</TD></TR>
+<TR><TD>Interface code excluded</TD><TD>true</TD></TR>
+</TABLE>
+<A NAME="statistics"><H2>Statistics</H2></A>
+<H3>Distribution of similarities, Average: 16%</H3>
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 60%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 50%</TD><TD>1</TD><TD>########                                                                        </TD></TR>
+<TR><TD> 40%</TD><TD>1</TD><TD>########                                                                        </TD></TR>
+<TR><TD> 30%</TD><TD>1</TD><TD>########                                                                        </TD></TR>
+<TR><TD> 20%</TD><TD>2</TD><TD>#################                                                               </TD></TR>
+<TR><TD> 10%</TD><TD>1</TD><TD>########                                                                        </TD></TR>
+<TR><TD> 0%</TD><TD>9</TD><TD>################################################################################</TD></TR>
+</TABLE>
+<H3>Distribution of similarities A, Average: 30.3%</H3>
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 60%</TD><TD>2</TD><TD>################################                                                </TD></TR>
+<TR><TD> 50%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 40%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 30%</TD><TD>3</TD><TD>################################################                                </TD></TR>
+<TR><TD> 20%</TD><TD>2</TD><TD>################################                                                </TD></TR>
+<TR><TD> 10%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 0%</TD><TD>5</TD><TD>################################################################################</TD></TR>
+</TABLE>
+<H3>Distribution of similarities B, Average: 31%</H3>
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 60%</TD><TD>2</TD><TD>################################                                                </TD></TR>
+<TR><TD> 50%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 40%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 30%</TD><TD>3</TD><TD>################################################                                </TD></TR>
+<TR><TD> 20%</TD><TD>2</TD><TD>################################                                                </TD></TR>
+<TR><TD> 10%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 0%</TD><TD>5</TD><TD>################################################################################</TD></TR>
+</TABLE>
+<H3>Distribution of maximum file similarities, Average: 19.5%</H3>
+<P>If there are a lot of high similarity values (i.e. > 20%) in this distribution, there is a reason to suspect, that some code provided to the students with the exercise definition or somewhere else is not excluded from the detection. You can use the code exclusion parameters in the configuration file to exclude code from the detection algorithm.
+<TABLE BORDER="1">
+<TR><TD> 100%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 90%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 80%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 70%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 60%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 50%</TD><TD>1</TD><TD>################                                                                </TD></TR>
+<TR><TD> 40%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 30%</TD><TD>3</TD><TD>################################################                                </TD></TR>
+<TR><TD> 20%</TD><TD>0</TD><TD>                                                                                </TD></TR>
+<TR><TD> 10%</TD><TD>5</TD><TD>################################################################################</TD></TR>
+<TR><TD> 0%</TD><TD>5</TD><TD>################################################################################</TD></TR>
+</TABLE>
+<H3>Files per submission</H3>
+<TABLE BORDER="1">
+<TR><TD> 2.0</TD><TD>5</TD><TD>################################################################################</TD></TR>
+<TR><TD> 1.0</TD><TD>1</TD><TD>################                                                                </TD></TR>
+</TABLE>
+<H3>Counters</H3>
+<TABLE BORDER="1">
+<TR><TD>failed_file_comparisons</TD><TD>10</TD></TR>
+<TR><TD>similarity_over_threshold</TD><TD>10</TD></TR>
+<TR><TD>files_excluded_by_filename_filter</TD><TD>0</TD></TR>
+<TR><TD>parsed_files</TD><TD>10/11</TD></TR>
+<TR><TD>files_excluded_as_non_java_files</TD><TD>4</TD></TR>
+<TR><TD>files_to_parse</TD><TD>11</TD></TR>
+<TR><TD>similarity_comparisons</TD><TD>15/15</TD></TR>
+<TR><TD>tokens_excluded_as_interface_code</TD><TD>0</TD></TR>
+<TR><TD>tokens_excluded_by_existing_code_filter</TD><TD>400</TD></TR>
+<TR><TD>blacklisted_detection_results</TD><TD>0</TD></TR>
+<TR><TD>files_excluded_by_subdirectory_filter</TD><TD>0</TD></TR>
+<TR><TD>submissions</TD><TD>6/6</TD></TR>
+<TR><TD>file_comparisons</TD><TD>50</TD></TR>
+<TR><TD>parse_failures</TD><TD>1</TD></TR>
+</TABLE>
+<A NAME="results"><H2>Results</H2></A>
+<P>Change sorting by clicking the links on the header row.<BR>
+Blacklisted student id's are highlighted.
+<TABLE BORDER="1">
+<TR><TD>Student A</TD><TD>Student B</TD><TD><A HREF="index.html#results">Similarity</A></TD><TD><A HREF="index_sima.html#results">Similarity A</A></TD><TD><A HREF="index_simb.html#results">Similarity B</A></TD><TD><A HREF="index_maxfile.html#results">Maximum file similarity</A></TD><TD>Student A similarity distribution average</TD><TD>Student B similarity distribution average</TD></TR>
+<TR>
+<TD>
+<A HREF="detection1/index.html">
+variable
+</A>
+</TD><TD>
+<A HREF="detection1/index.html">
+original
+</A>
+</TD><TD>
+59%</TD><TD>
+75.7%</TD><TD>
+77.9%</TD><TD>
+63.5%</TD><TD>
+<A HREF="sub3/simdistr.html">41.2%</A></TD><TD>
+<A HREF="sub2/simdistr.html">46.1%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection7/index.html">
+structure
+</A>
+</TD><TD>
+<A HREF="detection7/index.html">
+original
+</A>
+</TD><TD>
+47.4%</TD><TD>
+68.8%</TD><TD>
+68.8%</TD><TD>
+58%</TD><TD>
+<A HREF="sub6/simdistr.html">39.2%</A></TD><TD>
+<A HREF="sub2/simdistr.html">46.1%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection8/index.html">
+structure
+</A>
+</TD><TD>
+<A HREF="detection8/index.html">
+variable
+</A>
+</TD><TD>
+37.9%</TD><TD>
+62.4%</TD><TD>
+60.8%</TD><TD>
+37.9%</TD><TD>
+<A HREF="sub6/simdistr.html">39.2%</A></TD><TD>
+<A HREF="sub3/simdistr.html">41.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection6/index.html">
+line
+</A>
+</TD><TD>
+<A HREF="detection6/index.html">
+all
+</A>
+</TD><TD>
+24.6%</TD><TD>
+50.2%</TD><TD>
+49.1%</TD><TD>
+32.7%</TD><TD>
+<A HREF="sub5/simdistr.html">30.8%</A></TD><TD>
+<A HREF="sub4/simdistr.html">26.5%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection4/index.html">
+line
+</A>
+</TD><TD>
+<A HREF="detection4/index.html">
+original
+</A>
+</TD><TD>
+21.9%</TD><TD>
+43.7%</TD><TD>
+50.2%</TD><TD>
+36.5%</TD><TD>
+<A HREF="sub5/simdistr.html">30.8%</A></TD><TD>
+<A HREF="sub2/simdistr.html">46.1%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection5/index.html">
+line
+</A>
+</TD><TD>
+<A HREF="detection5/index.html">
+variable
+</A>
+</TD><TD>
+11.8%</TD><TD>
+32.2%</TD><TD>
+36.7%</TD><TD>
+13.4%</TD><TD>
+<A HREF="sub5/simdistr.html">30.8%</A></TD><TD>
+<A HREF="sub3/simdistr.html">41.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection2/index.html">
+all
+</A>
+</TD><TD>
+<A HREF="detection2/index.html">
+original
+</A>
+</TD><TD>
+9.6%</TD><TD>
+28.6%</TD><TD>
+33.5%</TD><TD>
+13.7%</TD><TD>
+<A HREF="sub4/simdistr.html">26.5%</A></TD><TD>
+<A HREF="sub2/simdistr.html">46.1%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection3/index.html">
+all
+</A>
+</TD><TD>
+<A HREF="detection3/index.html">
+variable
+</A>
+</TD><TD>
+9.4%</TD><TD>
+28.6%</TD><TD>
+32.8%</TD><TD>
+13.9%</TD><TD>
+<A HREF="sub4/simdistr.html">26.5%</A></TD><TD>
+<A HREF="sub3/simdistr.html">41.2%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection10/index.html">
+structure
+</A>
+</TD><TD>
+<A HREF="detection10/index.html">
+line
+</A>
+</TD><TD>
+9.1%</TD><TD>
+32.5%</TD><TD>
+28%</TD><TD>
+12.8%</TD><TD>
+<A HREF="sub6/simdistr.html">39.2%</A></TD><TD>
+<A HREF="sub5/simdistr.html">30.8%</A></TD>
+</TR>
+<TR>
+<TD>
+<A HREF="detection9/index.html">
+structure
+</A>
+</TD><TD>
+<A HREF="detection9/index.html">
+all
+</A>
+</TD><TD>
+8.5%</TD><TD>
+32.2%</TD><TD>
+26.5%</TD><TD>
+10.6%</TD><TD>
+<A HREF="sub6/simdistr.html">39.2%</A></TD><TD>
+<A HREF="sub4/simdistr.html">26.5%</A></TD>
+</TR>
+</TABLE>
+</BODY>
+</HTML>
