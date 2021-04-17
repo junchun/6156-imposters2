@@ -26,17 +26,6 @@ Repository Structure
 
 ```/utility```: miscellaneous scripts and input for data processing
 
-
-SIM text diff results:
-Ground truth: comparison between non-plagiarized submissions (14 and 36)
-
-Sample plagiarism (/simulated\ plagiarism)
-- Manually created plagiarized code based on submission 14 (junchun). Confirmed that all samples compile successfully.
-- lines_removed: attempts to fool the code similarity detector by adding meaningless or redundant code snippets. Also removed comments (e.g. Javadoc) or removed lines when possible.
-- structure_changed: changes the order of methods defined
-- variables_changed: changes the variable types and names.
-- all_changed: all changes listed above are applied here.
-
 Running the tools
 -----------------------------------
 
@@ -61,7 +50,7 @@ Running the tools
 - Process the encoding files (```.txt``` format) with DeepSim Embedding.ipynb
 - To train and test, run: ```python classification.py```
 
-#### SIM
+### SIM
 - The most recent official version (released in 2017) contains Makefile and other compatibility issues. A fixed version published at https://github.com/andre-wojtowicz/sim is used instead.
 - The fixed version of SIM is available in /tools/sim-master
 - To install SIM, follow the steps outlined in the README file at: https://github.com/andre-wojtowicz/sim/blob/master/project/README
