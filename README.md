@@ -6,15 +6,27 @@ Sang Jun Chun (sc4658) and Claire (Yumeng) Luo (yl4655)
 
 Project Overview
 ----------------------------
+Code similarity detection is used in plagiarism check, defect detection, etc. In our project, we utilized code similarity detection tools to detect plagiarism in school projects. 
+
+In this repo, you will find accompanying data and tools that we used, as well as directions for replication.
 
 
 Repository Structure
 ----------------------------
-/all_submissions: contains proposal, revised proposal, first progress report, second progress report, demo slides, and final report
+```/all_submissions```: contains proposal, revised proposal, first progress report, second progress report, demo slides, and final report
 
-Data used for this project:
+```/data```: contains various data used for this project
+- ```/data/encoding_data```: encoding data for DeepSim
+- ```/data/original_github_data```: original submissions for 4156 IP1 downloaded from public GitHub repo
+- ```/data/SIM_data```: modified code for SIM to process
+- ```/data/simulated_plagiarism```: artificially created plagiarism cases
+- ```/data/skeleton_code```: initial skeleton code made available for 4156 IP1 project
 
-Code & configuration:
+```/tools```: contains code & configuration for tools used
+
+```/utility```: miscellaneous scripts and input for data processing
+
+
 SIM text diff results:
 Ground truth: comparison between non-plagiarized submissions (14 and 36)
 
