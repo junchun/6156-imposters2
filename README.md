@@ -4,9 +4,13 @@ COMS W6156 Final Project (imposters2)
 ### Team Members
 Sang Jun Chun (sc4658) and Claire (Yumeng) Luo (yl4655)
 
+Project Overview
+----------------------------
+
+
 Repository Structure
 ----------------------------
-All project assignment:
+/all_submissions: contains proposal, revised proposal, first progress report, second progress report, demo slides, and final report
 
 Data used for this project:
 
